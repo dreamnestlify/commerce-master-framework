@@ -529,6 +529,23 @@ if ($_tests_dir && file_exists($_tests_dir . '/includes/functions.php')) {
             define('COOKIE_DOMAIN', false);
         }
 
+        // ── Plugin constants needed by module enqueue methods ──
+        if (!defined('COMMERCE_CORE_VERSION')) {
+            define('COMMERCE_CORE_VERSION', '0.1.0');
+        }
+        if (!defined('COMMERCE_CORE_FILE')) {
+            define('COMMERCE_CORE_FILE', __FILE__);
+        }
+        if (!defined('COMMERCE_CORE_DIR')) {
+            define('COMMERCE_CORE_DIR', dirname($plugin_root) . '/');
+        }
+        if (!defined('COMMERCE_CORE_URL')) {
+            define('COMMERCE_CORE_URL', 'http://test.example.com/wp-content/plugins/commerce-core/');
+        }
+        if (!defined('COMMERCE_CORE_BASENAME')) {
+            define('COMMERCE_CORE_BASENAME', 'commerce-core/commerce-core.php');
+        }
+
         // ── User / auth stubs ──
         if (!function_exists('is_user_logged_in')) {
             function is_user_logged_in(): bool
