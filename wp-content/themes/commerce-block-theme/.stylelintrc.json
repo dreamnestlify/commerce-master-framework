@@ -8,8 +8,11 @@
         }],
         "custom-property-pattern": null,
         "color-hex-length": "short",
-        "declaration-block-no-redundant-longhand-properties": true,
-        "shorthand-property-no-redundant-longhand": true
+        "property-no-vendor-prefix": null,
+        "value-keyword-case": null,
+        "shorthand-property-no-redundant-values": null,
+        "no-descending-specificity": null,
+        "media-feature-range-notation": null
     },
     "ignoreFiles": ["node_modules/**", "build/**", "*.min.css"]
 }

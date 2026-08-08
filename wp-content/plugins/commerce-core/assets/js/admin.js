@@ -7,13 +7,13 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         // Quick settings save feedback.
-        var form = document.querySelector('.commerce-core-admin form');
+        const form = document.querySelector('.commerce-core-admin form');
         if (!form) {
             return;
         }
 
         form.addEventListener('submit', function () {
-            var button = form.querySelector('input[type="submit"]');
+            const button = form.querySelector('input[type="submit"]');
             if (button) {
                 button.disabled = true;
                 button.value = 'Saving...';
