@@ -1,3 +1,7 @@
+includes:
+    # extension-installer auto-includes szepeviktor/phpstan-wordpress.
+    # Do NOT manually include extension.neon — it causes a duplicate-include crash.
+
 parameters:
     level: 6
     paths:
@@ -5,3 +9,8 @@ parameters:
     excludePaths:
         - tests/*
     tmpDir: .phpstan-cache
+
+    # Load stubs for plugin constants, WooCommerce, and WP_CLI.
+    # These are not provided by the WordPress extension.
+    bootstrapFiles:
+        - phpstan-stubs.php
