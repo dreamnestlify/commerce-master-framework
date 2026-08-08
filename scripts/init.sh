@@ -51,7 +51,7 @@ fi
 echo "📦 Checking WooCommerce..."
 if ! wp plugin is-installed woocommerce 2>/dev/null; then
     echo "   Installing WooCommerce..."
-    wp plugin install woocommerce --activate
+    wp plugin install woocommerce --version=11.0.0 --activate
 else
     echo "   WooCommerce already installed."
     wp plugin activate woocommerce 2>/dev/null || true

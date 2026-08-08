@@ -91,7 +91,7 @@
 
 **Context:** Developers need a consistent, reproducible local WordPress environment.
 
-**Decision:** Use Docker Compose with named images (WordPress 6.7 + PHP 8.3, MariaDB 11.6, phpMyAdmin, WP-CLI, Node 22).
+**Decision:** Use Docker Compose with named images (WordPress 7.0.2 + PHP 8.3, MariaDB 11.8 LTS, phpMyAdmin, WP-CLI 2.12.0, Node 22).
 
 **Rationale:**
 - Consistent environment across team members.

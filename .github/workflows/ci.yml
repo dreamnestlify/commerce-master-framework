@@ -8,7 +8,7 @@ on:
 
 jobs:
   php-checks:
-    name: PHP Lint / PHPCS / PHPStan
+    name: PHP Lint / PHPCS / PHPStan / PHPUnit
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -33,10 +33,10 @@ jobs:
       - name: PHP Lint
         run: composer lint
 
-      - name: PHPCS
+      - name: PHPCS (WordPress Coding Standards)
         run: composer phpcs
 
-      - name: PHPStan
+      - name: PHPStan (Static Analysis)
         run: composer phpstan
 
       - name: PHPUnit

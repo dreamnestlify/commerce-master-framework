@@ -37,10 +37,10 @@ open http://localhost:8080
 
 | Component | Version / Tool |
 |---|---|
-| WordPress | 6.7+ |
+| WordPress | 7.0.2 |
 | PHP | 8.3 |
-| WooCommerce | 9.x (latest compatible) |
-| Database | MariaDB 11.6 |
+| WooCommerce | 11.0.0 |
+| Database | MariaDB 11.8 LTS |
 | Runtime | Docker Compose |
 | Node (build/lint) | 22.x |
 | Frontend | Gutenberg Blocks + native WC Blocks |

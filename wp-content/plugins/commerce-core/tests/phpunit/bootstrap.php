@@ -183,6 +183,6 @@ if (!function_exists('get_option')) {
 
     function get_bloginfo(string $show = ''): string
     {
-        return '6.7';
+        return '7.0.2';
     }
 }

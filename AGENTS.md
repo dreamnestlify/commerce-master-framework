@@ -102,7 +102,7 @@ commerce-core/
 | PHP 8.3 | Plugin code, lint, tests | **Not installed** |
 | Composer | PHP deps, PHPCS, PHPStan | **Not installed** |
 | Docker | Local WP environment | **Not installed** |
-| WP-CLI | Demo data init | Not installed (via Docker image) |
+| WP-CLI 2.12.0 | Demo data init | Not installed (via Docker image) |
 
 When dependencies are missing:
 - Complete all reviewable engineering files.

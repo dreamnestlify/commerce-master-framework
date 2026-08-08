@@ -185,7 +185,7 @@ Homepage block patterns:
 │  wordpress (PHP 8.3 + Apache)  ←── :8080             │
 │    └─ volumes: commerce-core (ro), commerce-block-theme (ro)
 │                                                      │
-│  db (MariaDB 11.6)              ←── :3307            │
+│  db (MariaDB 11.8 LTS)          ←── :3307            │
 │                                                      │
 │  phpmyadmin                     ←── :8090            │
 │                                                      │
