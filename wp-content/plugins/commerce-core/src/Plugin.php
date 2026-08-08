@@ -15,6 +15,7 @@ use CommerceMaster\Core\Module\SecurityModule;
 use CommerceMaster\Core\Module\WishlistModule;
 use CommerceMaster\Core\Module\RecentlyViewedModule;
 use CommerceMaster\Core\Module\PaymentGatewayModule;
+use CommerceMaster\Core\Module\SmtpModule;
 
 class Plugin {
 
@@ -86,6 +87,7 @@ class Plugin {
 		$this->registry->register( new WishlistModule() );
 		$this->registry->register( new RecentlyViewedModule() );
 		$this->registry->register( new PaymentGatewayModule() );
+	$this->registry->register( new SmtpModule() );
 		}
 
 		return $this->registry;

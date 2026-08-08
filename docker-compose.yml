@@ -56,6 +56,13 @@ services:
       PAYPAL_LIVE_CLIENT_ID: ${PAYPAL_LIVE_CLIENT_ID:-}
       PAYPAL_LIVE_CLIENT_SECRET: ${PAYPAL_LIVE_CLIENT_SECRET:-}
       PAYPAL_WEBHOOK_ID: ${PAYPAL_WEBHOOK_ID:-}
+      # SMTP / email (read by SmtpModule via getenv())
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM_EMAIL: ${SMTP_FROM_EMAIL:-}
+      SMTP_FROM_NAME: ${SMTP_FROM_NAME:-}
     volumes:
       - wordpress_data:/var/www/html
       - ./wp-content/plugins/commerce-core:/var/www/html/wp-content/plugins/commerce-core:ro
