@@ -422,32 +422,42 @@ else
     fail "Payment settings do NOT include PayPal configuration"
 fi
 
-# Verify gateways are registered with WooCommerce (capture stderr for diagnostics)
-GATEWAY_OUTPUT=$(wp eval "if(function_exists('WC')){ echo implode(',', array_keys(WC()->payment_gateways()->payment_gateways)); } else { echo 'WC_NOT_AVAILABLE'; }" 2>&1 || echo "")
-if echo "$GATEWAY_OUTPUT" | grep -q "WC_NOT_AVAILABLE"; then
+# Verify gateways are registered with WooCommerce
+# Iterate gateways and check IDs (more robust than array_keys for WC 11.0+)
+GATEWAY_CHECK=$(wp eval "
+if (!function_exists('WC')) { echo 'WC_NOT_AVAILABLE'; exit; }
+\$gateways = WC()->payment_gateways()->payment_gateways;
+\$found_stripe = false;
+\$found_paypal = false;
+\$details = array();
+foreach (\$gateways as \$key => \$gw) {
+    if (is_object(\$gw)) {
+        \$id = isset(\$gw->id) ? \$gw->id : 'n/a';
+        \$details[] = \$key . '=' . \$id;
+        if (\$id === 'commerce_stripe') \$found_stripe = true;
+        if (\$id === 'commerce_paypal') \$found_paypal = true;
+    } elseif (is_string(\$gw)) {
+        \$details[] = \$key . '=' . \$gw;
+        if (strpos(\$gw, 'StripeGateway') !== false) \$found_stripe = true;
+        if (strpos(\$gw, 'PayPalGateway') !== false) \$found_paypal = true;
+    }
+}
+echo (\$found_stripe ? 'stripe:yes' : 'stripe:no') . ',' . (\$found_paypal ? 'paypal:yes' : 'paypal:no');
+echo '|gateways:' . implode(';', \$details);
+// Also test filter directly
+\$filtered = apply_filters('woocommerce_payment_gateways', array());
+echo '|filter:' . implode(',', array_map(function(\$v){ return is_object(\$v)?get_class(\$v):\$v; }, \$filtered));
+" 2>&1 || echo "EVAL_FAILED")
+
+if echo "$GATEWAY_CHECK" | grep -q "WC_NOT_AVAILABLE"; then
     fail "WooCommerce WC() not available for gateway check"
-elif echo "$GATEWAY_OUTPUT" | grep -q "commerce_stripe"; then
+elif echo "$GATEWAY_CHECK" | grep -q "stripe:yes"; then
     ok "Stripe gateway is registered (id: commerce_stripe)"
 else
     fail "Stripe gateway is NOT registered"
-    # Run detailed diagnostics
-    DIAG=$(wp eval "
-echo 'filter:' . (has_filter('woocommerce_payment_gateways') !== false ? 'yes' : 'no');
-echo '|wc_gateway_class:' . (class_exists('WC_Payment_Gateway') ? 'yes' : 'no');
-echo '|stripe_class:' . (class_exists('CommerceMaster\Core\Gateway\StripeGateway') ? 'yes' : 'no');
-if (class_exists('CommerceMaster\Core\Gateway\StripeGateway')) {
-    try {
-        \$g = new CommerceMaster\Core\Gateway\StripeGateway();
-        echo '|instantiated:' . \$g->id;
-    } catch (\Throwable \$e) {
-        echo '|error:' . \$e->getMessage();
-    }
-}
-" 2>&1)
-    echo "      Diagnostic: $(echo "$DIAG" | tr '\n' ' ' | cut -c1-300)"
-    echo "      Gateway output: $(echo "$GATEWAY_OUTPUT" | tr '\n' ' ' | cut -c1-200)"
+    echo "      Diagnostic: $(echo "$GATEWAY_CHECK" | tr '\n' ' ' | cut -c1-400)"
 fi
-if echo "$GATEWAY_OUTPUT" | grep -q "commerce_paypal"; then
+if echo "$GATEWAY_CHECK" | grep -q "paypal:yes"; then
     ok "PayPal gateway is registered (id: commerce_paypal)"
 else
     fail "PayPal gateway is NOT registered"

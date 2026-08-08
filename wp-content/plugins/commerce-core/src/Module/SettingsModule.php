@@ -179,8 +179,12 @@ class SettingsModule implements ModuleInterface {
 		// Payment.
 		$clean['payment']['stripe_enabled'] = filter_var( $input['payment']['stripe_enabled'] ?? false, FILTER_VALIDATE_BOOLEAN );
 		$clean['payment']['paypal_enabled'] = filter_var( $input['payment']['paypal_enabled'] ?? false, FILTER_VALIDATE_BOOLEAN );
-		$clean['payment']['stripe_mode']    = in_array( $input['payment']['stripe_mode'] ?? 'sandbox', array( 'sandbox', 'live' ), true ) ? $input['payment']['stripe_mode'] : 'sandbox';
-		$clean['payment']['paypal_mode']    = in_array( $input['payment']['paypal_mode'] ?? 'sandbox', array( 'sandbox', 'live' ), true ) ? $input['payment']['paypal_mode'] : 'sandbox';
+
+		$stripe_mode = $input['payment']['stripe_mode'] ?? 'sandbox';
+		$paypal_mode = $input['payment']['paypal_mode'] ?? 'sandbox';
+
+		$clean['payment']['stripe_mode'] = in_array( $stripe_mode, array( 'sandbox', 'live' ), true ) ? $stripe_mode : 'sandbox';
+		$clean['payment']['paypal_mode'] = in_array( $paypal_mode, array( 'sandbox', 'live' ), true ) ? $paypal_mode : 'sandbox';
 
 		return $clean;
 	}
