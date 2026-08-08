@@ -335,7 +335,7 @@ class WishlistModule implements ModuleInterface {
 	/**
 	 * Render the wishlist page via shortcode [commerce_wishlist].
 	 *
-	 * @param array $atts Shortcode attributes.
+	 * @param array<string, mixed> $atts Shortcode attributes.
 	 * @return string HTML output.
 	 */
 	public function render_wishlist_page(array $atts = array()): string {
