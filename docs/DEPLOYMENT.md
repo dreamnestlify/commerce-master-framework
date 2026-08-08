@@ -161,6 +161,7 @@ commerce_master_db         Up (healthy)
 
 > Caddy 首次启动会自动向 Let's Encrypt 申请 SSL 证书（需要 DNS 已生效）。
 > 如果证书申请失败，检查 DNS 是否已指向本服务器。
+> WordPress 容器首次启动会自动运行 `composer install` 安装 Stripe SDK，耗时约 1-2 分钟。
 
 ---
 
@@ -309,6 +310,34 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml logs caddy | gre
 # 1. DNS 未指向本服务器 → 等待 DNS 生效
 # 2. 80 端口被占用 → sudo lsof -i :80
 # 3. Let's Encrypt 限速 → 等待 1 小时后重试
+# 4. 域名使用 Cloudflare 等 CDN 代理 → 临时关闭代理（DNS-only，灰色云）
+#    等 Caddy 申请到证书后再开启
+```
+
+### DNS 解析到多个 IP
+
+如果 `nslookup your-domain.com` 返回多个 IP，说明域名可能配置了：
+- 多条 A 记录（删除多余的，只保留服务器 IP）
+- CDN 代理（如 Cloudflare 橙色云）
+
+如果使用了 Cloudflare：
+1. 先登录 Cloudflare，把域名记录改成 **DNS-only（灰色云）**
+2. 等 5 分钟，确认 `nslookup` 只返回服务器 IP
+3. 重新启动 Caddy 申请证书：`docker compose -f docker-compose.yml -f docker-compose.prod.yml restart caddy`
+4. 证书申请成功后，可以重新开启 Cloudflare 代理
+
+### Smoke check 报 "Stripe PHP SDK is missing"
+
+```bash
+# WordPress 容器启动时会自动运行 composer install 安装 Stripe SDK
+# 如果仍然缺失，检查 WordPress 容器日志
+docker compose -f docker-compose.yml -f docker-compose.prod.yml logs wordpress | tail -50
+
+# 手动进入容器安装
+docker compose -f docker-compose.yml -f docker-compose.prod.yml exec wordpress bash
+cd /var/www/html/wp-content/plugins/commerce-core
+composer install --no-dev --no-interaction --prefer-dist
+exit
 ```
 
 ### init.sh 失败

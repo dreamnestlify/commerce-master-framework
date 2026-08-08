@@ -8,6 +8,7 @@
 #   - Removes public access to MariaDB (3307) and phpMyAdmin (8090)
 #   - Sets WordPress to internal-only port (Caddy proxies :80/:443 -> wordpress:80)
 #   - Disables WP_DEBUG for production
+#   - Runs composer install on WordPress startup to install plugin dependencies
 # ──────────────────────────────────────────────
 services:
 
@@ -28,9 +29,16 @@ services:
     networks:
       - commerce_net
 
-  # ── WordPress (override: remove public port, disable debug) ──
+  # ── WordPress (override: remove public port, disable debug, auto composer install) ──
   wordpress:
     ports: []  # No public port — Caddy proxies to it
+    entrypoint: ["/bin/bash", "/entrypoint-prod.sh"]
+    volumes:
+      - wordpress_data:/var/www/html
+      # Plugin directory must be writable so composer can install vendor/ on startup.
+      - ./wp-content/plugins/commerce-core:/var/www/html/wp-content/plugins/commerce-core
+      - ./wp-content/themes/commerce-block-theme:/var/www/html/wp-content/themes/commerce-block-theme:ro
+      - ./scripts/entrypoint-prod.sh:/entrypoint-prod.sh:ro
     environment:
       WORDPRESS_DEBUG: "false"
       WORDPRESS_DEBUG_LOG: "false"
