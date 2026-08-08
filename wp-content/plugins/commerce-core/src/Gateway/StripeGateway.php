@@ -61,7 +61,7 @@ class StripeGateway extends \WC_Payment_Gateway {
 		$this->enabled     = $this->payment_config->is_stripe_enabled() ? 'yes' : 'no';
 
 		if ( is_admin() ) {
-			add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
+			add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) ); // @phpstan-ignore-line — WC standard pattern, return value ignored by action API
 		}
 	}
 

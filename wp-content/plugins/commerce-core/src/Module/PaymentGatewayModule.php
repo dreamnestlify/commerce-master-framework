@@ -126,7 +126,7 @@ class PaymentGatewayModule implements ModuleInterface {
 	 * @param \Stripe\Event $event Stripe event.
 	 */
 	private function handle_stripe_payment_succeeded( $event ): void {
-		$intent   = $event->data->object;
+		$intent   = $event->data->object; // @phpstan-ignore-line — Stripe SDK uses magic properties
 		$order_id = isset( $intent->metadata->order_id ) ? (int) $intent->metadata->order_id : 0;
 
 		if ( ! $order_id ) {
@@ -150,7 +150,7 @@ class PaymentGatewayModule implements ModuleInterface {
 	 * @param \Stripe\Event $event Stripe event.
 	 */
 	private function handle_stripe_refund( $event ): void {
-		$charge   = $event->data->object;
+		$charge   = $event->data->object; // @phpstan-ignore-line — Stripe SDK uses magic properties
 		$order_id = isset( $charge->metadata->order_id ) ? (int) $charge->metadata->order_id : 0;
 
 		if ( ! $order_id ) {
@@ -171,7 +171,7 @@ class PaymentGatewayModule implements ModuleInterface {
 	 * @param \Stripe\Event $event Stripe event.
 	 */
 	private function handle_stripe_payment_failed( $event ): void {
-		$intent   = $event->data->object;
+		$intent   = $event->data->object; // @phpstan-ignore-line — Stripe SDK uses magic properties
 		$order_id = isset( $intent->metadata->order_id ) ? (int) $intent->metadata->order_id : 0;
 
 		if ( ! $order_id ) {
