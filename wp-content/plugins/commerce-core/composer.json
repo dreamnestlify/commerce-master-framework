@@ -31,7 +31,7 @@
         "lint": "find src commerce-core.php uninstall.php tests -name '*.php' -exec php -l {} +",
         "phpcs": "phpcs --standard=phpcs.xml.dist",
         "phpcs-fix": "phpcbf --standard=phpcs.xml.dist",
-        "phpstan": "phpstan analyse src/ --memory-limit=512M",
+        "phpstan": "phpstan analyse src/ --memory-limit=2G",
         "test": "phpunit -c phpunit.xml.dist",
         "test-coverage": "phpunit -c phpunit.xml.dist --coverage-html coverage",
         "validate": "composer validate --strict",
