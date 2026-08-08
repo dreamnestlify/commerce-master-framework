@@ -23,7 +23,7 @@ echo "  Block Runtime Registration Check" . PHP_EOL;
 echo "═══════════════════════════════════════════════════════════" . PHP_EOL;
 echo PHP_EOL;
 
-$theme_dir = get_stylesheetDirectory();
+$theme_dir = get_stylesheet_directory();
 $scan_dirs = ['templates', 'parts', 'patterns'];
 
 $all_blocks = [];
