@@ -24,14 +24,4 @@
         </testsuite>
     </testsuites>
 
-    <coverage>
-        <report>
-            <html outputDirectory="coverage"/>
-            <text outputFile="coverage.txt" showUncoveredFiles="false"/>
-        </report>
-    </coverage>
-
-    <source>
-        <directory>src/</directory>
-    </source>
 </phpunit>

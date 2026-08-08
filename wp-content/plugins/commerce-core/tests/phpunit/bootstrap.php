@@ -430,20 +430,21 @@ if ($_tests_dir && file_exists($_tests_dir . '/includes/functions.php')) {
             public $terms = 'wp_terms';
             public $term_taxonomy = 'wp_term_taxonomy';
 
-            public function prepare(string $query, ...$args): string
-            {
-                // Naive substitution for test purposes.
-                $result = $query;
-                foreach ($args as $arg) {
-                    $pos = strpos($result, '%s');
-                    if ($pos !== false) {
-                        $result = substr_replace($result, (string) $arg, $pos, 2);
-                    } elseif (($pos = strpos($result, '%d')) !== false) {
-                        $result = substr_replace($result, (string) (int) $arg, $pos, 2);
-                    }
+        public function prepare(string $query, ...$args): string
+        {
+            // Naive substitution for test purposes.
+            // WordPress wraps %s values in quotes, so we do the same.
+            $result = $query;
+            foreach ($args as $arg) {
+                $pos = strpos($result, '%s');
+                if ($pos !== false) {
+                    $result = substr_replace($result, "'" . (string) $arg . "'", $pos, 2);
+                } elseif (($pos = strpos($result, '%d')) !== false) {
+                    $result = substr_replace($result, (string) (int) $arg, $pos, 2);
                 }
-                return $result;
             }
+            return $result;
+        }
 
             public function get_var(string $query): ?string
             {

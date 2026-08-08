@@ -107,7 +107,7 @@ class SettingsModuleTest extends TestCase {
 			),
 			'payment' => array(
 				'stripe_enabled' => true,
-				'paypal_enabled' => false,
+				// paypal_enabled omitted — unchecked checkbox is not sent in form data.
 			),
 		);
 
