@@ -191,7 +191,7 @@ class RecentlyViewedModule implements ModuleInterface {
 		if (headers_sent()) {
 			return;
 		}
-		setcookie(self::COOKIE_NAME, $value, time() + self::COOKIE_LIFETIME, COOKIEPATH, COOKIE_DOMAIN);
+		setcookie(self::COOKIE_NAME, $value, time() + self::COOKIE_LIFETIME, COOKIEPATH, (string) COOKIE_DOMAIN);
 		$_COOKIE[self::COOKIE_NAME] = $value;
 	}
 
