@@ -1,0 +1,371 @@
+/* ══════════════════════════════════════════════
+   Commerce Block Theme — Custom CSS
+   Supplemental styles on top of theme.json tokens.
+   Mobile-first. WCAG 2.2 AA compliant.
+   ══════════════════════════════════════════════ */
+
+/* ── Reset & Base ── */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Skip Link (Accessibility) ── */
+.skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 9999;
+    padding: 0.75rem 1.5rem;
+    background: var(--wp--preset--color--contrast);
+    color: var(--wp--preset--color--base);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.skip-link:focus {
+    left: 1rem;
+    top: 1rem;
+}
+
+/* ── Focus Styles (Accessibility) ── */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid var(--wp--preset--color--accent);
+    outline-offset: 2px;
+}
+
+/* ── Respect reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ── Announcement Bar ── */
+.announcement-bar {
+    background: var(--wp--preset--color--contrast);
+    color: var(--wp--preset--color--base);
+    padding: 0.5rem 0;
+    font-size: var(--wp--preset--font-size--small);
+    text-align: center;
+    font-weight: 500;
+}
+
+/* ── Site Header ── */
+.site-header,
+.fashion-header {
+    border-bottom: 1px solid var(--wp--preset--color--stone);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--wp--preset--color--base);
+}
+
+.site-header__inner,
+.fashion-header__inner {
+    align-items: center;
+    padding: 1rem 2rem;
+    max-width: var(--wp--layout--wide-size);
+    margin: 0 auto;
+}
+
+.site-nav {
+    flex: 1;
+    justify-content: center;
+}
+
+.header-actions {
+    gap: 0.75rem;
+    align-items: center;
+}
+
+/* ── Checkout Header (simplified) ── */
+.checkout-header {
+    border-bottom: 1px solid var(--wp--preset--color--stone);
+    padding: 1.5rem 0;
+    text-align: center;
+}
+
+/* ── Hero ── */
+.hero {
+    padding: 4rem 2rem 6rem;
+    text-align: center;
+    background: var(--wp--preset--color--mist);
+}
+
+.hero__content {
+    margin: 0 auto;
+}
+
+.hero__title {
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    margin-bottom: 1rem;
+    line-height: 1.1;
+}
+
+.hero__subtitle {
+    font-size: var(--wp--preset--font-size--large);
+    margin-bottom: 2rem;
+    color: var(--wp--preset--color--slate);
+}
+
+/* ── Category Grid ── */
+.category-grid {
+    padding: 4rem 2rem;
+}
+
+.category-grid__title {
+    margin-bottom: 2.5rem;
+}
+
+.category-card__inner {
+    background: var(--wp--preset--color--mist);
+    text-align: center;
+    border-radius: 4px;
+    transition: transform 0.2s ease;
+}
+
+.category-card__inner:hover {
+    transform: translateY(-4px);
+}
+
+/* ── New Arrivals / Product Collection ── */
+.new-arrivals,
+.product-collection {
+    padding: 4rem 2rem;
+}
+
+.new-arrivals__header,
+.product-collection__header {
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+/* ── Editorial Campaign ── */
+.editorial-campaign {
+    padding: 2rem 0;
+}
+
+.editorial-campaign__image-block {
+    background: var(--wp--preset--color--stone);
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.placeholder-image {
+    color: var(--wp--preset--color--slate);
+    font-size: var(--wp--preset--font-size--small);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+/* ── Benefits Strip ── */
+.benefits-strip {
+    padding: 2rem 2rem;
+    border-top: 1px solid var(--wp--preset--color--stone);
+    border-bottom: 1px solid var(--wp--preset--color--stone);
+    background: var(--wp--preset--color--mist);
+}
+
+.benefit-item {
+    text-align: center;
+}
+
+.benefit-text {
+    font-weight: 600;
+    font-size: var(--wp--preset--font-size--small);
+    line-height: 1.4;
+}
+
+/* ── Newsletter ── */
+.newsletter {
+    background: var(--wp--preset--color--contrast);
+    color: var(--wp--preset--color--base);
+    padding: 2rem 0;
+}
+
+.newsletter__content {
+    text-align: center;
+}
+
+.newsletter__title {
+    color: var(--wp--preset--color--base);
+}
+
+.newsletter__subtitle {
+    color: var(--wp--preset--color--stone);
+    margin-bottom: 2rem;
+}
+
+.newsletter__disclaimer {
+    font-size: var(--wp--preset--font-size--small);
+    color: var(--wp--preset--color--slate);
+    margin-top: 1.5rem;
+}
+
+/* ── Footer ── */
+.site-footer,
+.footer-info {
+    background: var(--wp--preset--color--ink);
+    color: var(--wp--preset--color--base);
+    padding: 3rem 2rem 2rem;
+}
+
+.footer-columns,
+.footer-info__columns {
+    max-width: var(--wp--layout--wide-size);
+    margin: 0 auto 2rem;
+}
+
+.footer-heading {
+    color: var(--wp--preset--color--base);
+    font-size: var(--wp--preset--font-size--small);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+}
+
+.footer-links a,
+.footer-info__col a {
+    color: var(--wp--preset--color--slate);
+    text-decoration: none;
+    font-size: var(--wp--preset--font-size--small);
+}
+
+.footer-links a:hover,
+.footer-info__col a:hover {
+    color: var(--wp--preset--color--base);
+}
+
+.footer-bottom {
+    max-width: var(--wp--layout--wide-size);
+    margin: 0 auto;
+    align-items: center;
+}
+
+.footer-copyright {
+    font-size: var(--wp--preset--font-size--small);
+    color: var(--wp--preset--color--slate);
+}
+
+.footer-social a {
+    color: var(--wp--preset--color--slate);
+    text-decoration: none;
+    font-size: var(--wp--preset--font-size--small);
+    margin-left: 1rem;
+}
+
+.footer-social a:hover {
+    color: var(--wp--preset--color--base);
+}
+
+/* ── 404 Page ── */
+.site-404 {
+    min-height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.error-404 {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+/* ── WooCommerce Product ── */
+.woocommerce-product .product-layout {
+    gap: 3rem;
+    align-items: flex-start;
+    max-width: var(--wp--layout--wide-size);
+    margin: 0 auto;
+}
+
+.product-images {
+    position: sticky;
+    top: 100px;
+}
+
+.product-meta {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--wp--preset--color--stone);
+}
+
+.product-badges .badge {
+    font-size: var(--wp--preset--font-size--small);
+    color: var(--wp--preset--color--slate);
+    margin-right: 1rem;
+}
+
+/* ── Mobile adjustments ── */
+@media (max-width: 768px) {
+    .site-header__inner,
+    .fashion-header__inner {
+        padding: 1rem;
+    }
+
+    .hero {
+        padding: 3rem 1.5rem 4rem;
+    }
+
+    .category-grid,
+    .new-arrivals,
+    .product-collection {
+        padding: 3rem 1.5rem;
+    }
+
+    .editorial-campaign__columns {
+        flex-direction: column;
+    }
+
+    .editorial-campaign__image-block {
+        min-height: 250px;
+    }
+
+    .footer-columns,
+    .footer-info__columns {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+
+    .woocommerce-product .product-layout {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .product-images {
+        position: static;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-columns,
+    .footer-info__columns {
+        grid-template-columns: 1fr;
+    }
+}

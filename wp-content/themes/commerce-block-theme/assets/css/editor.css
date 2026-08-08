@@ -1,0 +1,29 @@
+/* ══════════════════════════════════════════════
+   Commerce Block Theme — Editor Styles
+   Styles for the Gutenberg editor.
+   ══════════════════════════════════════════════ */
+
+.editor-styles-wrapper {
+    font-family: var(--wp--preset--font-family--primary);
+}
+
+.editor-styles-wrapper .wp-block-heading h1 {
+    font-size: var(--wp--preset--font-size--xxx-large);
+}
+
+.editor-styles-wrapper .wp-block-heading h2 {
+    font-size: var(--wp--preset--font-size--xx-large);
+}
+
+.editor-styles-wrapper .wp-block-heading h3 {
+    font-size: var(--wp--preset--font-size--x-large);
+}
+
+/* Ensure preview blocks match front-end */
+.editor-styles-wrapper .announcement-bar {
+    background: var(--wp--preset--color--contrast);
+    color: var(--wp--preset--color--base);
+    padding: 0.5rem 1rem;
+    text-align: center;
+    font-size: var(--wp--preset--font-size--small);
+}

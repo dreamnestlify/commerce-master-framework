@@ -1,0 +1,25 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/theme.json",
+    "version": 3,
+    "title": "Default",
+    "description": "Neutral dark-on-light base palette for modern fashion e-commerce.",
+    "styles": {
+        "color": {
+            "background": "#ffffff",
+            "text": "#111111"
+        },
+        "elements": {
+            "button": {
+                "color": {
+                    "background": "#111111",
+                    "text": "#ffffff"
+                },
+                ":hover": {
+                    "color": {
+                        "background": "#c026d3"
+                    }
+                }
+            }
+        }
+    }
+}

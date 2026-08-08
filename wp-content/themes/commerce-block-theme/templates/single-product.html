@@ -1,0 +1,58 @@
+<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
+
+<!-- wp:group {"tagName":"main","className":"site-main woocommerce-product","layout":{"type":"constrained"}} -->
+<main class="wp-block-group site-main woocommerce-product" id="main-content">
+    <!-- wp:woocommerce/breadcrumb /-->
+
+    <!-- wp:group {"className":"single-product-content","layout":{"type":"constrained"}} -->
+    <div class="wp-block-group single-product-content">
+        <!-- wp:columns {"className":"product-layout"} -->
+        <div class="wp-block-columns product-layout">
+            <!-- wp:column {"width":"50%","className":"product-images"} -->
+            <div class="wp-block-column product-images" style="flex-basis:50%">
+                <!-- wp:woocommerce/product-image-gallery /-->
+            </div>
+            <!-- /wp:column -->
+
+            <!-- wp:column {"width":"50%","className":"product-details"} -->
+            <div class="wp-block-column product-details" style="flex-basis:50%">
+                <!-- wp:post-title {"level":1,"className":"product-title"} /-->
+
+                <!-- wp:woocommerce/product-rating /-->
+
+                <!-- wp:woocommerce/product-price {"className":"product-price"} /-->
+
+                <!-- wp:woocommerce/product-short-description /-->
+
+                <!-- wp:woocommerce/add-to-cart {"className":"product-add-to-cart"} /-->
+
+                <!-- wp:group {"className":"product-meta"} -->
+                <div class="wp-block-group product-meta">
+                    <!-- wp:woocommerce/product-meta /-->
+                </div>
+                <!-- /wp:group -->
+
+                <!-- wp:group {"className":"product-badges","layout":{"type":"flex","flexWrap":"wrap"}} -->
+                <div class="wp-block-group product-badges">
+                    <!-- wp:paragraph {"className":"badge shipping-badge"} -->
+                    <p class="badge shipping-badge">Free shipping over $50</p>
+                    <!-- /wp:paragraph -->
+                    <!-- wp:paragraph {"className":"badge returns-badge"} -->
+                    <p class="badge returns-badge">30-day returns</p>
+                    <!-- /wp:paragraph -->
+                </div>
+                <!-- /wp:group -->
+
+                <!-- wp:woocommerce/product-tabs /-->
+
+                <!-- wp:woocommerce/related-products {"className":"related-products"} /-->
+            </div>
+            <!-- /wp:column -->
+        </div>
+        <!-- /wp:columns -->
+    </div>
+    <!-- /wp:group -->
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->

@@ -1,0 +1,77 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/theme.json",
+    "version": 3,
+    "title": "Dark Mode",
+    "description": "Dark theme with light text — ideal for editorial fashion brands.",
+    "styles": {
+        "color": {
+            "background": "#0a0a0a",
+            "text": "#e5e5e5"
+        },
+        "elements": {
+            "heading": {
+                "color": {
+                    "text": "#ffffff"
+                }
+            },
+            "link": {
+                "color": {
+                    "text": "#e5e5e5"
+                },
+                ":hover": {
+                    "color": {
+                        "text": "#c026d3"
+                    }
+                }
+            },
+            "button": {
+                "color": {
+                    "background": "#ffffff",
+                    "text": "#0a0a0a"
+                },
+                ":hover": {
+                    "color": {
+                        "background": "#c026d3",
+                        "text": "#ffffff"
+                    }
+                }
+            }
+        }
+    },
+    "settings": {
+        "color": {
+            "palette": [
+                {
+                    "slug": "base",
+                    "name": "Base",
+                    "color": "#0a0a0a"
+                },
+                {
+                    "slug": "contrast",
+                    "name": "Contrast",
+                    "color": "#ffffff"
+                },
+                {
+                    "slug": "ink",
+                    "name": "Ink",
+                    "color": "#1a1a1a"
+                },
+                {
+                    "slug": "slate",
+                    "name": "Slate",
+                    "color": "#71717a"
+                },
+                {
+                    "slug": "mist",
+                    "name": "Mist",
+                    "color": "#18181b"
+                },
+                {
+                    "slug": "accent",
+                    "name": "Accent",
+                    "color": "#c026d3"
+                }
+            ]
+        }
+    }
+}
