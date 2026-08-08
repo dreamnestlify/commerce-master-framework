@@ -27,7 +27,7 @@ jobs:
       - name: Validate composer.json
         run: composer validate --strict
 
-      - name: Install dependencies (uses committed composer.lock)
+      - name: Install dependencies
         run: composer install --no-interaction --no-progress --prefer-dist
 
       - name: Upload composer.lock
