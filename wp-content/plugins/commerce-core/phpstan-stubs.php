@@ -32,6 +32,87 @@ if ( ! class_exists( 'WooCommerce' ) ) {
 	}
 }
 
+// WooCommerce conditional functions.
+if ( ! function_exists( 'is_shop' ) ) {
+	function is_shop() {}
+}
+if ( ! function_exists( 'is_product_category' ) ) {
+	function is_product_category( $term = '' ) {}
+}
+
+// WooCommerce product factory.
+if ( ! function_exists( 'wc_get_product' ) ) {
+	/**
+	 * @param mixed $product_id
+	 * @return \WC_Product|false
+	 */
+	function wc_get_product( $product_id = false ) {}
+}
+
+// WooCommerce product class stub (minimal — methods used by plugin modules).
+if ( ! class_exists( 'WC_Product' ) ) {
+	class WC_Product {
+		/**
+		 * Get product ID.
+		 *
+		 * @return int
+		 */
+		public function get_id() {}
+
+		/**
+		 * Get product name.
+		 *
+		 * @return string
+		 */
+		public function get_name() {}
+
+		/**
+		 * Get product permalink.
+		 *
+		 * @return string
+		 */
+		public function get_permalink() {}
+
+		/**
+		 * Get formatted price HTML.
+		 *
+		 * @return string
+		 */
+		public function get_price_html() {}
+
+		/**
+		 * Get product image ID.
+		 *
+		 * @return int
+		 */
+		public function get_image_id() {}
+
+		/**
+		 * Get stock status.
+		 *
+		 * @return string
+		 */
+		public function get_stock_status() {}
+
+		/**
+		 * Get product type.
+		 *
+		 * @return string
+		 */
+		public function get_type() {}
+
+		/**
+		 * Get product image HTML.
+		 *
+		 * @param string $size
+		 * @param array  $attr
+		 * @param bool   $placeholder
+		 * @return string
+		 */
+		public function get_image( $size = 'shop_thumbnail', $attr = array(), $placeholder = true ) {}
+	}
+}
+
 // WP_CLI class stub (minimal — only methods used by this plugin).
 if ( ! class_exists( 'WP_CLI' ) ) {
 	class WP_CLI {

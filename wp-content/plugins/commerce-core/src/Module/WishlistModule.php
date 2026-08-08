@@ -115,7 +115,8 @@ class WishlistModule implements ModuleInterface {
 
 		// Guest: read from cookie.
 		if (isset($_COOKIE[self::COOKIE_NAME])) {
-			$ids = json_decode(stripslashes($_COOKIE[self::COOKIE_NAME]), true);
+			$cookie_value = sanitize_text_field(wp_unslash($_COOKIE[self::COOKIE_NAME]));
+			$ids = json_decode($cookie_value, true);
 			return is_array($ids) ? array_map('intval', $ids) : array();
 		}
 

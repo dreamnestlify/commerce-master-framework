@@ -111,14 +111,14 @@
          * Mobile filter drawer for shop archive.
          */
         initFilterDrawer: function () {
-            var toggleBtn = document.querySelector('.filter-toggle-btn .wp-element-button');
-            var sidebar = document.querySelector('.shop-sidebar');
+            const toggleBtn = document.querySelector('.filter-toggle-btn .wp-element-button');
+            const sidebar = document.querySelector('.shop-sidebar');
             if (!toggleBtn || !sidebar) {
                 return;
             }
 
             // Create overlay element.
-            var overlay = document.createElement('div');
+            const overlay = document.createElement('div');
             overlay.className = 'filter-overlay';
             document.body.appendChild(overlay);
 
@@ -146,9 +146,9 @@
 
             // Close drawer when clicking the ::before pseudo-element area (top-right close).
             sidebar.addEventListener('click', function (e) {
-                var rect = sidebar.getBoundingClientRect();
-                var clickX = e.clientX - rect.right + 40;
-                var clickY = e.clientY - rect.top;
+                const rect = sidebar.getBoundingClientRect();
+                const clickX = e.clientX - rect.right + 40;
+                const clickY = e.clientY - rect.top;
                 if (clickX >= 0 && clickX <= 40 && clickY >= 0 && clickY <= 50) {
                     closeDrawer();
                 }

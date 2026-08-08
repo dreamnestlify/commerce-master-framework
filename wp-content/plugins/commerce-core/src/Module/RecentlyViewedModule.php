@@ -89,7 +89,8 @@ class RecentlyViewedModule implements ModuleInterface {
 		}
 
 		if (isset($_COOKIE[self::COOKIE_NAME])) {
-			$ids = json_decode(stripslashes($_COOKIE[self::COOKIE_NAME]), true);
+			$cookie_value = sanitize_text_field(wp_unslash($_COOKIE[self::COOKIE_NAME]));
+			$ids = json_decode($cookie_value, true);
 			return is_array($ids) ? array_map('intval', $ids) : array();
 		}
 
@@ -226,7 +227,7 @@ class RecentlyViewedModule implements ModuleInterface {
 	 */
 	public function render_recently_viewed_section(): void {
 		global $product;
-		if (!$product) {
+		if ( ! $product instanceof \WC_Product ) {
 			return;
 		}
 
@@ -256,7 +257,7 @@ class RecentlyViewedModule implements ModuleInterface {
 			printf(
 				'<a href="%s" class="recently-viewed-item">%s<span class="recently-viewed-name">%s</span><span class="recently-viewed-price">%s</span></a>',
 				esc_url($p->get_permalink()),
-				$p->get_image('woocommerce_thumbnail', array('class' => 'recently-viewed-img'), false),
+				wp_kses_post($p->get_image('woocommerce_thumbnail', array('class' => 'recently-viewed-img'), false)),
 				esc_html($p->get_name()),
 				wp_kses_post($p->get_price_html())
 			);
