@@ -604,6 +604,11 @@ foreach ($demo_products as $product_data) {
         // Reload children after potential creation.
         $product->save();
 
+        // Re-fetch the product to clear cached children data.
+        // Without this, get_children() may return stale/empty results.
+        wc_delete_product_transients($product->get_id());
+        $product = wc_get_product($product->get_id());
+
         // ── Delete stale variations (not in expected SKU set) ──
         $expected_skus = [];
         foreach ($color_attr as $color) {

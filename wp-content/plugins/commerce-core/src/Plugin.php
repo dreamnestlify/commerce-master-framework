@@ -13,81 +13,75 @@ use CommerceMaster\Core\Module\ModuleRegistry;
 use CommerceMaster\Core\Module\SettingsModule;
 use CommerceMaster\Core\Module\SecurityModule;
 
-class Plugin
-{
-    private ?ModuleRegistry $registry = null;
+class Plugin {
 
-    /**
-     * Plugin activation: set defaults, flush rewrites.
-     */
-    public function activate(): void
-    {
-        // Set default options on first activation.
-        $this->get_registry()->activate();
+	private ?ModuleRegistry $registry = null;
 
-        // Flush rewrite rules.
-        flush_rewrite_rules();
-    }
+	/**
+	 * Plugin activation: set defaults, flush rewrites.
+	 */
+	public function activate(): void {
+		// Set default options on first activation.
+		$this->get_registry()->activate();
 
-    /**
-     * Plugin deactivation: flush rewrites, keep data.
-     */
-    public function deactivate(): void
-    {
-        flush_rewrite_rules();
-    }
+		// Flush rewrite rules.
+		flush_rewrite_rules();
+	}
 
-    /**
-     * Bootstrap the plugin on plugins_loaded.
-     */
-    public function boot(): void
-    {
-        // Load text domain.
-        load_plugin_textdomain(
-            'commerce-core',
-            false,
-            dirname(COMMERCE_CORE_BASENAME) . '/languages'
-        );
+	/**
+	 * Plugin deactivation: flush rewrites, keep data.
+	 */
+	public function deactivate(): void {
+		flush_rewrite_rules();
+	}
 
-        $registry = $this->get_registry();
-        $registry->boot();
+	/**
+	 * Bootstrap the plugin on plugins_loaded.
+	 */
+	public function boot(): void {
+		// Load text domain.
+		load_plugin_textdomain(
+			'commerce-core',
+			false,
+			dirname( COMMERCE_CORE_BASENAME ) . '/languages'
+		);
 
-        // Hook into REST API init.
-        add_action('rest_api_init', [$this, 'register_rest_routes']);
-    }
+		$registry = $this->get_registry();
+		$registry->boot();
 
-    /**
-     * Register REST API routes.
-     */
-    public function register_rest_routes(): void
-    {
-        $controller = new Rest\SettingsController();
-        $controller->register_routes();
-    }
+		// Hook into REST API init.
+		add_action( 'rest_api_init', array( $this, 'register_rest_routes' ) );
+	}
 
-    /**
-     * Register WP-CLI commands.
-     */
-    public function register_cli_commands(): void
-    {
-        if (!class_exists('\WP_CLI')) {
-            return;
-        }
+	/**
+	 * Register REST API routes.
+	 */
+	public function register_rest_routes(): void {
+		$controller = new Rest\SettingsController();
+		$controller->register_routes();
+	}
 
-        \WP_CLI::add_command('commerce-core', \CommerceMaster\Core\Cli\CoreCommand::class);
-    }
+	/**
+	 * Register WP-CLI commands.
+	 */
+	public function register_cli_commands(): void {
+		if ( ! class_exists( '\WP_CLI' ) ) {
+			return;
+		}
 
-    /**
-     * Get or create the module registry.
-     */
-    private function get_registry(): ModuleRegistry
-    {
-        if ($this->registry === null) {
-            $this->registry = new ModuleRegistry();
-            $this->registry->register(new SettingsModule());
-            $this->registry->register(new SecurityModule());
-        }
+		\WP_CLI::add_command( 'commerce-core', \CommerceMaster\Core\Cli\CoreCommand::class );
+	}
 
-        return $this->registry;
-    }
+	/**
+	 * Get or create the module registry.
+	 */
+	private function get_registry(): ModuleRegistry {
+		if ( null === $this->registry ) {
+			$this->registry = new ModuleRegistry();
+			$this->registry->register( new SettingsModule() );
+			$this->registry->register( new SecurityModule() );
+		}
+
+		return $this->registry;
+	}
 }

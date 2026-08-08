@@ -9,45 +9,40 @@ declare(strict_types=1);
 
 namespace CommerceMaster\Core\Config;
 
-class SupportConfig
-{
-    /**
-     * @var array<string, mixed>
-     */
-    private array $data;
+class SupportConfig {
 
-    /**
-     * @param array<string, mixed> $data Raw config data.
-     */
-    public function __construct(array $data)
-    {
-        $this->data = $data;
-    }
+	/**
+	 * @var array<string, mixed>
+	 */
+	private array $data;
 
-    public function get_email(): string
-    {
-        return (string) ($this->data['email'] ?? '');
-    }
+	/**
+	 * @param array<string, mixed> $data Raw config data.
+	 */
+	public function __construct( array $data ) {
+		$this->data = $data;
+	}
 
-    public function get_phone(): string
-    {
-        return (string) ($this->data['phone'] ?? '');
-    }
+	public function get_email(): string {
+		return (string) ( $this->data['email'] ?? '' );
+	}
 
-    /**
-     * Check if support email is configured.
-     */
-    public function has_email(): bool
-    {
-        $email = $this->get_email();
-        return $email !== '' && is_email($email);
-    }
+	public function get_phone(): string {
+		return (string) ( $this->data['phone'] ?? '' );
+	}
 
-    /**
-     * Check if support phone is configured.
-     */
-    public function has_phone(): bool
-    {
-        return $this->get_phone() !== '';
-    }
+	/**
+	 * Check if support email is configured.
+	 */
+	public function has_email(): bool {
+		$email = $this->get_email();
+		return '' !== $email && is_email( $email );
+	}
+
+	/**
+	 * Check if support phone is configured.
+	 */
+	public function has_phone(): bool {
+		return '' !== $this->get_phone();
+	}
 }

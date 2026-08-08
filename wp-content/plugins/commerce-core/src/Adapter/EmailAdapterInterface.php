@@ -12,40 +12,40 @@ declare(strict_types=1);
 
 namespace CommerceMaster\Core\Adapter;
 
-interface EmailAdapterInterface
-{
-    /**
-     * Send a templated email.
-     *
-     * @param string $to       Recipient email.
-     * @param string $subject  Email subject.
-     * @param string $template Template identifier.
-     * @param array<string, mixed> $data Template data.
-     * @return bool True on success.
-     */
-    public function send(string $to, string $subject, string $template, array $data = []): bool;
+interface EmailAdapterInterface {
 
-    /**
-     * Add a subscriber to a list/audience.
-     *
-     * @param string $email Subscriber email.
-     * @param array<string, mixed> $properties Subscriber properties.
-     * @return bool True on success.
-     */
-    public function add_subscriber(string $email, array $properties = []): bool;
+	/**
+	 * Send a templated email.
+	 *
+	 * @param string               $to       Recipient email.
+	 * @param string               $subject  Email subject.
+	 * @param string               $template Template identifier.
+	 * @param array<string, mixed> $data Template data.
+	 * @return bool True on success.
+	 */
+	public function send( string $to, string $subject, string $template, array $data = array() ): bool;
 
-    /**
-     * Remove a subscriber from a list/audience.
-     */
-    public function remove_subscriber(string $email): bool;
+	/**
+	 * Add a subscriber to a list/audience.
+	 *
+	 * @param string               $email Subscriber email.
+	 * @param array<string, mixed> $properties Subscriber properties.
+	 * @return bool True on success.
+	 */
+	public function add_subscriber( string $email, array $properties = array() ): bool;
 
-    /**
-     * Get the adapter's unique identifier.
-     */
-    public function get_id(): string;
+	/**
+	 * Remove a subscriber from a list/audience.
+	 */
+	public function remove_subscriber( string $email ): bool;
 
-    /**
-     * Check if the adapter is configured.
-     */
-    public function is_configured(): bool;
+	/**
+	 * Get the adapter's unique identifier.
+	 */
+	public function get_id(): string;
+
+	/**
+	 * Check if the adapter is configured.
+	 */
+	public function is_configured(): bool;
 }

@@ -12,45 +12,43 @@ declare(strict_types=1);
 
 namespace CommerceMaster\Core;
 
-class Autoload
-{
-    private static ?bool $registered = null;
+class Autoload {
 
-    /**
-     * Register the autoloader.
-     */
-    public static function register(): void
-    {
-        if (self::$registered !== null) {
-            return;
-        }
+	private static ?bool $registered = null;
 
-        self::$registered = true;
+	/**
+	 * Register the autoloader.
+	 */
+	public static function register(): void {
+		if ( null !== self::$registered ) {
+			return;
+		}
 
-        spl_autoload_register([self::class, 'load']);
-    }
+		self::$registered = true;
 
-    /**
-     * Load a class file based on its fully qualified name.
-     *
-     * @param string $class Fully qualified class name.
-     */
-    public static function load(string $class): void
-    {
-        $prefix = 'CommerceMaster\\Core\\';
+		spl_autoload_register( array( self::class, 'load' ) );
+	}
 
-        if (strncmp($class, $prefix, strlen($prefix)) !== 0) {
-            return;
-        }
+	/**
+	 * Load a class file based on its fully qualified name.
+	 *
+	 * @param string $class Fully qualified class name.
+	 */
+	public static function load( string $class ): void {
+		$prefix = 'CommerceMaster\\Core\\';
 
-        // Strip the prefix.
-        $relative = substr($class, strlen($prefix));
+		if ( 0 !== strncmp( $class, $prefix, strlen( $prefix ) ) ) {
+			return;
+		}
 
-        // Convert namespace separators to directory separators.
-        $file = COMMERCE_CORE_DIR . 'src/' . str_replace('\\', '/', $relative) . '.php';
+		// Strip the prefix.
+		$relative = substr( $class, strlen( $prefix ) );
 
-        if (file_exists($file)) {
-            require_once $file;
-        }
-    }
+		// Convert namespace separators to directory separators.
+		$file = COMMERCE_CORE_DIR . 'src/' . str_replace( '\\', '/', $relative ) . '.php';
+
+		if ( file_exists( $file ) ) {
+			require_once $file;
+		}
+	}
 }

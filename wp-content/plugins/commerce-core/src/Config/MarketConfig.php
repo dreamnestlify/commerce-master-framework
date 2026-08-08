@@ -9,51 +9,45 @@ declare(strict_types=1);
 
 namespace CommerceMaster\Core\Config;
 
-class MarketConfig
-{
-    /**
-     * @var array<string, mixed>
-     */
-    private array $data;
+class MarketConfig {
 
-    /**
-     * @param array<string, mixed> $data Raw config data.
-     */
-    public function __construct(array $data)
-    {
-        $this->data = $data;
-    }
+	/**
+	 * @var array<string, mixed>
+	 */
+	private array $data;
 
-    public function get_default_locale(): string
-    {
-        return (string) ($this->data['default_locale'] ?? 'en_US');
-    }
+	/**
+	 * @param array<string, mixed> $data Raw config data.
+	 */
+	public function __construct( array $data ) {
+		$this->data = $data;
+	}
 
-    public function get_base_currency(): string
-    {
-        return (string) ($this->data['base_currency'] ?? 'USD');
-    }
+	public function get_default_locale(): string {
+		return (string) ( $this->data['default_locale'] ?? 'en_US' );
+	}
 
-    /**
-     * @return string[]
-     */
-    public function get_enabled_currencies(): array
-    {
-        $currencies = $this->data['enabled_currencies'] ?? ['USD'];
+	public function get_base_currency(): string {
+		return (string) ( $this->data['base_currency'] ?? 'USD' );
+	}
 
-        return array_map('strval', (array) $currencies);
-    }
+	/**
+	 * @return string[]
+	 */
+	public function get_enabled_currencies(): array {
+		$currencies = $this->data['enabled_currencies'] ?? array( 'USD' );
 
-    public function get_default_market(): string
-    {
-        return (string) ($this->data['default_market'] ?? 'EU');
-    }
+		return array_map( 'strval', (array) $currencies );
+	}
 
-    /**
-     * Check if a currency is enabled.
-     */
-    public function is_currency_enabled(string $code): bool
-    {
-        return in_array(strtoupper($code), array_map('strtoupper', $this->get_enabled_currencies()), true);
-    }
+	public function get_default_market(): string {
+		return (string) ( $this->data['default_market'] ?? 'EU' );
+	}
+
+	/**
+	 * Check if a currency is enabled.
+	 */
+	public function is_currency_enabled( string $code ): bool {
+		return in_array( strtoupper( $code ), array_map( 'strtoupper', $this->get_enabled_currencies() ), true );
+	}
 }

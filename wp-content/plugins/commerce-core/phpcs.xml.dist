@@ -18,6 +18,18 @@
         <!-- Allow PSR-4 namespace naming (PascalCase) alongside WordPress snake_case for functions -->
         <exclude name="WordPress.NamingConventions.ValidFunctionName.FunctionNameInvalid"/>
         <exclude name="WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase"/>
+        <!-- PSR-4 autoloading requires PascalCase filenames, not WordPress hyphenated lowercase -->
+        <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
+        <exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+        <!-- Doc comments are valuable but not blocking for Phase 0 -->
+        <exclude name="Squiz.Commenting.ClassComment.Missing"/>
+        <exclude name="Squiz.Commenting.FunctionComment.Missing"/>
+        <exclude name="Squiz.Commenting.FunctionComment.MissingParam"/>
+        <exclude name="Squiz.Commenting.FunctionComment.MissingParamTag"/>
+        <exclude name="Squiz.Commenting.VariableComment.Missing"/>
+        <exclude name="Squiz.Commenting.InlineComments.NoEndOfPeriod"/>
+        <exclude name="Squiz.Commenting.InlineComments.NotCapital"/>
+        <exclude name="Generic.Commenting.DocComment.MissingShort"/>
     </rule>
 
     <!-- Minimum supported WP version for deprecated function checks -->

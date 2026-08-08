@@ -15,127 +15,132 @@ use WP_REST_Request;
 use WP_REST_Response;
 use WP_Error;
 
-class SettingsController
-{
-    public const NAMESPACE = 'commerce-core/v1';
-    public const REST_BASE = 'settings';
+class SettingsController {
 
-    /**
-     * Register REST routes.
-     */
-    public function register_routes(): void
-    {
-        register_rest_route(self::NAMESPACE, '/' . self::REST_BASE, [
-            [
-                'methods'             => 'GET',
-                'callback'            => [$this, 'get_settings'],
-                'permission_callback' => [$this, 'get_settings_permissions'],
-            ],
-            [
-                'methods'             => 'POST',
-                'callback'            => [$this, 'update_settings'],
-                'permission_callback' => [$this, 'update_settings_permissions'],
-            ],
-        ]);
+	public const NAMESPACE = 'commerce-core/v1';
+	public const REST_BASE = 'settings';
 
-        register_rest_route(self::NAMESPACE, '/' . self::REST_BASE . '/brand', [
-            [
-                'methods'             => 'GET',
-                'callback'            => [$this, 'get_brand'],
-                'permission_callback' => '__return_true',
-            ],
-        ]);
-    }
+	/**
+	 * Register REST routes.
+	 */
+	public function register_routes(): void {
+		register_rest_route(
+			self::NAMESPACE,
+			'/' . self::REST_BASE,
+			array(
+				array(
+					'methods'             => 'GET',
+					'callback'            => array( $this, 'get_settings' ),
+					'permission_callback' => array( $this, 'get_settings_permissions' ),
+				),
+				array(
+					'methods'             => 'POST',
+					'callback'            => array( $this, 'update_settings' ),
+					'permission_callback' => array( $this, 'update_settings_permissions' ),
+				),
+			)
+		);
 
-    /**
-     * Get settings (requires manage_options).
-     *
-     * @param WP_REST_Request $request Request.
-     * @return WP_REST_Response|WP_Error
-     */
-    public function get_settings(WP_REST_Request $request)
-    {
-        $settings = $this->get_settings_module()->get_settings();
+		register_rest_route(
+			self::NAMESPACE,
+			'/' . self::REST_BASE . '/brand',
+			array(
+				array(
+					'methods'             => 'GET',
+					'callback'            => array( $this, 'get_brand' ),
+					'permission_callback' => '__return_true',
+				),
+			)
+		);
+	}
 
-        // Remove any sensitive fields from REST response.
-        unset($settings['credentials']);
+	/**
+	 * Get settings (requires manage_options).
+	 *
+	 * @param WP_REST_Request $request Request.
+	 * @return WP_REST_Response|WP_Error
+	 */
+	public function get_settings( WP_REST_Request $request ) {
+		$settings = $this->get_settings_module()->get_settings();
 
-        return rest_ensure_response($settings);
-    }
+		// Remove any sensitive fields from REST response.
+		unset( $settings['credentials'] );
 
-    /**
-     * Update settings (requires manage_options + REST nonce).
-     *
-     * Uses WordPress standard `wp_rest` nonce via X-WP-Nonce header.
-     * Does NOT use the admin form nonce (`commerce_core_nonce`).
-     *
-     * @param WP_REST_Request $request Request.
-     * @return WP_REST_Response|WP_Error
-     */
-    public function update_settings(WP_REST_Request $request)
-    {
-        if (!SecurityModule::verify_rest_nonce($request)) {
-            return new WP_Error(
-                'rest_forbidden',
-                __('REST nonce verification failed.', 'commerce-core'),
-                ['status' => 403]
-            );
-        }
+		return rest_ensure_response( $settings );
+	}
 
-        $params = $request->get_json_params();
+	/**
+	 * Update settings (requires manage_options + REST nonce).
+	 *
+	 * Uses WordPress standard `wp_rest` nonce via X-WP-Nonce header.
+	 * Does NOT use the admin form nonce (`commerce_core_nonce`).
+	 *
+	 * @param WP_REST_Request $request Request.
+	 * @return WP_REST_Response|WP_Error
+	 */
+	public function update_settings( WP_REST_Request $request ) {
+		if ( ! SecurityModule::verify_rest_nonce( $request ) ) {
+			return new WP_Error(
+				'rest_forbidden',
+				__( 'REST nonce verification failed.', 'commerce-core' ),
+				array( 'status' => 403 )
+			);
+		}
 
-        $settings_module = $this->get_settings_module();
-        $sanitized = $settings_module->sanitize_settings($params);
+		$params = $request->get_json_params();
 
-        update_option(SettingsModule::OPTION_KEY, $sanitized);
+		$settings_module = $this->get_settings_module();
+		$sanitized       = $settings_module->sanitize_settings( $params );
 
-        return rest_ensure_response([
-            'success' => true,
-            'message' => __('Settings updated.', 'commerce-core'),
-        ]);
-    }
+		update_option( SettingsModule::OPTION_KEY, $sanitized );
 
-    /**
-     * Get brand info (public — no auth needed).
-     *
-     * @param WP_REST_Request $request Request.
-     * @return WP_REST_Response
-     */
-    public function get_brand(WP_REST_Request $request): WP_REST_Response
-    {
-        $settings = $this->get_settings_module()->get_settings();
-        $brand = $settings['brand'] ?? [];
+		return rest_ensure_response(
+			array(
+				'success' => true,
+				'message' => __( 'Settings updated.', 'commerce-core' ),
+			)
+		);
+	}
 
-        return rest_ensure_response([
-            'name'    => $brand['name'] ?? '',
-            'tagline' => $brand['tagline'] ?? '',
-            'logo'    => $brand['logo_id'] ?? 0,
-        ]);
-    }
+	/**
+	 * Get brand info (public — no auth needed).
+	 *
+	 * @param WP_REST_Request $request Request.
+	 * @return WP_REST_Response
+	 */
+	public function get_brand( WP_REST_Request $request ): WP_REST_Response {
+		$settings = $this->get_settings_module()->get_settings();
+		$brand    = $settings['brand'] ?? array();
 
-    /**
-     * Permission check for GET settings.
-     */
-    public function get_settings_permissions(): bool
-    {
-        return SecurityModule::check_capability('manage_options');
-    }
+		return rest_ensure_response(
+			array(
+				'name'    => $brand['name'] ?? '',
+				'tagline' => $brand['tagline'] ?? '',
+				'logo'    => $brand['logo_id'] ?? 0,
+			)
+		);
+	}
 
-    /**
-     * Permission check for POST settings.
-     */
-    public function update_settings_permissions(): bool
-    {
-        return SecurityModule::check_capability('manage_options');
-    }
+	/**
+	 * Permission check for GET settings.
+	 */
+	public function get_settings_permissions(): bool {
+		return SecurityModule::check_capability( 'manage_options' );
+	}
 
-    /**
-     * Get the settings module instance.
-     */
-    private function get_settings_module(): SettingsModule
-    {
-        $settings = get_option(SettingsModule::OPTION_KEY, []);
+	/**
+	 * Permission check for POST settings.
+	 */
+	public function update_settings_permissions(): bool {
+		return SecurityModule::check_capability( 'manage_options' );
+	}
 
-        return new SettingsModule();
-    }
+	/**
+	 * Get the settings module instance.
+	 */
+	private function get_settings_module(): SettingsModule {
+		$settings = get_option( SettingsModule::OPTION_KEY, array() );
+
+		return new SettingsModule();
+	}
 }
