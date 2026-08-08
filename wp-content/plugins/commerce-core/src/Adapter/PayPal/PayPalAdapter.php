@@ -23,11 +23,15 @@ class PayPalAdapter implements PaymentAdapterInterface {
 
 	/**
 	 * Cached OAuth access token.
+	 *
+	 * @var string|null
 	 */
 	private ?string $access_token = null;
 
 	/**
 	 * Token expiry timestamp.
+	 *
+	 * @var int|null
 	 */
 	private ?int $token_expiry = null;
 

@@ -20,6 +20,8 @@ class PaymentGatewayModule implements ModuleInterface {
 
 	/**
 	 * Payment configuration.
+	 *
+	 * @var PaymentConfig|null
 	 */
 	private ?PaymentConfig $payment_config = null;
 
@@ -88,7 +90,7 @@ class PaymentGatewayModule implements ModuleInterface {
 			$event = \Stripe\Webhook::constructEvent( $payload, $sig, $secret );
 		} catch ( \Exception $e ) {
 			status_header( 400 );
-			exit( 'Invalid signature: ' . $e->getMessage() );
+			exit( 'Invalid signature: ' . esc_html( $e->getMessage() ) );
 		}
 
 		$this->process_stripe_event( $event );

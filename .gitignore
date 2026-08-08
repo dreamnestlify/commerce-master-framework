@@ -84,3 +84,6 @@ Thumbs.db
 # ──────────────────────────────────────────────
 mise.toml
 .mise.toml
+
+# Preview files
+preview.html

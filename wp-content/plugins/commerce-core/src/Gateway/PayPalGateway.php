@@ -11,6 +11,7 @@ namespace CommerceMaster\Core\Gateway;
 
 use CommerceMaster\Core\Adapter\PayPal\PayPalAdapter;
 use CommerceMaster\Core\Config\PaymentConfig;
+use CommerceMaster\Core\Module\SettingsModule;
 
 if ( ! class_exists( '\WC_Payment_Gateway' ) ) {
 	return;
@@ -20,21 +21,30 @@ class PayPalGateway extends \WC_Payment_Gateway {
 
 	/**
 	 * PayPal adapter instance.
+	 *
+	 * @var PayPalAdapter|null
 	 */
 	private ?PayPalAdapter $adapter = null;
 
 	/**
 	 * Payment configuration.
+	 *
+	 * @var PaymentConfig
 	 */
 	private PaymentConfig $payment_config;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param PaymentConfig $payment_config Payment configuration.
+	 * WooCommerce instantiates gateways with zero arguments via
+	 * WC_Payment_Gateways::init(). The PaymentConfig argument is
+	 * therefore optional — when omitted, a default config is built
+	 * from the stored settings option.
+	 *
+	 * @param PaymentConfig|null $payment_config Payment configuration.
 	 */
-	public function __construct( PaymentConfig $payment_config ) {
-		$this->payment_config = $payment_config;
+	public function __construct( ?PaymentConfig $payment_config = null ) {
+		$this->payment_config = $payment_config ?? $this->create_default_config();
 		$this->id             = 'commerce_paypal';
 		$this->icon           = '';
 		$this->has_fields     = false;
@@ -52,6 +62,20 @@ class PayPalGateway extends \WC_Payment_Gateway {
 		if ( is_admin() ) {
 			add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 		}
+	}
+
+	/**
+	 * Create a default PaymentConfig from stored settings.
+	 *
+	 * Used when WooCommerce instantiates the gateway with no arguments.
+	 */
+	private function create_default_config(): PaymentConfig {
+		$settings     = get_option( SettingsModule::OPTION_KEY, array() );
+		$payment_data = is_array( $settings ) && isset( $settings['payment'] ) && is_array( $settings['payment'] )
+			? $settings['payment']
+			: array();
+
+		return new PaymentConfig( $payment_data );
 	}
 
 	/**
