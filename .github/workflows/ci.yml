@@ -40,6 +40,20 @@ jobs:
       - name: PHP Lint
         run: composer lint
 
+      - name: Auto-fix PHPCS violations (PHPCBF)
+        run: composer phpcs-fix || true
+
+      - name: Upload fixed source
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fixed-source
+          path: |
+            wp-content/plugins/commerce-core/src/
+            wp-content/plugins/commerce-core/commerce-core.php
+            wp-content/plugins/commerce-core/uninstall.php
+          if-no-files-found: warn
+
       - name: PHPCS (WordPress Coding Standards)
         run: composer phpcs
 

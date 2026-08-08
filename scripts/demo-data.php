@@ -21,10 +21,12 @@
  *
  * Uses pure-color placeholder images generated via GD. No third-party assets.
  *
+ * Note: declare(strict_types=1) is intentionally omitted because this file
+ * is executed via wp eval-file, which wraps the code in eval() where strict_types
+ * has no effect and triggers a fatal error if present.
+ *
  * @package CommerceMaster
  */
-
-declare(strict_types=1);
 
 if (!defined('ABSPATH')) {
     exit;
