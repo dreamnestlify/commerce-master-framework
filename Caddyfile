@@ -7,7 +7,7 @@
 # Replace {$DOMAIN} with your real domain in .env
 # ──────────────────────────────────────────────
 
-{$DOMAIN} {
+{$DOMAIN}, www.{$DOMAIN} {
     # Reverse proxy to WordPress container
     reverse_proxy wordpress:80
 
@@ -46,7 +46,9 @@
     }
 }
 
-# Redirect www to non-www (optional — uncomment if needed)
+# Note: www and root domain are both served above.
+# To redirect www → root instead, remove www from the block above
+# and uncomment the redirect below:
 # www.{$DOMAIN} {
 #     redir https://{$DOMAIN}{uri} permanent
 # }
