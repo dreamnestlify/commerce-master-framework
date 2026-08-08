@@ -64,17 +64,20 @@ class SettingsController
     }
 
     /**
-     * Update settings (requires manage_options + nonce).
+     * Update settings (requires manage_options + REST nonce).
+     *
+     * Uses WordPress standard `wp_rest` nonce via X-WP-Nonce header.
+     * Does NOT use the admin form nonce (`commerce_core_nonce`).
      *
      * @param WP_REST_Request $request Request.
      * @return WP_REST_Response|WP_Error
      */
     public function update_settings(WP_REST_Request $request)
     {
-        if (!SecurityModule::verify_nonce()) {
+        if (!SecurityModule::verify_rest_nonce($request)) {
             return new WP_Error(
                 'rest_forbidden',
-                __('Nonce verification failed.', 'commerce-core'),
+                __('REST nonce verification failed.', 'commerce-core'),
                 ['status' => 403]
             );
         }

@@ -47,6 +47,7 @@
 *.min.js
 *.min.css
 *.map
+*.zip
 /wp-content/themes/commerce-block-theme/build/
 
 # ──────────────────────────────────────────────
@@ -77,3 +78,9 @@ Thumbs.db
 # WorkBuddy workspace metadata (internal, not source code)
 # ──────────────────────────────────────────────
 .workbuddy/
+
+# ──────────────────────────────────────────────
+# Local tool version management (mise, etc.)
+# ──────────────────────────────────────────────
+mise.toml
+.mise.toml

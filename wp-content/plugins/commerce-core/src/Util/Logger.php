@@ -5,6 +5,10 @@
  * Uses WordPress error_log when WC_LOGGER is not available.
  * Never logs sensitive data (passwords, payment info, PII).
  *
+ * IMPORTANT: Do NOT embed PII (email, phone, address, IP, customer_name)
+ * directly in the $message string. Only pass structured data via $data
+ * array, which is automatically sanitized by sanitize_data().
+ *
  * @package CommerceMaster\Core\Util
  */
 
@@ -38,8 +42,8 @@ class Logger
     /**
      * Log an info message.
      *
-     * @param string $message Log message.
-     * @param array<string, mixed> $data Additional structured data (no secrets!).
+     * @param string $message Log message. Do NOT embed PII (email, phone, address, IP, customer_name) here.
+     * @param array<string, mixed> $data Additional structured data (PII in $data is auto-redacted).
      */
     public function info(string $message, array $data = []): void
     {
@@ -136,7 +140,7 @@ class Logger
 
         // Exact key matches (keys where substring matching would cause false positives)
         $sensitive_exact = [
-            'customer_name', 'customer_name ', 'ip', 'ip_address',
+            'customer_name', 'ip', 'ip_address',
             'customer_ip', 'client_ip', 'remote_addr', 'user_ip',
         ];
 

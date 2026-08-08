@@ -650,10 +650,10 @@ WP_CLI::log('🔍 Post-run verification...');
 // Verify product count.
 $product_count = wp_count_posts('product');
 $total_products = (int) ($product_count->publish ?? 0) + (int) ($product_count->draft ?? 0);
-if ($total_products < count($demo_products)) {
-    WP_CLI::error("Expected >= " . count($demo_products) . " products, found {$total_products}.");
+if ($total_products !== count($demo_products)) {
+    WP_CLI::error("Expected exactly " . count($demo_products) . " products, found {$total_products}.");
 }
-WP_CLI::log("  ✅ Products: {$total_products} (expected >= " . count($demo_products) . ")");
+WP_CLI::log("  ✅ Products: {$total_products} (expected exactly " . count($demo_products) . ")");
 
 // Verify categories.
 foreach ($categories as $name => $desc) {

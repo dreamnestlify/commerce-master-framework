@@ -11,8 +11,12 @@ namespace CommerceMaster\Core\Module;
 
 class SecurityModule implements ModuleInterface
 {
+    /** Admin form nonce (settings pages, not REST). */
     public const NONCE_ACTION = 'commerce_core_nonce';
     public const NONCE_NAME = '_commerce_core_nonce';
+
+    /** WordPress REST API standard nonce action. */
+    public const REST_NONCE_ACTION = 'wp_rest';
 
     public function register(): void
     {
@@ -47,24 +51,44 @@ class SecurityModule implements ModuleInterface
     }
 
     /**
-     * Verify a nonce from request.
+     * Verify a nonce from an admin form request (NOT REST).
      *
-     * Uses WordPress REST API standard: checks X-WP-Nonce header first,
-     * falls back to request parameter. All input is unslashed and sanitized.
+     * Uses the `commerce_core_nonce` action for backend form submissions.
+     * For REST API requests, use {@see verify_rest_nonce()} instead.
      *
      * @return bool True if valid.
      */
     public static function verify_nonce(): bool
     {
-        // For REST API requests, the nonce is sent via X-WP-Nonce header.
         $nonce = '';
-        if (isset($_SERVER['HTTP_X_WP_NONCE'])) {
-            $nonce = sanitize_text_field(wp_unslash($_SERVER['HTTP_X_WP_NONCE']));
-        } elseif (isset($_REQUEST[self::NONCE_NAME])) {
+        if (isset($_REQUEST[self::NONCE_NAME])) {
             $nonce = sanitize_text_field(wp_unslash($_REQUEST[self::NONCE_NAME]));
         }
 
         return $nonce !== '' && wp_verify_nonce($nonce, self::NONCE_ACTION) !== false;
+    }
+
+    /**
+     * Verify a WordPress REST API nonce.
+     *
+     * Uses the standard `wp_rest` action and reads the nonce from the
+     * `X-WP-Nonce` header via the REST request object. This follows
+     * WordPress Cookie Authentication conventions for REST API.
+     *
+     * @param mixed $request WP_REST_Request or any object with get_header().
+     * @return bool True if the nonce is valid.
+     */
+    public static function verify_rest_nonce($request): bool
+    {
+        $nonce = '';
+        if (is_object($request) && method_exists($request, 'get_header')) {
+            $header = $request->get_header('X-WP-Nonce');
+            if ($header !== null && $header !== '') {
+                $nonce = sanitize_text_field(wp_unslash($header));
+            }
+        }
+
+        return $nonce !== '' && wp_verify_nonce($nonce, self::REST_NONCE_ACTION) !== false;
     }
 
     /**

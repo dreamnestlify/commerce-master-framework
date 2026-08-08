@@ -120,7 +120,11 @@ if ($_tests_dir && file_exists($_tests_dir . '/includes/functions.php')) {
 
         function current_user_can(string $capability): bool
         {
-            return true; // Always allow in tests.
+            // Controllable via $GLOBALS['_test_user_can'] for permission tests.
+            if (isset($GLOBALS['_test_user_can'])) {
+                return $GLOBALS['_test_user_can'];
+            }
+            return true; // Default: allow in tests.
         }
 
         function load_plugin_textdomain(?string $domain, $deprecated = false, $plugin_rel_path = false): bool
@@ -130,11 +134,18 @@ if ($_tests_dir && file_exists($_tests_dir . '/includes/functions.php')) {
 
         function wp_verify_nonce($nonce, string $action = ''): int|false
         {
+            // Support both admin nonce and REST nonce in tests.
+            if ($action === 'wp_rest') {
+                return $nonce === 'valid_rest_nonce' ? 1 : false;
+            }
             return $nonce === 'valid_nonce' ? 1 : false;
         }
 
         function wp_create_nonce(string $action = ''): string
         {
+            if ($action === 'wp_rest') {
+                return 'valid_rest_nonce';
+            }
             return 'test_nonce';
         }
 
@@ -335,6 +346,78 @@ if ($_tests_dir && file_exists($_tests_dir . '/includes/functions.php')) {
                     if ($data) {
                         $this->error_data[$code] = $data;
                     }
+                }
+            }
+        }
+
+        // ── WP_REST_Request stub ──
+        if (!class_exists('WP_REST_Request')) {
+            class WP_REST_Request
+            {
+                private array $headers = [];
+                private array $json_params = [];
+                private array $query_params = [];
+                private string $method = 'GET';
+
+                public function set_method(string $method): void
+                {
+                    $this->method = $method;
+                }
+
+                public function get_method(): string
+                {
+                    return $this->method;
+                }
+
+                public function set_header(string $key, string $value): void
+                {
+                    $this->headers[strtolower($key)] = $value;
+                }
+
+                public function get_header(string $key): ?string
+                {
+                    $key = strtolower($key);
+                    return $this->headers[$key] ?? null;
+                }
+
+                public function set_json_params(array $params): void
+                {
+                    $this->json_params = $params;
+                }
+
+                public function get_json_params(): array
+                {
+                    return $this->json_params;
+                }
+
+                public function set_query_params(array $params): void
+                {
+                    $this->query_params = $params;
+                }
+
+                public function get_query_params(): array
+                {
+                    return $this->query_params;
+                }
+
+                public function get_param(string $key)
+                {
+                    return $this->json_params[$key] ?? $this->query_params[$key] ?? null;
+                }
+            }
+        }
+
+        // ── WP_REST_Response stub ──
+        if (!class_exists('WP_REST_Response')) {
+            class WP_REST_Response
+            {
+                public $data;
+                public int $status = 200;
+
+                public function __construct($data = null, int $status = 200)
+                {
+                    $this->data = $data;
+                    $this->status = $status;
                 }
             }
         }

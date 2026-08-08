@@ -1,7 +1,7 @@
 # Phase 0 — Engineering Master Template Report (v3 — Third-Round Review Fix)
 
 **Date:** 2026-08-09  
-**Commit:** `8adb4b1` (fix(v3): Phase 0 third-round review)  
+**Commit:** `3ee0e93` (fix(v3): Phase 0 third-round review)  
 **Status:** Awaiting re-review. **Do NOT start Phase 1.**
 
 ---
@@ -287,7 +287,7 @@ New `docker-integration` job in `.github/workflows/ci.yml`:
 ## 11. Git Commit History (this round)
 
 ```
-8adb4b1 fix(v3): Phase 0 third-round review — Docker salts, smoke check, idempotency, security, block validation, CI integration
+3ee0e93 fix(v3): Phase 0 third-round review — Docker salts, smoke check, idempotency, security, block validation, CI integration
 ```
 
 ---

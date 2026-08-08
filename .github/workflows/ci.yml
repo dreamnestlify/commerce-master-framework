@@ -27,8 +27,8 @@ jobs:
       - name: Validate composer.json
         run: composer validate --strict
 
-      - name: Install dependencies (generates composer.lock)
-        run: composer install --no-interaction --no-progress
+      - name: Install dependencies (uses committed composer.lock)
+        run: composer install --no-interaction --no-progress --prefer-dist
 
       - name: Upload composer.lock
         uses: actions/upload-artifact@v4
@@ -207,18 +207,28 @@ jobs:
 
       - name: Verify product detail page
         run: |
-          # Find a product URL
-          PRODUCT_URL=$(curl -s "http://localhost:8080/shop/" | grep -oE 'href="[^"]*product/[^"]*"' | head -1 | sed 's/href="//;s/"//')
-          if [ -n "$PRODUCT_URL" ]; then
-            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$PRODUCT_URL" 2>/dev/null || echo "000")
-            if [ "$HTTP_CODE" = "200" ]; then
-              echo "  ✅ Product page → ${HTTP_CODE} ($PRODUCT_URL)"
-            else
-              echo "  ❌ Product page → ${HTTP_CODE} ($PRODUCT_URL)"
+          # Use WP-CLI to find a product by stable SKU, get its permalink.
+          PRODUCT_ID=$(docker compose --profile cli run --rm wpcli wp post list --post_type=product --meta_key=_sku --meta_value="WOM-TS-001" --field=ID --format=raw 2>/dev/null | head -1)
+          if [ -z "$PRODUCT_ID" ]; then
+            echo "  ❌ Product with SKU WOM-TS-001 not found"
+            exit 1
+          fi
+          PRODUCT_URL=$(docker compose --profile cli run --rm wpcli wp eval "echo get_permalink($PRODUCT_ID);" 2>/dev/null)
+          if [ -z "$PRODUCT_URL" ]; then
+            echo "  ❌ Could not determine product URL for product ID $PRODUCT_ID"
+            exit 1
+          fi
+          HTTP_CODE=$(curl -s -o /tmp/product-page.html -w "%{http_code}" "$PRODUCT_URL" 2>/dev/null || echo "000")
+          if [ "$HTTP_CODE" = "200" ]; then
+            # Verify it's not a WordPress error page
+            if grep -qi "error-establishing-a-database-connection\|wp-die-message\|Fatal error" /tmp/product-page.html; then
+              echo "  ❌ Product page returned HTTP 200 but contains WP error content"
               exit 1
             fi
+            echo "  ✅ Product page → ${HTTP_CODE} ($PRODUCT_URL)"
           else
-            echo "  ⚠️  No product URL found on shop page"
+            echo "  ❌ Product page → ${HTTP_CODE} ($PRODUCT_URL)"
+            exit 1
           fi
 
       - name: Save container logs
