@@ -57,6 +57,15 @@ if ( ! function_exists( 'wc_get_product' ) ) {
 	function wc_get_product( $product_id = false ) {}
 }
 
+// WooCommerce page ID helper.
+if ( ! function_exists( 'wc_get_page_id' ) ) {
+	/**
+	 * @param string $page Page type (shop, cart, checkout, myaccount, etc.)
+	 * @return int
+	 */
+	function wc_get_page_id( string $page ) {}
+}
+
 // WooCommerce product class stub (minimal — methods used by plugin modules).
 if ( ! class_exists( 'WC_Product' ) ) {
 	class WC_Product {

@@ -788,3 +788,130 @@ textarea:focus-visible {
         grid-template-columns: repeat(2, 1fr);
     }
 }
+
+/* ═══════════════════════════════════════════════════
+   Phase 1 Fixes — Wishlist Page & Header Link
+   ═══════════════════════════════════════════════════ */
+
+/* ── Header Wishlist Link ── */
+.header-wishlist-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    font-size: 1.25rem;
+    color: var(--wp--preset--color--contrast);
+    transition: color 0.2s ease;
+}
+
+.header-wishlist-link:hover {
+    color: var(--wp--preset--color--accent);
+}
+
+/* ── Wishlist Page ── */
+.wishlist-page-content {
+    max-width: var(--wp--layout--wide-size);
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.wishlist-page-title {
+    margin-bottom: 2rem;
+}
+
+.commerce-wishlist-page {
+    min-height: 300px;
+}
+
+.commerce-wishlist-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+}
+
+.commerce-wishlist-item {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.commerce-wishlist-item__image {
+    display: block;
+    overflow: hidden;
+    border-radius: 4px;
+    margin-bottom: 0.75rem;
+}
+
+.commerce-wishlist-item__image img {
+    width: 100%;
+    height: auto;
+    transition: transform 0.3s ease;
+}
+
+.commerce-wishlist-item:hover .commerce-wishlist-item__image img {
+    transform: scale(1.05);
+}
+
+.commerce-wishlist-item__name {
+    font-size: var(--wp--preset--font-size--small);
+    font-weight: 600;
+    color: var(--wp--preset--color--contrast);
+    text-decoration: none;
+    margin-bottom: 0.25rem;
+}
+
+.commerce-wishlist-item__name:hover {
+    color: var(--wp--preset--color--accent);
+}
+
+.commerce-wishlist-item__price {
+    font-size: var(--wp--preset--font-size--small);
+    color: var(--wp--preset--color--slate);
+    margin-bottom: 0.75rem;
+}
+
+.commerce-wishlist-item .commerce-wishlist-btn {
+    margin: 0 auto;
+}
+
+/* ── Wishlist Empty State ── */
+.commerce-wishlist-empty {
+    text-align: center;
+    padding: 4rem 1rem;
+}
+
+.commerce-wishlist-empty__text {
+    font-size: var(--wp--preset--font-size--large);
+    color: var(--wp--preset--color--slate);
+    margin-bottom: 1.5rem;
+}
+
+.commerce-wishlist-empty__link {
+    display: inline-block;
+    padding: 0.75rem 2rem;
+    background: var(--wp--preset--color--contrast);
+    color: var(--wp--preset--color--base);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: var(--wp--preset--font-size--small);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 0;
+    transition: opacity 0.2s ease;
+}
+
+.commerce-wishlist-empty__link:hover {
+    opacity: 0.85;
+}
+
+@media (max-width: 768px) {
+    .commerce-wishlist-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .commerce-wishlist-grid {
+        grid-template-columns: 1fr;
+    }
+}

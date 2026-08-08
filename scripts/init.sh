@@ -202,6 +202,22 @@ else
     echo "   ✅ My Account page exists (ID: $ACCOUNT_PAGE_ID)"
 fi
 
+# Wishlist page (idempotent)
+WISHLIST_PAGE_SLUG="wishlist"
+WISHLIST_PAGE_ID=$(wp post list --post_type=page --field=ID --name="$WISHLIST_PAGE_SLUG" 2>/dev/null | head -1)
+if [ -z "$WISHLIST_PAGE_ID" ]; then
+    WISHLIST_PAGE_ID=$(wp post create \
+        --post_type=page \
+        --post_title="Wishlist" \
+        --post_status=publish \
+        --post_name="$WISHLIST_PAGE_SLUG" \
+        --post_content='[commerce_wishlist]' \
+        --porcelain)
+    echo "   ✅ Wishlist page created (ID: $WISHLIST_PAGE_ID, slug: $WISHLIST_PAGE_SLUG)"
+else
+    echo "   ✅ Wishlist page exists (ID: $WISHLIST_PAGE_ID)"
+fi
+
 # Shop page
 SHOP_PAGE_ID=$(wp option get woocommerce_shop_page_id 2>/dev/null || echo "0")
 if [ "$SHOP_PAGE_ID" = "0" ] || ! wp post exists "$SHOP_PAGE_ID" 2>/dev/null; then

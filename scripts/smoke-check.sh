@@ -120,6 +120,19 @@ check_page_by_option "woocommerce_cart_page_id" "Cart"
 check_page_by_option "woocommerce_checkout_page_id" "Checkout"
 check_page_by_option "woocommerce_myaccount_page_id" "My Account"
 
+# Wishlist page (custom, not a WC option)
+WISHLIST_PAGE_ID=$(wp post list --post_type=page --field=ID --name="wishlist" 2>/dev/null | head -1)
+if [ -n "$WISHLIST_PAGE_ID" ]; then
+    WISHLIST_STATUS=$(wp post get "$WISHLIST_PAGE_ID" --field=post_status 2>/dev/null || echo "not_found")
+    if [ "$WISHLIST_STATUS" = "publish" ]; then
+        ok "Wishlist page exists and is published (ID: $WISHLIST_PAGE_ID)"
+    else
+        fail "Wishlist page status: $WISHLIST_STATUS (expected 'publish')"
+    fi
+else
+    fail "Wishlist page does NOT exist"
+fi
+
 # Check Home page exists and is set as front page
 echo ""
 echo "── Home / Front Page ────────────────────────────────────"

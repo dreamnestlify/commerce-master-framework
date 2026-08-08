@@ -27,6 +27,7 @@ class WishlistModule implements ModuleInterface {
 		add_action('wp_enqueue_scripts', array($this, 'enqueue_assets'));
 		add_action('wp_footer', array($this, 'render_wishlist_button_template'));
 		add_action('woocommerce_after_add_to_cart_button', array($this, 'render_wishlist_button_inline'));
+		add_shortcode('commerce_wishlist', array($this, 'render_wishlist_page'));
 	}
 
 	/**
@@ -69,7 +70,7 @@ class WishlistModule implements ModuleInterface {
 			array(
 				'methods'             => 'POST',
 				'callback'            => array($this, 'add_to_wishlist'),
-				'permission_callback' => '__return_true',
+				'permission_callback' => array($this, 'verify_rest_nonce'),
 				'args'                => array(
 					'product_id' => array(
 						'required'          => true,
@@ -84,7 +85,7 @@ class WishlistModule implements ModuleInterface {
 			array(
 				'methods'             => 'POST',
 				'callback'            => array($this, 'remove_from_wishlist'),
-				'permission_callback' => '__return_true',
+				'permission_callback' => array($this, 'verify_rest_nonce'),
 				'args'                => array(
 					'product_id' => array(
 						'required'          => true,
@@ -102,6 +103,17 @@ class WishlistModule implements ModuleInterface {
 				'permission_callback' => '__return_true',
 			),
 		));
+	}
+
+	/**
+	 * Verify the wp_rest nonce for state-changing REST requests.
+	 *
+	 * @param \WP_REST_Request $request REST request object.
+	 * @return bool True if nonce is valid.
+	 */
+	public function verify_rest_nonce(\WP_REST_Request $request): bool {
+		$nonce = (string) $request->get_header('x-wp-nonce');
+		return wp_verify_nonce($nonce, 'wp_rest') !== false;
 	}
 
 	/**
@@ -236,10 +248,10 @@ class WishlistModule implements ModuleInterface {
 	}
 
 	/**
-	 * Enqueue assets on product pages.
+	 * Enqueue assets on product pages and wishlist page.
 	 */
 	public function enqueue_assets(): void {
-		if (!is_singular('product') && !is_shop() && !is_product_category()) {
+		if (!is_singular('product') && !is_shop() && !is_product_category() && !is_page('wishlist')) {
 			return;
 		}
 
@@ -272,12 +284,13 @@ class WishlistModule implements ModuleInterface {
 			return;
 		}
 		$in_wishlist = in_array($product_id, $this->get_wishlist_ids(), true);
+		$label = $in_wishlist ? __('♥ Wishlisted', 'commerce-core') : __('♡ Add to Wishlist', 'commerce-core');
 		printf(
 			'<button type="button" class="commerce-wishlist-btn%s" data-product-id="%d" aria-label="%s">%s</button>',
 			$in_wishlist ? ' is-active' : '',
 			(int) $product_id,
 			esc_attr__('Toggle wishlist', 'commerce-core'),
-			esc_html($in_wishlist ? '♥ Wishlisted' : '♡ Add to Wishlist')
+			esc_html($label)
 		);
 	}
 
@@ -291,5 +304,99 @@ class WishlistModule implements ModuleInterface {
 		echo '<script type="text/template" id="commerce-wishlist-btn-template">';
 		echo '<button type="button" class="commerce-wishlist-card-btn" aria-label="Add to wishlist">♡</button>';
 		echo '</script>';
+	}
+
+	/**
+	 * Enqueue wishlist assets on the wishlist page.
+	 *
+	 * Ensures scripts are loaded when the wishlist shortcode is present.
+	 */
+	public function enqueue_wishlist_page_assets(): void {
+		wp_enqueue_script(
+			'commerce-core-wishlist',
+			plugins_url('assets/js/wishlist.js', dirname(__FILE__, 2)),
+			array(),
+			COMMERCE_CORE_VERSION,
+			true
+		);
+
+		wp_localize_script('commerce-core-wishlist', 'commerceWishlist', array(
+			'restUrl'   => esc_url_raw(rest_url(self::REST_NAMESPACE)),
+			'nonce'     => wp_create_nonce('wp_rest'),
+			'wishlist'  => $this->get_wishlist_ids(),
+			'labels'    => array(
+				'add'    => __('Add to Wishlist', 'commerce-core'),
+				'remove' => __('Remove from Wishlist', 'commerce-core'),
+				'added'  => __('Added to wishlist', 'commerce-core'),
+			),
+		));
+	}
+
+	/**
+	 * Render the wishlist page via shortcode [commerce_wishlist].
+	 *
+	 * @param array $atts Shortcode attributes.
+	 * @return string HTML output.
+	 */
+	public function render_wishlist_page(array $atts = array()): string {
+		// Ensure assets are enqueued.
+		$this->enqueue_wishlist_page_assets();
+
+		$ids   = $this->get_wishlist_ids();
+		$items = array();
+
+		foreach ($ids as $product_id) {
+			$product = wc_get_product($product_id);
+			if (!$product) {
+				continue;
+			}
+			$items[] = $product;
+		}
+
+		ob_start();
+
+		echo '<div class="commerce-wishlist-page">';
+
+		if (empty($items)) {
+			echo '<div class="commerce-wishlist-empty">';
+			echo '<p class="commerce-wishlist-empty__text">' . esc_html__('Your wishlist is empty.', 'commerce-core') . '</p>';
+			echo '<a href="' . esc_url(get_permalink(wc_get_page_id('shop'))) . '" class="commerce-wishlist-empty__link">';
+			echo esc_html__('Browse Products', 'commerce-core');
+			echo '</a>';
+			echo '</div>';
+		} else {
+			echo '<div class="commerce-wishlist-grid">';
+			foreach ($items as $product) {
+				printf(
+					'<div class="commerce-wishlist-item" data-product-id="%d">',
+					(int) $product->get_id()
+				);
+				printf(
+					'<a href="%s" class="commerce-wishlist-item__image">%s</a>',
+					esc_url($product->get_permalink()),
+					wp_kses_post($product->get_image('woocommerce_thumbnail'))
+				);
+				printf(
+					'<a href="%s" class="commerce-wishlist-item__name">%s</a>',
+					esc_url($product->get_permalink()),
+					esc_html($product->get_name())
+				);
+				printf(
+					'<span class="commerce-wishlist-item__price">%s</span>',
+					wp_kses_post($product->get_price_html())
+				);
+				printf(
+					'<button type="button" class="commerce-wishlist-btn is-active" data-product-id="%d">%s</button>',
+					(int) $product->get_id(),
+					esc_html__('♥ Wishlisted', 'commerce-core')
+				);
+				echo '</div>';
+			}
+			echo '</div>';
+		}
+
+		echo '</div>';
+
+		return (string) ob_get_clean();
 	}
 }

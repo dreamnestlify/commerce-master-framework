@@ -36,7 +36,7 @@
                         wishlist.push(parseInt(productId, 10));
                         if (btn) {
                             btn.classList.add('is-active');
-                            btn.textContent = '♥ Wishlisted';
+                            btn.textContent = '♥ ' + (labels.remove || 'Wishlisted');
                         }
                     } else {
                         var idx = wishlist.indexOf(parseInt(productId, 10));
@@ -45,7 +45,7 @@
                         }
                         if (btn) {
                             btn.classList.remove('is-active');
-                            btn.textContent = '♡ Add to Wishlist';
+                            btn.textContent = '♡ ' + (labels.add || 'Add to Wishlist');
                         }
                     }
                     updateCountBadge(data.count);
@@ -73,7 +73,7 @@
             var productId = btn.getAttribute('data-product-id');
             if (isInWishlist(productId)) {
                 btn.classList.add('is-active');
-                btn.textContent = '♥ Wishlisted';
+                btn.textContent = '♥ ' + (labels.remove || 'Wishlisted');
             }
             btn.addEventListener('click', function () {
                 toggleWishlist(productId, btn);

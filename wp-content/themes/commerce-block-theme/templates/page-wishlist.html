@@ -1,0 +1,21 @@
+<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
+
+<!-- wp:group {"tagName":"main","className":"site-main woocommerce-wishlist-page","layout":{"type":"constrained"}} -->
+<main class="wp-block-group site-main woocommerce-wishlist-page" id="main-content">
+    <!-- wp:woocommerce/store-notices /-->
+
+    <!-- wp:group {"className":"wishlist-page-content","layout":{"type":"constrained"}} -->
+    <div class="wp-block-group wishlist-page-content">
+        <!-- wp:heading {"level":1,"className":"wishlist-page-title"} -->
+        <h1 class="wp-block-heading wishlist-page-title">My Wishlist</h1>
+        <!-- /wp:heading -->
+
+        <!-- wp:shortcode -->
+        [commerce_wishlist]
+        <!-- /wp:shortcode -->
+    </div>
+    <!-- /wp:group -->
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->

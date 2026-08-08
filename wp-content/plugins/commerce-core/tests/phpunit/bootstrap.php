@@ -164,6 +164,11 @@ if ($_tests_dir && file_exists($_tests_dir . '/includes/functions.php')) {
             return true;
         }
 
+        function add_shortcode(string $tag, callable $callback): void
+        {
+            // No-op.
+        }
+
         function register_activation_hook(string $file, callable $callback): void
         {
             // No-op.
@@ -515,5 +520,290 @@ if ($_tests_dir && file_exists($_tests_dir . '/includes/functions.php')) {
                 $GLOBALS['_test_attributes'][] = ['attribute_id' => $id, 'attribute_name' => $slug];
             }
         }
+
+        // ── WordPress constants needed by modules ──
+        if (!defined('COOKIEPATH')) {
+            define('COOKIEPATH', '/');
+        }
+        if (!defined('COOKIE_DOMAIN')) {
+            define('COOKIE_DOMAIN', false);
+        }
+
+        // ── User / auth stubs ──
+        if (!function_exists('is_user_logged_in')) {
+            function is_user_logged_in(): bool
+            {
+                return $GLOBALS['_test_user_logged_in'] ?? false;
+            }
+        }
+
+        if (!function_exists('get_current_user_id')) {
+            function get_current_user_id(): int
+            {
+                return $GLOBALS['_test_current_user_id'] ?? 0;
+            }
+        }
+
+        if (!function_exists('get_user_meta')) {
+            function get_user_meta(int $user_id, string $key, bool $single = false)
+            {
+                $meta = $GLOBALS['_test_user_meta'][$user_id][$key] ?? null;
+                if ($single) {
+                    return $meta;
+                }
+                return $meta !== null ? array($meta) : array();
+            }
+        }
+
+        if (!function_exists('update_user_meta')) {
+            function update_user_meta(int $user_id, string $key, $value, $prev_value = ''): int|bool
+            {
+                if (!isset($GLOBALS['_test_user_meta'])) {
+                    $GLOBALS['_test_user_meta'] = array();
+                }
+                if (!isset($GLOBALS['_test_user_meta'][$user_id])) {
+                    $GLOBALS['_test_user_meta'][$user_id] = array();
+                }
+                $GLOBALS['_test_user_meta'][$user_id][$key] = $value;
+                return true;
+            }
+        }
+
+        if (!function_exists('delete_user_meta')) {
+            function delete_user_meta(int $user_id, string $key, $value = ''): bool
+            {
+                unset($GLOBALS['_test_user_meta'][$user_id][$key]);
+                return true;
+            }
+        }
+
+        // ── Template / page conditionals ──
+        if (!function_exists('is_singular')) {
+            function is_singular($types = ''): bool
+            {
+                return $GLOBALS['_test_is_singular'] ?? false;
+            }
+        }
+
+        if (!function_exists('is_shop')) {
+            function is_shop(): bool
+            {
+                return $GLOBALS['_test_is_shop'] ?? false;
+            }
+        }
+
+        if (!function_exists('is_product_category')) {
+            function is_product_category($term = ''): bool
+            {
+                return $GLOBALS['_test_is_product_category'] ?? false;
+            }
+        }
+
+        if (!function_exists('is_page')) {
+            function is_page($page = ''): bool
+            {
+                if (is_string($page) && $page !== '') {
+                    return ($GLOBALS['_test_page_slug'] ?? '') === $page;
+                }
+                return $GLOBALS['_test_is_page'] ?? false;
+            }
+        }
+
+        if (!function_exists('get_the_ID')) {
+            function get_the_ID(): int|false
+            {
+                return $GLOBALS['_test_the_id'] ?? false;
+            }
+        }
+
+        if (!function_exists('get_permalink')) {
+            function get_permalink($post = 0): string
+            {
+                $id = is_object($post) ? ($post->ID ?? 0) : (int) $post;
+                return 'http://test.example.com/?p=' . $id;
+            }
+        }
+
+        // ── Asset / script stubs ──
+        if (!function_exists('wp_enqueue_script')) {
+            function wp_enqueue_script(string $handle, $src = '', array $deps = array(), $ver = false, $in_footer = false): void
+            {
+                // No-op.
+            }
+        }
+
+        if (!function_exists('wp_localize_script')) {
+            function wp_localize_script(string $handle, string $object_name, array $data): bool
+            {
+                $GLOBALS['_test_localized_scripts'][$handle] = array(
+                    'object_name' => $object_name,
+                    'data' => $data,
+                );
+                return true;
+            }
+        }
+
+        if (!function_exists('plugins_url')) {
+            function plugins_url($path = '', $plugin = ''): string
+            {
+                return 'http://test.example.com/wp-content/plugins/' . ltrim($path, '/');
+            }
+        }
+
+        if (!function_exists('esc_url_raw')) {
+            function esc_url_raw(string $url): string
+            {
+                return $url;
+            }
+        }
+
+        if (!function_exists('rest_url')) {
+            function rest_url(string $path = ''): string
+            {
+                return 'http://test.example.com/wp-json/' . ltrim($path, '/');
+            }
+        }
+
+        if (!function_exists('esc_attr__')) {
+            function esc_attr__(string $text, ?string $domain = null): string
+            {
+                return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+            }
+        }
+
+        if (!function_exists('headers_sent')) {
+            function headers_sent(&$file = null, &$line = null): bool
+            {
+                return $GLOBALS['_test_headers_sent'] ?? false;
+            }
+        }
+
+        if (!function_exists('setcookie')) {
+            function setcookie(string $name, string $value = '', int $expires = 0, string $path = '', string $domain = '', bool $secure = false, bool $httponly = false): bool
+            {
+                $GLOBALS['_test_cookies'][$name] = array(
+                    'value' => $value,
+                    'expires' => $expires,
+                );
+                $_COOKIE[$name] = $value;
+                return true;
+            }
+        }
+
+        if (!function_exists('wp_get_attachment_image_url')) {
+            function wp_get_attachment_image_url($attachment_id, $size = 'thumbnail', $icon = false): string|false
+            {
+                if (!$attachment_id) {
+                    return false;
+                }
+                return 'http://test.example.com/wp-content/uploads/test-image-' . (int) $attachment_id . '.jpg';
+            }
+        }
+
+        if (!function_exists('wc_get_page_id')) {
+            function wc_get_page_id(string $page): int
+            {
+                return $GLOBALS['_test_wc_page_ids'][$page] ?? 1;
+            }
+        }
+
+        // ── WooCommerce product stub for tests ──
+        if (!function_exists('wc_get_product')) {
+            /**
+             * @param mixed $product_id
+             * @return \TestWCProduct|false
+             */
+            function wc_get_product($product_id = false)
+            {
+                if (!$product_id) {
+                    return false;
+                }
+                $products = $GLOBALS['_test_wc_products'] ?? array();
+                return $products[(int) $product_id] ?? false;
+            }
+        }
+
+        if (!class_exists('TestWCProduct')) {
+            /**
+             * Minimal WC_Product stub for unit testing.
+             */
+            class TestWCProduct
+            {
+                private int $id;
+                private string $name;
+                private string $price_html;
+                private string $stock_status;
+                private string $type;
+                private int $image_id;
+
+                public function __construct(array $data)
+                {
+                    $this->id = $data['id'] ?? 0;
+                    $this->name = $data['name'] ?? 'Test Product';
+                    $this->price_html = $data['price_html'] ?? '$29.99';
+                    $this->stock_status = $data['stock_status'] ?? 'instock';
+                    $this->type = $data['type'] ?? 'simple';
+                    $this->image_id = $data['image_id'] ?? 1;
+                }
+
+                public function get_id(): int
+                {
+                    return $this->id;
+                }
+
+                public function get_name(): string
+                {
+                    return $this->name;
+                }
+
+                public function get_permalink(): string
+                {
+                    return 'http://test.example.com/?p=' . $this->id;
+                }
+
+                public function get_price_html(): string
+                {
+                    return $this->price_html;
+                }
+
+                public function get_image_id(): int
+                {
+                    return $this->image_id;
+                }
+
+                public function get_stock_status(): string
+                {
+                    return $this->stock_status;
+                }
+
+                public function get_type(): string
+                {
+                    return $this->type;
+                }
+
+                public function get_image($size = 'shop_thumbnail', $attr = array(), $placeholder = true): string
+                {
+                    return '<img src="http://test.example.com/image-' . $this->id . '.jpg" alt="' . esc_attr($this->name) . '" />';
+                }
+            }
+        }
+
+        // ── Helper: register a test product ──
+        if (!function_exists('_test_add_wc_product')) {
+            function _test_add_wc_product(int $id, array $data = array()): void
+            {
+                if (!isset($GLOBALS['_test_wc_products'])) {
+                    $GLOBALS['_test_wc_products'] = array();
+                }
+                $data['id'] = $id;
+                $GLOBALS['_test_wc_products'][$id] = new \TestWCProduct($data);
+            }
+        }
+
+        // ── Output buffering stub ──
+        if (!function_exists('ob_start')) {
+            // ob_start is a PHP built-in; this is here as a safety check.
+        }
+
     }
 }

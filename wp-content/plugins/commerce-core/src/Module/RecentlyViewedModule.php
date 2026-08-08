@@ -59,7 +59,7 @@ class RecentlyViewedModule implements ModuleInterface {
 			array(
 				'methods'             => 'POST',
 				'callback'            => array($this, 'track_view'),
-				'permission_callback' => '__return_true',
+				'permission_callback' => array($this, 'verify_rest_nonce'),
 				'args'                => array(
 					'product_id' => array(
 						'required'          => true,
@@ -77,6 +77,17 @@ class RecentlyViewedModule implements ModuleInterface {
 				'permission_callback' => '__return_true',
 			),
 		));
+	}
+
+	/**
+	 * Verify the wp_rest nonce for state-changing REST requests.
+	 *
+	 * @param \WP_REST_Request $request REST request object.
+	 * @return bool True if nonce is valid.
+	 */
+	public function verify_rest_nonce(\WP_REST_Request $request): bool {
+		$nonce = (string) $request->get_header('x-wp-nonce');
+		return wp_verify_nonce($nonce, 'wp_rest') !== false;
 	}
 
 	/**
