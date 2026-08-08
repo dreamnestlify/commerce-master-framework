@@ -5,6 +5,9 @@
  * The szepeviktor/phpstan-wordpress extension (auto-included by
  * extension-installer) provides WordPress core function stubs but
  * does NOT include WP_CLI or WooCommerce stubs. This file fills those gaps.
+ *
+ * Note: WP_CLI\Utils\format_items is in a separate file because PHP
+ * requires namespace declarations to be the first statement.
  */
 
 // Plugin constants (defined in commerce-core.php).
@@ -53,13 +56,4 @@ if ( ! class_exists( 'WP_CLI' ) ) {
 		 */
 		public static function add_command( $name, $command, $args = array() ) {}
 	}
-}
-
-namespace WP_CLI\Utils {
-	/**
-	 * @param array  $items
-	 * @param array  $fields
-	 * @param string $format
-	 */
-	function format_items( $items, $fields, $format = 'table' ) {}
 }

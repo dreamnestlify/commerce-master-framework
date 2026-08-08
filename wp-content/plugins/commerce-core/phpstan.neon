@@ -12,5 +12,8 @@ parameters:
 
     # Load stubs for plugin constants, WooCommerce, and WP_CLI.
     # These are not provided by the WordPress extension.
+    # Two files: global namespace + WP_CLI\Utils namespace (PHP requires
+    # namespace to be first statement in file).
     bootstrapFiles:
         - phpstan-stubs.php
+        - phpstan-stubs-wpcli.php
