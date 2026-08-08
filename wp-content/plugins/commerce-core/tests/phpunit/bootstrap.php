@@ -616,6 +616,13 @@ if ($_tests_dir && file_exists($_tests_dir . '/includes/functions.php')) {
             }
         }
 
+        if (!function_exists('is_admin')) {
+            function is_admin(): bool
+            {
+                return false;
+            }
+        }
+
         if (!function_exists('is_page')) {
             function is_page($page = ''): bool
             {
@@ -820,6 +827,150 @@ if ($_tests_dir && file_exists($_tests_dir . '/includes/functions.php')) {
         // ── Output buffering stub ──
         if (!function_exists('ob_start')) {
             // ob_start is a PHP built-in; this is here as a safety check.
+        }
+
+        // ── Payment-related stubs ──
+        if (!function_exists('wc_get_order')) {
+            /**
+             * @param mixed $order Order ID or object.
+             * @return \TestWCOrder|false
+             */
+            function wc_get_order($order = false)
+            {
+                if (!$order) {
+                    return false;
+                }
+                $id = is_object($order) && method_exists($order, 'get_id') ? $order->get_id() : (int) $order;
+                $orders = $GLOBALS['_test_wc_orders'] ?? array();
+                return $orders[$id] ?? false;
+            }
+        }
+
+        if (!function_exists('wc_add_notice')) {
+            function wc_add_notice(string $message, string $notice_type = 'success'): void
+            {
+                $GLOBALS['_test_notices'][] = array('message' => $message, 'type' => $notice_type);
+            }
+        }
+
+        if (!function_exists('status_header')) {
+            function status_header(int $code, string $description = ''): void
+            {
+                $GLOBALS['_test_status_header'] = $code;
+            }
+        }
+
+        if (!function_exists('wp_remote_post')) {
+            function wp_remote_post(string $url, array $args = array())
+            {
+                return $GLOBALS['_test_wp_remote_response'] ?? new \WP_Error('http_error', 'No mock response set');
+            }
+        }
+
+        if (!function_exists('wp_remote_retrieve_body')) {
+            function wp_remote_retrieve_body($response): string
+            {
+                if (is_array($response) && isset($response['body'])) {
+                    return $response['body'];
+                }
+                return '';
+            }
+        }
+
+        if (!function_exists('wp_remote_retrieve_response_code')) {
+            function wp_remote_retrieve_response_code($response): int
+            {
+                if (is_array($response) && isset($response['response']['code'])) {
+                    return $response['response']['code'];
+                }
+                return 0;
+            }
+        }
+
+        if (!class_exists('TestWCOrder')) {
+            /**
+             * Minimal WC_Order stub for payment tests.
+             */
+            class TestWCOrder
+            {
+                private int $id;
+                private string $currency = 'USD';
+                private string $total = '0.00';
+                private string $transaction_id = '';
+                private string $order_number = '';
+                private string $status = 'pending';
+
+                public function __construct(array $data = array())
+                {
+                    $this->id = $data['id'] ?? 0;
+                    $this->currency = $data['currency'] ?? 'USD';
+                    $this->total = $data['total'] ?? '0.00';
+                    $this->transaction_id = $data['transaction_id'] ?? '';
+                    $this->order_number = $data['order_number'] ?? (string) $this->id;
+                    $this->status = $data['status'] ?? 'pending';
+                }
+
+                public function get_id(): int { return $this->id; }
+                public function get_currency(): string { return $this->currency; }
+                public function get_total(): string { return $this->total; }
+                public function get_transaction_id(): string { return $this->transaction_id; }
+                public function get_order_number(): string { return $this->order_number; }
+                public function payment_complete($transaction_id = ''): bool { $this->transaction_id = $transaction_id; $this->status = 'processing'; return true; }
+                public function add_order_note(string $note): int { return 1; }
+                public function update_status(string $status, string $note = ''): void { $this->status = $status; }
+                public function has_status(array $statuses): bool { return in_array($this->status, $statuses, true); }
+            }
+        }
+
+        if (!function_exists('_test_add_wc_order')) {
+            function _test_add_wc_order(int $id, array $data = array()): void
+            {
+                if (!isset($GLOBALS['_test_wc_orders'])) {
+                    $GLOBALS['_test_wc_orders'] = array();
+                }
+                $data['id'] = $id;
+                $GLOBALS['_test_wc_orders'][$id] = new \TestWCOrder($data);
+            }
+        }
+
+        // ── WC_Payment_Gateway stub (so gateway classes can be loaded) ──
+        if (!class_exists('WC_Payment_Gateway')) {
+            abstract class WC_Payment_Gateway
+            {
+                public $id;
+                public $icon;
+                public $has_fields;
+                public $method_title;
+                public $method_description;
+                public $supports;
+                public $title;
+                public $description;
+                public $enabled;
+                public $form_fields = array();
+                public $settings = array();
+
+                abstract public function init_form_fields(): void;
+                public function init_settings(): void {}
+                public function get_option($key, $default = false) { return $this->settings[$key] ?? $default; }
+                public function process_payment($order_id) { return array('result' => 'failure'); }
+                public function process_refund($order_id, $amount = null, $reason = '') { return false; }
+                public function get_return_url($order = null) { return 'http://test.example.com/checkout/order-received/'; }
+                public function is_available(): bool { return true; }
+                public function process_admin_options(): bool { return true; }
+            }
+        }
+
+        // ── Stripe SDK stubs (for headless tests without Composer) ──
+        if (!class_exists('Stripe\\Stripe')) {
+            class StripeStripeStub
+            {
+                public static $api_key = '';
+                public static function setApiKey(string $key): void { self::$api_key = $key; }
+            }
+        }
+
+        if (!class_exists('Stripe\\Exception\\ApiErrorException')) {
+            class StripeApiErrorExceptionStub extends \Exception {}
         }
 
     }

@@ -32,16 +32,16 @@ Phase 1 development and are tracked here for future resolution.
 - **Current state**: Level 6 passes. Can be raised incrementally in Phase 1+.
 - **Priority**: Low
 
-### 5. Payment Toggle Sanitization Logic
-- **Issue**: `SettingsModule::sanitize_settings()` uses `isset()` for
+### 5. Payment Toggle Sanitization Logic — ✅ RESOLVED
+- **Issue**: `SettingsModule::sanitize_settings()` used `isset()` for
   `stripe_enabled` and `paypal_enabled`. When the value is explicitly `false`,
-  `isset()` returns `true`, so the sanitized value becomes `true` instead of
+  `isset()` returns `true`, so the sanitized value became `true` instead of
   `false`.
-- **Current state**: Works for form checkbox semantics (absent = false,
-  present = true) but is incorrect for REST API JSON input where `false` is
-  explicitly passed.
-- **Fix**: Use `filter_var($input['payment']['stripe_enabled'] ?? false, FILTER_VALIDATE_BOOLEAN)`.
-- **Priority**: Medium — should fix before Phase 1 settings UI.
+- **Fix applied (Phase 2 Sprint 1)**: Replaced `isset()` with
+  `filter_var($input['payment']['stripe_enabled'] ?? false, FILTER_VALIDATE_BOOLEAN)`.
+  Also added `stripe_mode` and `paypal_mode` sanitization with whitelist validation.
+- **Tests**: `SettingsModuleTest::test_sanitize_payment_uses_filter_var_for_toggles()`
+  verifies `filter_var` behavior with string `'1'`/`'0'` and invalid mode fallback.
 
 ### 6. GitHub Actions Node.js 20 Deprecation
 - **Issue**: `actions/checkout@v4` and `actions/upload-artifact@v4` target

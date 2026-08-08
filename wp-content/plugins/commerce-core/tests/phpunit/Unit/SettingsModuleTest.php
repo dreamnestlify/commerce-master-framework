@@ -118,6 +118,43 @@ class SettingsModuleTest extends TestCase {
 		$this->assertSame( 'test@example.com', $clean['support']['email'] );
 		$this->assertTrue( $clean['payment']['stripe_enabled'] );
 		$this->assertFalse( $clean['payment']['paypal_enabled'] );
+		// Mode defaults to sandbox when not provided.
+		$this->assertSame( 'sandbox', $clean['payment']['stripe_mode'] );
+		$this->assertSame( 'sandbox', $clean['payment']['paypal_mode'] );
+	}
+
+	public function test_sanitize_payment_uses_filter_var_for_toggles(): void {
+		$input = array(
+			'brand'   => array( 'name' => 'Test', 'tagline' => '', 'logo_id' => 0 ),
+			'market'  => array(
+				'default_locale'     => 'en_US',
+				'base_currency'      => 'USD',
+				'enabled_currencies' => array( 'USD' ),
+				'default_market'     => 'EU',
+			),
+			'support' => array( 'email' => '', 'phone' => '' ),
+			'analytics' => array(
+				'ga4_measurement_id' => '',
+				'meta_pixel_id'      => '',
+				'tiktok_pixel_id'    => '',
+				'google_ads_id'      => '',
+			),
+			'payment' => array(
+				'stripe_enabled' => '1',
+				'paypal_enabled' => '0',
+				'stripe_mode'    => 'live',
+				'paypal_mode'    => 'invalid',
+			),
+		);
+
+		$clean = $this->module->sanitize_settings( $input );
+
+		// filter_var treats '1' as true, '0' as false.
+		$this->assertTrue( $clean['payment']['stripe_enabled'] );
+		$this->assertFalse( $clean['payment']['paypal_enabled'] );
+		// Valid mode is preserved; invalid mode falls back to sandbox.
+		$this->assertSame( 'live', $clean['payment']['stripe_mode'] );
+		$this->assertSame( 'sandbox', $clean['payment']['paypal_mode'] );
 	}
 
 	public function test_default_currencies_include_usd_eur_gbp(): void {

@@ -106,6 +106,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: dom, iconv, mbstring, mysql, zip
+          tools: composer
+
+      - name: Install Composer dependencies (for Stripe SDK)
+        working-directory: wp-content/plugins/commerce-core
+        run: composer install --no-interaction --no-progress --prefer-dist
+
       - name: Generate test .env with random salts
         run: |
           cat > .env << 'ENVEOF'
@@ -144,6 +155,13 @@ jobs:
 
           SUPPORT_EMAIL=support@example.com
           SUPPORT_PHONE=
+
+          STRIPE_TEST_PUBLISHABLE_KEY=pk_test_ci_placeholder
+          STRIPE_TEST_SECRET_KEY=sk_test_ci_placeholder
+          STRIPE_WEBHOOK_SECRET=whsec_ci_placeholder
+          PAYPAL_SANDBOX_CLIENT_ID=ci_client_id_placeholder
+          PAYPAL_SANDBOX_CLIENT_SECRET=ci_client_secret_placeholder
+          PAYPAL_WEBHOOK_ID=wh_ci_placeholder
 
           HTTP_PORT=8080
           PMA_PORT=8090

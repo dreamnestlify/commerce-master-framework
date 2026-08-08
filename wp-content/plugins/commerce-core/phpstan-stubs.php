@@ -66,6 +66,145 @@ if ( ! function_exists( 'wc_get_page_id' ) ) {
 	function wc_get_page_id( string $page ) {}
 }
 
+// WooCommerce order factory.
+if ( ! function_exists( 'wc_get_order' ) ) {
+	/**
+	 * @param mixed $order Order ID or object.
+	 * @return \WC_Order|false
+	 */
+	function wc_get_order( $order = false ) {}
+}
+
+// WooCommerce notice helper.
+if ( ! function_exists( 'wc_add_notice' ) ) {
+	/**
+	 * @param string $message Notice message.
+	 * @param string $notice_type Notice type (error, success, notice).
+	 */
+	function wc_add_notice( string $message, string $notice_type = 'success' ) {}
+}
+
+// WordPress status header helper (used by webhook handlers).
+if ( ! function_exists( 'status_header' ) ) {
+	/**
+	 * @param int    $code        HTTP status code.
+	 * @param string $description Optional description.
+	 */
+	function status_header( int $code, string $description = '' ) {}
+}
+
+// WooCommerce order class stub (minimal — methods used by payment modules).
+if ( ! class_exists( 'WC_Order' ) ) {
+	class WC_Order {
+		/**
+		 * @param mixed $order Order ID or object.
+		 */
+		public function __construct( $order = 0 ) {}
+
+		public function get_id(): int {}
+
+		public function get_currency(): string {}
+
+		/**
+		 * Get order total.
+		 *
+		 * @return string
+		 */
+		public function get_total() {}
+
+		public function get_transaction_id(): string {}
+
+		public function get_order_number(): string {}
+
+		/**
+		 * @param string $transaction_id Optional transaction ID.
+		 * @return bool
+		 */
+		public function payment_complete( $transaction_id = '' ) {}
+
+		/**
+		 * @param string $note Order note.
+		 * @return int
+		 */
+		public function add_order_note( string $note ) {}
+
+		/**
+		 * @param string $status  New status.
+		 * @param string $note    Optional note.
+		 */
+		public function update_status( string $status, string $note = '' ) {}
+
+		/**
+		 * @param string[] $statuses Statuses to check.
+		 * @return bool
+		 */
+		public function has_status( array $statuses ): bool {}
+	}
+}
+
+// WooCommerce payment gateway class stub (minimal).
+if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
+	abstract class WC_Payment_Gateway {
+		/** @var string */
+		public $id;
+		/** @var string */
+		public $icon;
+		/** @var bool */
+		public $has_fields;
+		/** @var string */
+		public $method_title;
+		/** @var string */
+		public $method_description;
+		/** @var string[] */
+		public $supports;
+		/** @var string */
+		public $title;
+		/** @var string */
+		public $description;
+		/** @var string */
+		public $enabled;
+		/** @var array<string, mixed> */
+		public $form_fields = array();
+		/** @var array<string, mixed> */
+		public $settings = array();
+
+		abstract public function init_form_fields(): void;
+
+		public function init_settings(): void {}
+
+		/**
+		 * @param string $key     Option key.
+		 * @param mixed  $default Default value.
+		 * @return mixed
+		 */
+		public function get_option( $key, $default = false ) {}
+
+		/**
+		 * @param int $order_id Order ID.
+		 * @return array<string, mixed>
+		 */
+		public function process_payment( $order_id ) {}
+
+		/**
+		 * @param int        $order_id Order ID.
+		 * @param float|null $amount   Refund amount.
+		 * @param string     $reason   Refund reason.
+		 * @return bool
+		 */
+		public function process_refund( $order_id, $amount = null, $reason = '' ) {}
+
+		/**
+		 * @param \WC_Order $order Order object.
+		 * @return string
+		 */
+		public function get_return_url( $order = null ) {}
+
+		public function is_available(): bool {}
+
+		public function process_admin_options(): bool {}
+	}
+}
+
 // WooCommerce product class stub (minimal — methods used by plugin modules).
 if ( ! class_exists( 'WC_Product' ) ) {
 	class WC_Product {

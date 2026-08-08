@@ -47,7 +47,9 @@ class SettingsModule implements ModuleInterface {
 			),
 			'payment'   => array(
 				'stripe_enabled' => true,
+				'stripe_mode'    => 'sandbox',
 				'paypal_enabled' => true,
+				'paypal_mode'    => 'sandbox',
 			),
 		);
 	}
@@ -175,8 +177,10 @@ class SettingsModule implements ModuleInterface {
 		$clean['analytics']['google_ads_id']      = sanitize_text_field( $input['analytics']['google_ads_id'] ?? '' );
 
 		// Payment.
-		$clean['payment']['stripe_enabled'] = isset( $input['payment']['stripe_enabled'] );
-		$clean['payment']['paypal_enabled'] = isset( $input['payment']['paypal_enabled'] );
+		$clean['payment']['stripe_enabled'] = filter_var( $input['payment']['stripe_enabled'] ?? false, FILTER_VALIDATE_BOOLEAN );
+		$clean['payment']['paypal_enabled'] = filter_var( $input['payment']['paypal_enabled'] ?? false, FILTER_VALIDATE_BOOLEAN );
+		$clean['payment']['stripe_mode']    = in_array( $input['payment']['stripe_mode'] ?? 'sandbox', array( 'sandbox', 'live' ), true ) ? $input['payment']['stripe_mode'] : 'sandbox';
+		$clean['payment']['paypal_mode']    = in_array( $input['payment']['paypal_mode'] ?? 'sandbox', array( 'sandbox', 'live' ), true ) ? $input['payment']['paypal_mode'] : 'sandbox';
 
 		return $clean;
 	}

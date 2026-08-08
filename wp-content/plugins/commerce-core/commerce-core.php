@@ -32,6 +32,11 @@ define( 'COMMERCE_CORE_BASENAME', plugin_basename( __FILE__ ) );
 require_once COMMERCE_CORE_DIR . 'src/Autoload.php';
 \CommerceMaster\Core\Autoload::register();
 
+// Composer autoloader (for stripe/stripe-php and other dependencies).
+if ( file_exists( COMMERCE_CORE_DIR . 'vendor/autoload.php' ) ) {
+	require_once COMMERCE_CORE_DIR . 'vendor/autoload.php';
+}
+
 // Bootstrap the plugin.
 $cc_plugin = new \CommerceMaster\Core\Plugin();
 

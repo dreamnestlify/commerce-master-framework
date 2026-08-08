@@ -405,6 +405,46 @@ HOME_URL=$(wp option get home 2>/dev/null || echo "")
 ok "Site URL: $SITEURL"
 ok "Home URL: $HOME_URL"
 
+# ── 14. Payment Gateways ─────────────────────────────────────────
+echo ""
+echo "── Payment Gateways ─────────────────────────────────────"
+
+# Verify payment settings are stored
+PAYMENT_SETTINGS=$(wp option get commerce_core_settings --format=json 2>/dev/null || echo "{}")
+if echo "$PAYMENT_SETTINGS" | grep -q "stripe_enabled"; then
+    ok "Payment settings include Stripe configuration"
+else
+    fail "Payment settings do NOT include Stripe configuration"
+fi
+if echo "$PAYMENT_SETTINGS" | grep -q "paypal_enabled"; then
+    ok "Payment settings include PayPal configuration"
+else
+    fail "Payment settings do NOT include PayPal configuration"
+fi
+
+# Verify gateways are registered with WooCommerce
+GATEWAY_IDS=$(wp eval "if(function_exists('WC')){ echo implode(',', array_keys(WC()->payment_gateways()->payment_gateways)); } else { echo 'WC_NOT_AVAILABLE'; }" 2>/dev/null || echo "")
+if [ "$GATEWAY_IDS" = "WC_NOT_AVAILABLE" ]; then
+    fail "WooCommerce WC() not available for gateway check"
+elif echo "$GATEWAY_IDS" | grep -q "commerce_stripe"; then
+    ok "Stripe gateway is registered (id: commerce_stripe)"
+else
+    fail "Stripe gateway is NOT registered"
+fi
+if echo "$GATEWAY_IDS" | grep -q "commerce_paypal"; then
+    ok "PayPal gateway is registered (id: commerce_paypal)"
+else
+    fail "PayPal gateway is NOT registered"
+fi
+
+# Verify Stripe SDK is loaded (composer dependency)
+STRIPE_SDK=$(wp eval "echo class_exists('\Stripe\Stripe') ? 'loaded' : 'missing';" 2>/dev/null || echo "error")
+if [ "$STRIPE_SDK" = "loaded" ]; then
+    ok "Stripe PHP SDK is loaded (composer dependency)"
+else
+    fail "Stripe PHP SDK is missing — run composer install"
+fi
+
 # ── Summary ───────────────────────────────────────────────────────
 echo ""
 echo "═══════════════════════════════════════════════════════════"

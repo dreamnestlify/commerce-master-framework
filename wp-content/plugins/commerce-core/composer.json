@@ -6,7 +6,8 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
-        "php": ">=8.2"
+        "php": ">=8.2",
+        "stripe/stripe-php": "^14.0"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.10",

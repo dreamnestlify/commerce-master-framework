@@ -14,6 +14,7 @@ use CommerceMaster\Core\Module\SettingsModule;
 use CommerceMaster\Core\Module\SecurityModule;
 use CommerceMaster\Core\Module\WishlistModule;
 use CommerceMaster\Core\Module\RecentlyViewedModule;
+use CommerceMaster\Core\Module\PaymentGatewayModule;
 
 class Plugin {
 
@@ -84,6 +85,7 @@ class Plugin {
 		$this->registry->register( new SecurityModule() );
 		$this->registry->register( new WishlistModule() );
 		$this->registry->register( new RecentlyViewedModule() );
+		$this->registry->register( new PaymentGatewayModule() );
 		}
 
 		return $this->registry;
