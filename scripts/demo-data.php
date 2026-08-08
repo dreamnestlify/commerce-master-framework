@@ -57,19 +57,36 @@ function _assert_product_saved($product, string $context): void
 // ══════════════════════════════════════════════════
 WP_CLI::log('📁 Creating product categories...');
 
+// Top-level categories and their sub-categories.
+// 'parent' = 0 means top-level; otherwise it references a parent category name.
 $categories = [
-    'Women'       => "Women's apparel, including dresses, tops, and knitwear.",
-    'Men'         => "Men's apparel, including shirts, jackets, and knitwear.",
-    'Shoes'       => 'Footwear for men and women — sneakers, boots, and more.',
-    'Accessories' => 'Bags, belts, scarves, sunglasses, and other accessories.',
+    'Women'       => ['description' => "Women's apparel, including dresses, tops, and knitwear.", 'parent' => 0],
+    'Men'         => ['description' => "Men's apparel, including shirts, jackets, and knitwear.", 'parent' => 0],
+    'Shoes'       => ['description' => 'Footwear for men and women — sneakers, boots, and more.', 'parent' => 0],
+    'Accessories' => ['description' => 'Bags, belts, scarves, sunglasses, and other accessories.', 'parent' => 0],
+    // Sub-categories
+    'Tops'        => ['description' => "Women's tops — t-shirts, blouses, cardigans.", 'parent' => 'Women'],
+    'Dresses'     => ['description' => "Women's dresses and skirts.", 'parent' => 'Women'],
+    'Outerwear'   => ['description' => "Men's jackets and outerwear.", 'parent' => 'Men'],
+    'Knitwear'    => ['description' => "Men's knitwear and sweaters.", 'parent' => 'Men'],
+    'Sneakers'    => ['description' => "Sneakers and casual footwear.", 'parent' => 'Shoes'],
+    'Boots'       => ['description' => "Boots and formal footwear.", 'parent' => 'Shoes'],
+    'Bags'        => ['description' => "Bags and totes.", 'parent' => 'Accessories'],
+    'Belts'       => ['description' => "Belts and leather accessories.", 'parent' => 'Accessories'],
+    'Scarves'     => ['description' => "Scarves and neckwear.", 'parent' => 'Accessories'],
+    'Sunglasses'  => ['description' => "Sunglasses and eyewear.", 'parent' => 'Accessories'],
 ];
 
 $category_ids = [];
-foreach ($categories as $name => $desc) {
+// First pass: create top-level categories.
+foreach ($categories as $name => $data) {
+    if ($data['parent'] !== 0) {
+        continue;
+    }
     $existing = term_exists($name, 'product_cat');
     if (empty($existing)) {
         $term = wp_insert_term($name, 'product_cat', [
-            'description' => $desc,
+            'description' => $data['description'],
             'slug'        => sanitize_title($name),
         ]);
         _assert_not_wp_error($term, "create category: {$name}");
@@ -77,10 +94,41 @@ foreach ($categories as $name => $desc) {
         WP_CLI::log("  ✅ Created: {$name} (ID: {$category_ids[$name]})");
     } else {
         $tid = is_array($existing) ? (int) $existing['term_id'] : (int) $existing;
-        // Ensure description is correct (convergent).
-        wp_update_term($tid, 'product_cat', ['description' => $desc]);
+        wp_update_term($tid, 'product_cat', ['description' => $data['description']]);
         $category_ids[$name] = $tid;
         WP_CLI::log("  ✓ Exists: {$name} (ID: {$tid})");
+    }
+}
+
+// Second pass: create sub-categories with parent assignments.
+foreach ($categories as $name => $data) {
+    if ($data['parent'] === 0) {
+        continue;
+    }
+    $parent_id = $category_ids[$data['parent']] ?? 0;
+    if (!$parent_id) {
+        WP_CLI::warning("Parent category '{$data['parent']}' not found for sub-category '{$name}'. Skipping.");
+        continue;
+    }
+    $existing = term_exists($name, 'product_cat');
+    if (empty($existing)) {
+        $term = wp_insert_term($name, 'product_cat', [
+            'description' => $data['description'],
+            'slug'        => sanitize_title($name),
+            'parent'      => $parent_id,
+        ]);
+        _assert_not_wp_error($term, "create sub-category: {$name}");
+        $category_ids[$name] = (int) $term['term_id'];
+        WP_CLI::log("  ✅ Created: {$name} → {$data['parent']} (ID: {$category_ids[$name]})");
+    } else {
+        $tid = is_array($existing) ? (int) $existing['term_id'] : (int) $existing;
+        // Convergent: ensure parent is set correctly.
+        wp_update_term($tid, 'product_cat', [
+            'description' => $data['description'],
+            'parent'      => $parent_id,
+        ]);
+        $category_ids[$name] = $tid;
+        WP_CLI::log("  ✓ Exists: {$name} → {$data['parent']} (ID: {$tid})");
     }
 }
 
@@ -164,6 +212,27 @@ foreach ($attributes_def as $key => $attr) {
 
 // Flush permalinks after attribute creation.
 flush_rewrite_rules();
+
+// ══════════════════════════════════════════════════
+// 2b. Create Product Tags
+// ══════════════════════════════════════════════════
+WP_CLI::log('🏷️  Creating product tags...');
+
+$tags_def = ['New Arrival', 'Sale', 'Featured'];
+$tag_ids = [];
+foreach ($tags_def as $tag_name) {
+    $existing = term_exists($tag_name, 'product_tag');
+    if (empty($existing)) {
+        $term = wp_insert_term($tag_name, 'product_tag', ['slug' => sanitize_title($tag_name)]);
+        _assert_not_wp_error($term, "create tag: {$tag_name}");
+        $tag_ids[$tag_name] = (int) $term['term_id'];
+        WP_CLI::log("  ✅ Created tag: {$tag_name}");
+    } else {
+        $tid = is_array($existing) ? (int) $existing['term_id'] : (int) $existing;
+        $tag_ids[$tag_name] = $tid;
+        WP_CLI::log("  ✓ Tag exists: {$tag_name}");
+    }
+}
 
 // ══════════════════════════════════════════════════
 // 3. Create Placeholder Images (solid color via GD)
@@ -276,10 +345,11 @@ WP_CLI::log('  ✅ ' . count($placeholder_images) . ' placeholder images ready.'
 // ══════════════════════════════════════════════════
 
 $demo_products = [
+    // ── Accessories (simple) ──
     [
         'name'          => 'Classic Leather Tote Bag',
         'type'          => 'simple',
-        'category'      => 'Accessories',
+        'category'      => 'Bags',
         'sku'           => 'ACC-TOTE-001',
         'regular_price' => '89.00',
         'stock'         => 50,
@@ -288,11 +358,13 @@ $demo_products = [
         'short_desc'    => 'Premium leather tote bag for everyday elegance.',
         'weight'        => '0.8',
         'dimensions'    => ['length' => '40', 'width' => '30', 'height' => '15'],
+        'tags'          => ['Featured'],
+        'gallery_colors' => ['Black', 'Brown'],
     ],
     [
         'name'          => 'Reversible Leather Belt',
         'type'          => 'simple',
-        'category'      => 'Accessories',
+        'category'      => 'Belts',
         'sku'           => 'ACC-BELT-001',
         'regular_price' => '45.00',
         'stock'         => 80,
@@ -301,11 +373,12 @@ $demo_products = [
         'short_desc'    => 'Two looks in one — reversible leather belt.',
         'weight'        => '0.3',
         'dimensions'    => ['length' => '110', 'width' => '3.5', 'height' => '0.5'],
+        'gallery_colors' => ['Brown', 'Black'],
     ],
     [
         'name'          => 'Silk Scarf — Floral Print',
         'type'          => 'simple',
-        'category'      => 'Accessories',
+        'category'      => 'Scarves',
         'sku'           => 'ACC-SCARF-001',
         'regular_price' => '65.00',
         'stock'         => 120,
@@ -314,11 +387,12 @@ $demo_products = [
         'short_desc'    => '100% silk floral print scarf.',
         'weight'        => '0.1',
         'dimensions'    => ['length' => '90', 'width' => '90', 'height' => '0.1'],
+        'gallery_colors' => ['Cream', 'Terracotta'],
     ],
     [
         'name'          => 'Polarized Sunglasses',
         'type'          => 'simple',
-        'category'      => 'Accessories',
+        'category'      => 'Sunglasses',
         'sku'           => 'ACC-SUN-001',
         'regular_price' => '120.00',
         'stock'         => 60,
@@ -327,11 +401,13 @@ $demo_products = [
         'short_desc'    => 'UV400 polarized sunglasses with case.',
         'weight'        => '0.05',
         'dimensions'    => ['length' => '15', 'width' => '14', 'height' => '4'],
+        'gallery_colors' => ['Black', 'Brown'],
     ],
+    // ── Women (variable) ──
     [
         'name'          => 'Organic Cotton T-Shirt',
         'type'          => 'variable',
-        'category'      => 'Women',
+        'category'      => 'Tops',
         'sku'           => 'WOM-TS-001',
         'regular_price' => '29.00',
         'stock'         => 200,
@@ -342,11 +418,13 @@ $demo_products = [
             'size'  => ['XS', 'S', 'M', 'L', 'XL'],
         ],
         'weight'        => '0.2',
+        'tags'          => ['Featured'],
+        'out_of_stock'  => ['Black-XS', 'White-XL'],
     ],
     [
         'name'          => 'Linen Wrap Dress',
         'type'          => 'variable',
-        'category'      => 'Women',
+        'category'      => 'Dresses',
         'sku'           => 'WOM-DR-001',
         'regular_price' => '145.00',
         'stock'         => 80,
@@ -357,11 +435,47 @@ $demo_products = [
             'size'  => ['XS', 'S', 'M', 'L'],
         ],
         'weight'        => '0.35',
+        'tags'          => ['Featured'],
     ],
+    [
+        'name'          => 'Oversized Knit Cardigan',
+        'type'          => 'variable',
+        'category'      => 'Tops',
+        'sku'           => 'WOM-KC-001',
+        'regular_price' => '115.00',
+        'sale_price'    => '89.00',
+        'stock'         => 60,
+        'description'   => 'Chunky oversized knit cardigan with drop shoulders and oversized front pockets. Perfect for layering in cooler weather.',
+        'short_desc'    => 'Oversized chunky knit cardigan — cozy layering piece.',
+        'attributes'    => [
+            'color' => ['Camel', 'Charcoal', 'Cream'],
+            'size'  => ['S', 'M', 'L', 'XL'],
+        ],
+        'weight'        => '0.55',
+        'tags'          => ['New Arrival', 'Sale'],
+    ],
+    [
+        'name'          => 'Pleated Midi Skirt',
+        'type'          => 'variable',
+        'category'      => 'Dresses',
+        'sku'           => 'WOM-SK-001',
+        'regular_price' => '95.00',
+        'stock'         => 50,
+        'description'   => 'Flowy pleated midi skirt with elastic waistband. Lightweight chiffon fabric with built-in lining.',
+        'short_desc'    => 'Pleated midi skirt — elegant and comfortable.',
+        'attributes'    => [
+            'color' => ['Navy', 'Forest Green', 'Black'],
+            'size'  => ['XS', 'S', 'M', 'L'],
+        ],
+        'weight'        => '0.3',
+        'tags'          => ['New Arrival'],
+        'out_of_stock'  => ['Navy-XS'],
+    ],
+    // ── Men (variable) ──
     [
         'name'          => 'Selvedge Denim Jacket',
         'type'          => 'variable',
-        'category'      => 'Men',
+        'category'      => 'Outerwear',
         'sku'           => 'MEN-JK-001',
         'regular_price' => '185.00',
         'stock'         => 60,
@@ -372,11 +486,13 @@ $demo_products = [
             'size'  => ['S', 'M', 'L', 'XL', 'XXL'],
         ],
         'weight'        => '0.7',
+        'tags'          => ['Featured'],
+        'out_of_stock'  => ['Indigo-XXL'],
     ],
     [
         'name'          => 'Merino Wool Knit Sweater',
         'type'          => 'variable',
-        'category'      => 'Men',
+        'category'      => 'Knitwear',
         'sku'           => 'MEN-KN-001',
         'regular_price' => '125.00',
         'stock'         => 70,
@@ -389,9 +505,26 @@ $demo_products = [
         'weight'        => '0.45',
     ],
     [
+        'name'          => 'Oxford Button-Down Shirt',
+        'type'          => 'variable',
+        'category'      => 'Outerwear',
+        'sku'           => 'MEN-SH-001',
+        'regular_price' => '79.00',
+        'stock'         => 90,
+        'description'   => 'Classic Oxford cotton button-down shirt with button-down collar and chest pocket. Tailored fit. Wrinkle-resistant finish.',
+        'short_desc'    => 'Classic Oxford button-down — tailored fit.',
+        'attributes'    => [
+            'color' => ['White', 'Navy', 'Sage Green'],
+            'size'  => ['S', 'M', 'L', 'XL', 'XXL'],
+        ],
+        'weight'        => '0.25',
+        'tags'          => ['New Arrival'],
+    ],
+    // ── Shoes (variable) ──
+    [
         'name'          => 'Canvas Low-Top Sneaker',
         'type'          => 'variable',
-        'category'      => 'Shoes',
+        'category'      => 'Sneakers',
         'sku'           => 'SHO-SN-001',
         'regular_price' => '75.00',
         'stock'         => 100,
@@ -406,7 +539,7 @@ $demo_products = [
     [
         'name'          => 'Chelsea Leather Boots',
         'type'          => 'variable',
-        'category'      => 'Shoes',
+        'category'      => 'Boots',
         'sku'           => 'SHO-BT-001',
         'regular_price' => '220.00',
         'stock'         => 40,
@@ -417,6 +550,56 @@ $demo_products = [
             'shoe_size' => ['40', '41', '42', '43', '44', '45'],
         ],
         'weight'        => '1.0',
+        'tags'          => ['Featured'],
+        'out_of_stock'  => ['Black-45'],
+    ],
+    [
+        'name'          => 'Suede Loafers',
+        'type'          => 'variable',
+        'category'      => 'Boots',
+        'sku'           => 'SHO-LF-001',
+        'regular_price' => '165.00',
+        'sale_price'    => '129.00',
+        'stock'         => 50,
+        'description'   => 'Italian suede penny loafers with leather sole and cushioned insole. Versatile smart-casual footwear.',
+        'short_desc'    => 'Italian suede penny loafers — smart-casual essential.',
+        'attributes'    => [
+            'color'     => ['Camel', 'Brown', 'Navy'],
+            'shoe_size' => ['40', '41', '42', '43', '44'],
+        ],
+        'weight'        => '0.7',
+        'tags'          => ['New Arrival', 'Sale'],
+    ],
+    // ── Accessories (simple, new) ──
+    [
+        'name'          => 'Wool Beanie',
+        'type'          => 'simple',
+        'category'      => 'Scarves',
+        'sku'           => 'ACC-BEANIE-001',
+        'regular_price' => '35.00',
+        'stock'         => 150,
+        'color'         => 'Charcoal',
+        'description'   => 'Soft merino wool beanie with folded cuff. One size fits all. Breathable and warm without being bulky.',
+        'short_desc'    => 'Merino wool beanie — warm, soft, one size.',
+        'weight'        => '0.12',
+        'tags'          => ['New Arrival'],
+        'gallery_colors' => ['Charcoal', 'Camel', 'Black'],
+    ],
+    [
+        'name'          => 'Leather Card Holder',
+        'type'          => 'simple',
+        'category'      => 'Bags',
+        'sku'           => 'ACC-CH-001',
+        'regular_price' => '39.00',
+        'sale_price'    => '29.00',
+        'stock'         => 100,
+        'color'         => 'Brown',
+        'description'   => 'Slim full-grain leather card holder with 4 card slots and center pocket. Fits comfortably in any pocket.',
+        'short_desc'    => 'Slim leather card holder — 4 card slots.',
+        'weight'        => '0.05',
+        'dimensions'    => ['length' => '10', 'width' => '7', 'height' => '0.5'],
+        'tags'          => ['New Arrival', 'Sale'],
+        'gallery_colors' => ['Brown', 'Black'],
     ],
 ];
 
@@ -476,6 +659,11 @@ foreach ($demo_products as $product_data) {
     $product->set_description($product_data['description']);
     $product->set_short_description($product_data['short_desc']);
     $product->set_regular_price($product_data['regular_price']);
+    if (isset($product_data['sale_price']) && $product_data['sale_price'] !== '') {
+        $product->set_sale_price($product_data['sale_price']);
+    } else {
+        $product->set_sale_price('');
+    }
     $product->set_manage_stock(true);
     $product->set_stock_quantity((int) $product_data['stock']);
     $product->set_stock_status('instock');
@@ -489,10 +677,23 @@ foreach ($demo_products as $product_data) {
         $product->set_height($product_data['dimensions']['height']);
     }
 
-    // ── Set / correct category ──
-    $cat_id = $category_ids[$product_data['category']] ?? 0;
+    // ── Set / correct category (sub-category + parent) ──
+    $cat_name = $product_data['category'];
+    $cat_id = $category_ids[$cat_name] ?? 0;
+    $cat_ids = [];
     if ($cat_id) {
-        $product->set_category_ids([$cat_id]);
+        $cat_ids[] = $cat_id;
+        // Also add parent category if this is a sub-category.
+        $cat_data = $categories[$cat_name] ?? null;
+        if ($cat_data && $cat_data['parent'] !== 0) {
+            $parent_id = $category_ids[$cat_data['parent']] ?? 0;
+            if ($parent_id) {
+                $cat_ids[] = $parent_id;
+            }
+        }
+    }
+    if (!empty($cat_ids)) {
+        $product->set_category_ids($cat_ids);
     }
 
     // ── Set / correct image ──
@@ -501,6 +702,23 @@ foreach ($demo_products as $product_data) {
         $product->set_image_id($placeholder_images[$color_key]);
     } elseif (!empty($placeholder_images)) {
         $product->set_image_id(reset($placeholder_images));
+    }
+
+    // ── Set / correct gallery images (additional color placeholders) ──
+    if (!empty($product_data['gallery_colors'])) {
+        $gallery_ids = [];
+        foreach ($product_data['gallery_colors'] as $gcolor) {
+            // Skip the main image color (it's already set as image_id).
+            if ($gcolor === $color_key) {
+                continue;
+            }
+            if (isset($placeholder_images[$gcolor])) {
+                $gallery_ids[] = $placeholder_images[$gcolor];
+            }
+        }
+        $product->set_gallery_image_ids($gallery_ids);
+    } else {
+        $product->set_gallery_image_ids([]);
     }
 
     // ── Set / correct attributes for variable products ──
@@ -543,10 +761,12 @@ foreach ($demo_products as $product_data) {
         $expected_var_count = count($color_attr) * count($size_values);
         $existing_variations = $product->get_children();
         $created_or_existing = 0;
+        $out_of_stock_combos = $product_data['out_of_stock'] ?? [];
 
         foreach ($color_attr as $color) {
             foreach ($size_values as $size) {
                 $var_sku = $product_data['sku'] . '-' . sanitize_title($color) . '-' . sanitize_title($size);
+                $is_oos = in_array($color . '-' . $size, $out_of_stock_combos, true);
 
                 // Check if variation already exists by SKU.
                 $found = false;
@@ -556,9 +776,14 @@ foreach ($demo_products as $product_data) {
                         $found = true;
                         // Convergent: correct price and stock.
                         $var->set_regular_price($product_data['regular_price']);
-                        $per_var_stock = max(1, intdiv($product_data['stock'], $expected_var_count));
-                        $var->set_stock_quantity($per_var_stock);
-                        $var->set_stock_status('instock');
+                        if ($is_oos) {
+                            $var->set_stock_quantity(0);
+                            $var->set_stock_status('outofstock');
+                        } else {
+                            $per_var_stock = max(1, intdiv($product_data['stock'], $expected_var_count));
+                            $var->set_stock_quantity($per_var_stock);
+                            $var->set_stock_status('instock');
+                        }
                         $var->set_manage_stock(true);
                         if (isset($placeholder_images[$color])) {
                             $var->set_image_id($placeholder_images[$color]);
@@ -574,9 +799,14 @@ foreach ($demo_products as $product_data) {
                     $variation->set_parent_id($product->get_id());
                     $variation->set_sku($var_sku);
                     $variation->set_regular_price($product_data['regular_price']);
-                    $per_var_stock = max(1, intdiv($product_data['stock'], $expected_var_count));
-                    $variation->set_stock_quantity($per_var_stock);
-                    $variation->set_stock_status('instock');
+                    if ($is_oos) {
+                        $variation->set_stock_quantity(0);
+                        $variation->set_stock_status('outofstock');
+                    } else {
+                        $per_var_stock = max(1, intdiv($product_data['stock'], $expected_var_count));
+                        $variation->set_stock_quantity($per_var_stock);
+                        $variation->set_stock_status('instock');
+                    }
                     $variation->set_manage_stock(true);
 
                     $variation_attributes = [];
@@ -646,6 +876,15 @@ foreach ($demo_products as $product_data) {
             WP_CLI::log("  ✓ Updated: {$product_data['name']}");
         }
     }
+
+    // ── Set / correct product tags (convergent: replaces existing) ──
+    $tag_term_ids = [];
+    foreach ($product_data['tags'] ?? [] as $tag_name) {
+        if (isset($tag_ids[$tag_name])) {
+            $tag_term_ids[] = $tag_ids[$tag_name];
+        }
+    }
+    wp_set_object_terms($product->get_id(), $tag_term_ids, 'product_tag', false);
 }
 
 // ══════════════════════════════════════════════════
@@ -663,12 +902,20 @@ if ($total_products !== count($demo_products)) {
 WP_CLI::log("  ✅ Products: {$total_products} (expected exactly " . count($demo_products) . ")");
 
 // Verify categories.
-foreach ($categories as $name => $desc) {
+foreach ($categories as $name => $data) {
     if (!term_exists($name, 'product_cat')) {
         WP_CLI::error("Category '{$name}' missing after init.");
     }
 }
-WP_CLI::log("  ✅ Categories: " . count($categories) . " verified");
+WP_CLI::log("  ✅ Categories: " . count($categories) . " verified (incl. sub-categories)");
+
+// Verify product tags.
+foreach ($tags_def as $tag_name) {
+    if (!term_exists($tag_name, 'product_tag')) {
+        WP_CLI::error("Tag '{$tag_name}' missing after init.");
+    }
+}
+WP_CLI::log("  ✅ Tags: " . count($tags_def) . " verified");
 
 // Verify attributes.
 foreach ($attributes_def as $key => $attr) {
@@ -732,6 +979,51 @@ foreach ($demo_products as $pd) {
     }
     WP_CLI::log("  ✅ '{$pd['name']}': {$actual}/{$expected} variations");
 }
+
+// Verify out-of-stock variations have correct stock status.
+foreach ($demo_products as $pd) {
+    if (empty($pd['out_of_stock'])) {
+        continue;
+    }
+    $pid = wc_get_product_id_by_sku($pd['sku']);
+    if (!$pid) {
+        continue;
+    }
+    $product = wc_get_product($pid);
+    if (!$product || $product->get_type() !== 'variable') {
+        continue;
+    }
+    foreach ($pd['out_of_stock'] as $oos_combo) {
+        [$oos_color, $oos_size] = explode('-', $oos_combo, 2);
+        $color_term = get_term_by('name', $oos_color, 'pa_color');
+        $size_tax = isset($pd['attributes']['shoe_size']) ? 'pa_shoe_size' : 'pa_size';
+        $size_term = get_term_by('name', $oos_size, $size_tax);
+        if (!$color_term || !$size_term) {
+            continue;
+        }
+        $found_oos = false;
+        foreach ($product->get_children() as $child_id) {
+            $child = wc_get_product($child_id);
+            if (!$child) {
+                continue;
+            }
+            $child_attrs = $child->get_attributes();
+            if (isset($child_attrs['pa_color']) && $child_attrs['pa_color'] === $color_term->slug
+                && isset($child_attrs[$size_tax]) && $child_attrs[$size_tax] === $size_term->slug
+            ) {
+                if ('outofstock' !== $child->get_stock_status()) {
+                    WP_CLI::error("Out-of-stock check failed: '{$pd['name']}' variation {$oos_combo} should be outofstock but is {$child->get_stock_status()}.");
+                }
+                $found_oos = true;
+                break;
+            }
+        }
+        if (!$found_oos) {
+            WP_CLI::warning("Out-of-stock variation {$oos_combo} not found for '{$pd['name']}'.");
+        }
+    }
+}
+WP_CLI::log("  ✅ Out-of-stock variations verified");
 
 // ══════════════════════════════════════════════════
 // 7. Final cleanup & status

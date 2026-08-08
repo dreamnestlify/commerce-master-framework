@@ -12,6 +12,8 @@ namespace CommerceMaster\Core;
 use CommerceMaster\Core\Module\ModuleRegistry;
 use CommerceMaster\Core\Module\SettingsModule;
 use CommerceMaster\Core\Module\SecurityModule;
+use CommerceMaster\Core\Module\WishlistModule;
+use CommerceMaster\Core\Module\RecentlyViewedModule;
 
 class Plugin {
 
@@ -78,8 +80,10 @@ class Plugin {
 	private function get_registry(): ModuleRegistry {
 		if ( null === $this->registry ) {
 			$this->registry = new ModuleRegistry();
-			$this->registry->register( new SettingsModule() );
-			$this->registry->register( new SecurityModule() );
+		$this->registry->register( new SettingsModule() );
+		$this->registry->register( new SecurityModule() );
+		$this->registry->register( new WishlistModule() );
+		$this->registry->register( new RecentlyViewedModule() );
 		}
 
 		return $this->registry;

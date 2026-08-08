@@ -1,18 +1,34 @@
+<!-- wp:group {"tagName":"div","className":"announcement-bar","layout":{"type":"constrained"}} -->
+<div class="wp-block-group announcement-bar">
+	<!-- wp:paragraph {"align":"center","className":"announcement-text"} -->
+	<p class="has-text-align-center announcement-text">Free shipping over $50 · Free 30-day returns</p>
+	<!-- /wp:paragraph -->
+</div>
+<!-- /wp:group -->
+
 <!-- wp:group {"tagName":"header","className":"site-header","layout":{"type":"constrained"}} -->
 <header class="wp-block-group site-header">
-    <!-- wp:group {"className":"site-header__inner","layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"space-between"}} -->
-    <div class="wp-block-group site-header__inner">
-        <!-- wp:site-title {"level":0} /-->
+	<!-- wp:group {"className":"site-header__inner","layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"space-between"}} -->
+	<div class="wp-block-group site-header__inner">
+		<!-- wp:site-title {"level":0} /-->
 
-        <!-- wp:navigation {"overlayMenu":"mobile","className":"site-nav"} /-->
+		<!-- wp:navigation {"overlayMenu":"mobile","className":"site-nav","layout":{"type":"flex","setCascadingProperties":true,"justifyContent":"center"}} -->
+		<!-- wp:navigation-link {"label":"Shop All","url":"/shop/"} /-->
+		<!-- wp:navigation-link {"label":"Women","url":"/product-category/women/"} /-->
+		<!-- wp:navigation-link {"label":"Men","url":"/product-category/men/"} /-->
+		<!-- wp:navigation-link {"label":"Shoes","url":"/product-category/shoes/"} /-->
+		<!-- wp:navigation-link {"label":"Accessories","url":"/product-category/accessories/"} /-->
+		<!-- wp:navigation-link {"label":"Sale","url":"/shop/?on_sale=1","className":"nav-sale-link"} /-->
+		<!-- /wp:navigation -->
 
-        <!-- wp:group {"className":"header-actions","layout":{"type":"flex","flexWrap":"nowrap"}} -->
-        <div class="wp-block-group header-actions">
-            <!-- wp:woocommerce/customer-account /-->
-            <!-- wp:woocommerce/mini-cart /-->
-        </div>
-        <!-- /wp:group -->
-    </div>
-    <!-- /wp:group -->
+		<!-- wp:group {"className":"header-actions","layout":{"type":"flex","flexWrap":"nowrap"}} -->
+		<div class="wp-block-group header-actions">
+			<!-- wp:search {"label":"Search","buttonText":"","className":"header-search"} /-->
+			<!-- wp:woocommerce/customer-account /-->
+			<!-- wp:woocommerce/mini-cart /-->
+		</div>
+		<!-- /wp:group -->
+	</div>
+	<!-- /wp:group -->
 </header>
 <!-- /wp:group -->

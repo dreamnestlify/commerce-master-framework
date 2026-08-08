@@ -11,6 +11,7 @@
             this.initSearchToggle();
             this.initStickyHeader();
             this.initAnnouncementBar();
+            this.initFilterDrawer();
         },
 
         /**
@@ -104,6 +105,54 @@
                     sessionStorage.setItem('announcement_dismissed', '1');
                 });
             }
+        },
+
+        /**
+         * Mobile filter drawer for shop archive.
+         */
+        initFilterDrawer: function () {
+            var toggleBtn = document.querySelector('.filter-toggle-btn .wp-element-button');
+            var sidebar = document.querySelector('.shop-sidebar');
+            if (!toggleBtn || !sidebar) {
+                return;
+            }
+
+            // Create overlay element.
+            var overlay = document.createElement('div');
+            overlay.className = 'filter-overlay';
+            document.body.appendChild(overlay);
+
+            function openDrawer() {
+                sidebar.classList.add('is-open');
+                overlay.classList.add('is-active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeDrawer() {
+                sidebar.classList.remove('is-open');
+                overlay.classList.remove('is-active');
+                document.body.style.overflow = '';
+            }
+
+            toggleBtn.addEventListener('click', openDrawer);
+            overlay.addEventListener('click', closeDrawer);
+
+            // Close on Escape key.
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && sidebar.classList.contains('is-open')) {
+                    closeDrawer();
+                }
+            });
+
+            // Close drawer when clicking the ::before pseudo-element area (top-right close).
+            sidebar.addEventListener('click', function (e) {
+                var rect = sidebar.getBoundingClientRect();
+                var clickX = e.clientX - rect.right + 40;
+                var clickY = e.clientY - rect.top;
+                if (clickX >= 0 && clickX <= 40 && clickY >= 0 && clickY <= 50) {
+                    closeDrawer();
+                }
+            });
         }
     };
 

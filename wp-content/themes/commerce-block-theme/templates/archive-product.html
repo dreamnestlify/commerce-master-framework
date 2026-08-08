@@ -13,7 +13,16 @@
         <!-- wp:group {"className":"shop-toolbar","layout":{"type":"flex","flexWrap":"wrap","justifyContent":"space-between"}} -->
         <div class="wp-block-group shop-toolbar">
             <!-- wp:woocommerce/product-results-count /-->
-            <!-- wp:woocommerce/catalog-sorting /-->
+            <!-- wp:group {"className":"shop-toolbar__right","layout":{"type":"flex","flexWrap":"nowrap"}} -->
+            <div class="wp-block-group shop-toolbar__right">
+                <!-- wp:buttons {"className":"filter-toggle-wrap"} -->
+                <div class="wp-block-buttons filter-toggle-wrap">
+                    <!-- wp:button {"className":"filter-toggle-btn","text":"Filters"} /-->
+                </div>
+                <!-- /wp:buttons -->
+                <!-- wp:woocommerce/catalog-sorting /-->
+            </div>
+            <!-- /wp:group -->
         </div>
         <!-- /wp:group -->
 
@@ -21,15 +30,23 @@
         <div class="wp-block-columns shop-layout">
             <!-- wp:column {"width":"25%","className":"shop-sidebar"} -->
             <div class="wp-block-column shop-sidebar" style="flex-basis:25%">
-                <!-- wp:woocommerce/product-filters {"className":"shop-filters"} -->
-                <div class="wp-block-woocommerce-product-filters shop-filters">
-                    <!-- wp:woocommerce/product-filter-active /-->
-                    <!-- wp:woocommerce/product-filter-price /-->
-                    <!-- wp:woocommerce/product-filter-status /-->
-                    <!-- wp:woocommerce/product-filter-rating /-->
-                    <!-- wp:woocommerce/product-filter-clear-button /-->
+                <!-- wp:group {"className":"shop-sidebar__inner"} -->
+                <div class="wp-block-group shop-sidebar__inner">
+                    <!-- wp:paragraph {"className":"shop-sidebar__title"} -->
+                    <p class="shop-sidebar__title">Filter Products</p>
+                    <!-- /wp:paragraph -->
+
+                    <!-- wp:woocommerce/product-filters {"className":"shop-filters"} -->
+                    <div class="wp-block-woocommerce-product-filters shop-filters">
+                        <!-- wp:woocommerce/product-filter-active /-->
+                        <!-- wp:woocommerce/product-filter-price /-->
+                        <!-- wp:woocommerce/product-filter-status /-->
+                        <!-- wp:woocommerce/product-filter-rating /-->
+                        <!-- wp:woocommerce/product-filter-clear-button /-->
+                    </div>
+                    <!-- /wp:woocommerce/product-filters -->
                 </div>
-                <!-- /wp:woocommerce/product-filters -->
+                <!-- /wp:group -->
             </div>
             <!-- /wp:column -->
 

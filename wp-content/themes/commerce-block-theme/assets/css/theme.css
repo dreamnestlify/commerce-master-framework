@@ -369,3 +369,428 @@ textarea:focus-visible {
         grid-template-columns: 1fr;
     }
 }
+
+/* ═══════════════════════════════════════════════════
+   Phase 1 — Shopping Experience Enhancements
+   ═══════════════════════════════════════════════════ */
+
+/* ── Header Navigation ── */
+.site-nav .wp-block-navigation__container {
+    gap: 2rem;
+}
+
+.site-nav .wp-block-navigation-item__label {
+    font-size: var(--wp--preset--font-size--small);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+}
+
+.nav-sale-link .wp-block-navigation-item__label {
+    color: var(--wp--preset--color--accent);
+}
+
+.header-search {
+    min-width: 180px;
+}
+
+.header-search .wp-block-search__inside-wrapper {
+    border: 1px solid var(--wp--preset--color--stone);
+    border-radius: 0;
+}
+
+.header-search input.wp-block-search__input {
+    border: none;
+    border-radius: 0;
+    font-size: var(--wp--preset--font-size--small);
+    padding: 0.5rem 0.75rem;
+}
+
+.header-search button.wp-block-search__button {
+    background: transparent;
+    color: var(--wp--preset--color--contrast);
+    padding: 0.5rem;
+}
+
+/* ── Shop Archive ── */
+.shop-toolbar {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--wp--preset--color--stone);
+    margin-bottom: 2rem;
+}
+
+.shop-toolbar__right {
+    gap: 1rem;
+    align-items: center;
+}
+
+.filter-toggle-wrap {
+    display: none;
+}
+
+.shop-sidebar__inner {
+    padding: 1.5rem;
+    background: var(--wp--preset--color--mist);
+    border-radius: 4px;
+}
+
+.shop-sidebar__title {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: var(--wp--preset--font-size--small);
+    margin-bottom: 1rem;
+    color: var(--wp--preset--color--contrast);
+}
+
+.shop-filters .wp-block-woocommerce-product-filter {
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--wp--preset--color--stone);
+}
+
+.shop-filters .wp-block-woocommerce-product-filter:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+/* Product card improvements */
+.woocommerce .product-collection .wc-block-product-template {
+    gap: 1.5rem;
+}
+
+.wc-block-product__image {
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+.wc-block-product__image img {
+    transition: transform 0.3s ease;
+}
+
+.wc-block-product:hover .wc-block-product__image img {
+    transform: scale(1.05);
+}
+
+.wc-block-product .product-title {
+    font-size: var(--wp--preset--font-size--small);
+    font-weight: 600;
+    margin-top: 0.75rem;
+}
+
+.wc-block-product .wc-block-product__price {
+    font-size: var(--wp--preset--font-size--small);
+    color: var(--wp--preset--color--contrast);
+}
+
+.wc-block-product .wc-block-components-product-sale-badge {
+    background: var(--wp--preset--color--accent);
+    color: var(--wp--preset--color--base);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 0;
+}
+
+/* Out of stock styling */
+.wc-block-product .out-of-stock,
+.wc-block-product .wc-block-components-product-stock-status--out-of-stock {
+    color: var(--wp--preset--color--slate);
+    font-size: var(--wp--preset--font-size--small);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ── Single Product Page ── */
+.product-size-guide {
+    margin-top: 1.5rem;
+}
+
+.product-size-guide .wp-block-details,
+.product-info-accordion .wp-block-details {
+    border: 1px solid var(--wp--preset--color--stone);
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    background: var(--wp--preset--color--base);
+}
+
+.product-size-guide summary,
+.product-info-accordion summary {
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    font-size: var(--wp--preset--font-size--small);
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.product-size-guide .wp-block-details[open] summary,
+.product-info-accordion .wp-block-details[open] summary {
+    border-bottom: 1px solid var(--wp--preset--color--stone);
+}
+
+.size-guide-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.size-guide-table th,
+.size-guide-table td {
+    padding: 0.5rem 1rem;
+    text-align: center;
+    border: 1px solid var(--wp--preset--color--stone);
+    font-size: var(--wp--preset--font-size--small);
+}
+
+.size-guide-table th {
+    background: var(--wp--preset--color--mist);
+    font-weight: 700;
+}
+
+.size-guide-table {
+    padding: 1rem;
+    margin: 0;
+}
+
+.product-info-accordion {
+    margin-top: 1.5rem;
+}
+
+.product-info-accordion p {
+    padding: 0.5rem 1rem;
+    font-size: var(--wp--preset--font-size--small);
+    color: var(--wp--preset--color--slate);
+    line-height: 1.6;
+}
+
+.product-badges {
+    margin-top: 1.5rem;
+    gap: 0.5rem;
+}
+
+.product-badges .badge {
+    font-size: var(--wp--preset--font-size--small);
+    color: var(--wp--preset--color--slate);
+    background: var(--wp--preset--color--mist);
+    padding: 0.4rem 0.75rem;
+    border-radius: 4px;
+    margin: 0;
+}
+
+/* Related products */
+.related-products {
+    margin-top: 4rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--wp--preset--color--stone);
+}
+
+/* ── Mobile Filter Drawer ── */
+@media (max-width: 768px) {
+    .filter-toggle-wrap {
+        display: block;
+    }
+
+    .filter-toggle-btn .wp-element-button {
+        font-size: var(--wp--preset--font-size--small);
+        padding: 0.5rem 1rem;
+        background: var(--wp--preset--color--contrast);
+        color: var(--wp--preset--color--base);
+        border: none;
+        border-radius: 0;
+        cursor: pointer;
+    }
+
+    .shop-layout {
+        position: relative;
+    }
+
+    .shop-sidebar {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 85%;
+        max-width: 350px;
+        height: 100vh;
+        z-index: 1000;
+        background: var(--wp--preset--color--base);
+        overflow-y: auto;
+        transition: left 0.3s ease;
+        padding: 1rem;
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .shop-sidebar.is-open {
+        left: 0;
+    }
+
+    .shop-sidebar::before {
+        content: "✕";
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--wp--preset--color--contrast);
+        z-index: 1;
+    }
+
+    .shop-products {
+        flex-basis: 100% !important;
+    }
+
+    .header-search {
+        display: none;
+    }
+
+    .site-header__inner {
+        flex-wrap: wrap;
+    }
+
+    .shop-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .shop-toolbar__right {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+
+/* ── Overlay for mobile filter drawer ── */
+.filter-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.filter-overlay.is-active {
+    display: block;
+}
+
+/* ── Search Results ── */
+.woocommerce-shop.search .shop-content {
+    padding: 2rem 0;
+}
+
+/* ── Mini-cart badge ── */
+.wc-block-mini-cart__button {
+    position: relative;
+}
+
+.wc-block-mini-cart__badge {
+    background: var(--wp--preset--color--accent);
+    color: var(--wp--preset--color--base);
+    font-size: 0.7rem;
+    font-weight: 700;
+    min-width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: -4px;
+    right: -4px;
+}
+
+/* ── Wishlist Button (single product) ── */
+.commerce-wishlist-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1.2rem;
+    margin-top: 0.75rem;
+    margin-left: 0.5rem;
+    background: transparent;
+    border: 1px solid var(--wp--preset--color--stone);
+    border-radius: 0;
+    color: var(--wp--preset--color--contrast);
+    font-size: var(--wp--preset--font-size--small);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.commerce-wishlist-btn:hover {
+    border-color: var(--wp--preset--color--contrast);
+    background: var(--wp--preset--color--mist);
+}
+
+.commerce-wishlist-btn.is-active {
+    color: var(--wp--preset--color--accent);
+    border-color: var(--wp--preset--color--accent);
+}
+
+/* ── Wishlist count badge (header) ── */
+.wishlist-count-badge {
+    background: var(--wp--preset--color--accent);
+    color: var(--wp--preset--color--base);
+    font-size: 0.7rem;
+    font-weight: 700;
+    min-width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 50%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: -4px;
+    right: -4px;
+}
+
+/* ── Recently Viewed Section ── */
+.recently-viewed-section {
+    margin-top: 4rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--wp--preset--color--stone);
+}
+
+.recently-viewed-title {
+    font-size: var(--wp--preset--font-size--x-large);
+    font-weight: 700;
+    margin-bottom: 2rem;
+}
+
+.recently-viewed-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+}
+
+.recently-viewed-item {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+}
+
+.recently-viewed-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.recently-viewed-name {
+    font-size: var(--wp--preset--font-size--small);
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+
+.recently-viewed-price {
+    font-size: var(--wp--preset--font-size--small);
+    color: var(--wp--preset--color--slate);
+}
+
+@media (max-width: 768px) {
+    .recently-viewed-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

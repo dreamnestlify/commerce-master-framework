@@ -193,7 +193,7 @@ fi
 echo ""
 echo "── Demo Products — Count & SKU ─────────────────────────"
 
-EXPECTED_PRODUCT_COUNT=10
+EXPECTED_PRODUCT_COUNT=16
 PRODUCT_COUNT=$(wp post list --post_type=product --post_status=publish --format=count 2>/dev/null || echo "0")
 if [ "$PRODUCT_COUNT" = "$EXPECTED_PRODUCT_COUNT" ]; then
     ok "Published products: $PRODUCT_COUNT (expected exactly $EXPECTED_PRODUCT_COUNT)"
@@ -209,10 +209,16 @@ EXPECTED_SKUS=(
     "ACC-SUN-001"
     "WOM-TS-001"
     "WOM-DR-001"
+    "WOM-KC-001"
+    "WOM-SK-001"
     "MEN-JK-001"
     "MEN-KN-001"
+    "MEN-SH-001"
     "SHO-SN-001"
     "SHO-BT-001"
+    "SHO-LF-001"
+    "ACC-BEANIE-001"
+    "ACC-CH-001"
 )
 
 for sku in "${EXPECTED_SKUS[@]}"; do
@@ -256,14 +262,20 @@ check_product_type "ACC-TOTE-001" "simple"
 check_product_type "ACC-BELT-001" "simple"
 check_product_type "ACC-SCARF-001" "simple"
 check_product_type "ACC-SUN-001" "simple"
+check_product_type "ACC-BEANIE-001" "simple"
+check_product_type "ACC-CH-001" "simple"
 
 # Variable products
 check_product_type "WOM-TS-001" "variable"
 check_product_type "WOM-DR-001" "variable"
+check_product_type "WOM-KC-001" "variable"
+check_product_type "WOM-SK-001" "variable"
 check_product_type "MEN-JK-001" "variable"
 check_product_type "MEN-KN-001" "variable"
+check_product_type "MEN-SH-001" "variable"
 check_product_type "SHO-SN-001" "variable"
 check_product_type "SHO-BT-001" "variable"
+check_product_type "SHO-LF-001" "variable"
 
 # ── 10. Variation Counts ─────────────────────────────────────────
 echo ""
@@ -294,26 +306,52 @@ check_variation_count() {
 check_variation_count "WOM-TS-001" 20
 # WOM-DR-001: 3 colors × 4 sizes = 12
 check_variation_count "WOM-DR-001" 12
+# WOM-KC-001: 3 colors × 4 sizes = 12
+check_variation_count "WOM-KC-001" 12
+# WOM-SK-001: 3 colors × 4 sizes = 12
+check_variation_count "WOM-SK-001" 12
 # MEN-JK-001: 3 colors × 5 sizes = 15
 check_variation_count "MEN-JK-001" 15
 # MEN-KN-001: 3 colors × 4 sizes = 12
 check_variation_count "MEN-KN-001" 12
+# MEN-SH-001: 3 colors × 5 sizes = 15
+check_variation_count "MEN-SH-001" 15
 # SHO-SN-001: 3 colors × 8 shoe sizes = 24
 check_variation_count "SHO-SN-001" 24
 # SHO-BT-001: 2 colors × 6 shoe sizes = 12
 check_variation_count "SHO-BT-001" 12
+# SHO-LF-001: 3 colors × 5 shoe sizes = 15
+check_variation_count "SHO-LF-001" 15
 
 # ── 11. Categories ─────────────────────────────────────────────────
 echo ""
 echo "── Product Categories ───────────────────────────────────"
 
+# Top-level categories
 EXPECTED_CATS=("women" "men" "shoes" "accessories")
-for cat_slug in "${EXPECTED_CATS[@]}"; do
+# Sub-categories
+EXPECTED_SUBCATS=("tops" "dresses" "outerwear" "knitwear" "sneakers" "boots" "bags" "belts" "scarves" "sunglasses")
+
+for cat_slug in "${EXPECTED_CATS[@]}" "${EXPECTED_SUBCATS[@]}"; do
     term_id=$(wp term get product_cat "$cat_slug" --by=slug --field=term_id 2>/dev/null || echo "")
     if [ -n "$term_id" ]; then
         ok "Category found: $cat_slug (ID: $term_id)"
     else
         fail "Category NOT found: $cat_slug"
+    fi
+done
+
+# Verify product tags
+echo ""
+echo "── Product Tags ─────────────────────────────────────────"
+
+EXPECTED_TAGS=("new-arrival" "sale" "featured")
+for tag_slug in "${EXPECTED_TAGS[@]}"; do
+    term_id=$(wp term get product_tag "$tag_slug" --by=slug --field=term_id 2>/dev/null || echo "")
+    if [ -n "$term_id" ]; then
+        ok "Tag found: $tag_slug (ID: $term_id)"
+    else
+        fail "Tag NOT found: $tag_slug"
     fi
 done
 
