@@ -177,20 +177,40 @@ jobs:
       - name: Run init.sh (first run)
         run: |
           docker compose --profile cli run --rm wpcli bash /scripts/init.sh 2>&1 | tee /tmp/init-run1.log
+          EXIT_CODE=${PIPESTATUS[0]}
+          if [ "$EXIT_CODE" -ne 0 ]; then
+            echo "❌ init.sh (first run) failed with exit code $EXIT_CODE"
+            exit 1
+          fi
           echo "✅ First init.sh completed"
 
       - name: Run init.sh (second run — idempotency check)
         run: |
           docker compose --profile cli run --rm wpcli bash /scripts/init.sh 2>&1 | tee /tmp/init-run2.log
+          EXIT_CODE=${PIPESTATUS[0]}
+          if [ "$EXIT_CODE" -ne 0 ]; then
+            echo "❌ init.sh (second run) failed with exit code $EXIT_CODE"
+            exit 1
+          fi
           echo "✅ Second init.sh completed (idempotency verified)"
 
       - name: Run smoke checks
         run: |
           docker compose --profile cli run --rm wpcli bash /scripts/smoke-check.sh 2>&1 | tee /tmp/smoke-check.log
+          EXIT_CODE=${PIPESTATUS[0]}
+          if [ "$EXIT_CODE" -ne 0 ]; then
+            echo "❌ Smoke checks failed with exit code $EXIT_CODE"
+            exit 1
+          fi
 
       - name: Run block runtime check
         run: |
           docker compose --profile cli run --rm wpcli wp eval-file /scripts/block-runtime-check.php 2>&1 | tee /tmp/block-runtime.log
+          EXIT_CODE=${PIPESTATUS[0]}
+          if [ "$EXIT_CODE" -ne 0 ]; then
+            echo "❌ Block runtime check failed with exit code $EXIT_CODE"
+            exit 1
+          fi
 
       - name: Verify page HTTP status codes
         run: |
@@ -207,10 +227,13 @@ jobs:
 
       - name: Verify product detail page
         run: |
-          # Use WP-CLI to find a product by stable SKU, get its permalink.
-          PRODUCT_ID=$(docker compose --profile cli run --rm wpcli wp post list --post_type=product --meta_key=_sku --meta_value="WOM-TS-001" --field=ID --format=raw 2>/dev/null | head -1)
-          if [ -z "$PRODUCT_ID" ]; then
+          # Use WooCommerce's native function to find product by SKU (more reliable than raw meta query).
+          PRODUCT_ID=$(docker compose --profile cli run --rm wpcli wp eval "echo wc_get_product_id_by_sku('WOM-TS-001');" 2>/dev/null)
+          if [ -z "$PRODUCT_ID" ] || [ "$PRODUCT_ID" = "0" ]; then
             echo "  ❌ Product with SKU WOM-TS-001 not found"
+            # Debug: list all products with their SKUs
+            echo "  ── Debug: All products ──"
+            docker compose --profile cli run --rm wpcli wp post list --post_type=product --post_status=publish --fields=ID,post_title --format=table 2>/dev/null
             exit 1
           fi
           PRODUCT_URL=$(docker compose --profile cli run --rm wpcli wp eval "echo get_permalink($PRODUCT_ID);" 2>/dev/null)
