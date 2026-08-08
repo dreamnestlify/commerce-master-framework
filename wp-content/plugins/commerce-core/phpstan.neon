@@ -1,6 +1,3 @@
-includes:
-    - vendor/szepeviktor/phpstan-wordpress/extension.neon
-
 parameters:
     level: 6
     paths:
@@ -8,7 +5,3 @@ parameters:
     excludePaths:
         - tests/*
     tmpDir: .phpstan-cache
-
-    # WordPress global constants/functions are provided by the extension
-    bootstrapFiles:
-        - vendor/szepeviktor/phpstan-wordpress/stubs/wordpress-stubs/wordpress-stubs.php
