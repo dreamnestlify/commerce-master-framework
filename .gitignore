@@ -1,0 +1,74 @@
+# ──────────────────────────────────────────────
+# WordPress core (managed via Docker, not committed)
+# ──────────────────────────────────────────────
+/wordpress/
+/wp/
+/wp-cli.local.yml
+
+# ──────────────────────────────────────────────
+# Environment & secrets
+# ──────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+*.secret
+*.key
+*.pem
+
+# ──────────────────────────────────────────────
+# Database & uploads (never commit user data)
+# ──────────────────────────────────────────────
+*.sql
+*.sql.gz
+*.sql.bz2
+/db-data/
+/wp-content/uploads/
+/wp-content/upgrade/
+/wp-content/backups/
+
+# ──────────────────────────────────────────────
+# Composer / PHP dependencies
+# ──────────────────────────────────────────────
+/vendor/
+/composer.lock
+/wp-content/plugins/commerce-core/vendor/
+
+# ──────────────────────────────────────────────
+# Node / npm dependencies
+# ──────────────────────────────────────────────
+/node_modules/
+/wp-content/themes/commerce-block-theme/node_modules/
+
+# ──────────────────────────────────────────────
+# Build artifacts
+# ──────────────────────────────────────────────
+/dist/
+/build/
+*.min.js
+*.min.css
+*.map
+/wp-content/themes/commerce-block-theme/build/
+
+# ──────────────────────────────────────────────
+# Editor / OS
+# ──────────────────────────────────────────────
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+Thumbs.db
+
+# ──────────────────────────────────────────────
+# Test / coverage
+# ──────────────────────────────────────────────
+/coverage/
+/.phpunit.cache/
+/.phpunit.result.cache
+
+# ──────────────────────────────────────────────
+# Logs
+# ──────────────────────────────────────────────
+*.log
+/logs/

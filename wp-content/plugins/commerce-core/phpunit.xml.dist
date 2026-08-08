@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+    bootstrap="tests/phpunit/bootstrap.php"
+    cacheDirectory=".phpunit.cache"
+    colors="true"
+    failOnRisky="true"
+    failOnWarning="true"
+    stopOnError="false"
+    stopOnFailure="false"
+    executionOrder="random"
+>
+    <php>
+        <!-- Constants for testing environment -->
+        <const name="WP_TESTS_DOMAIN" value="example.org"/>
+        <const name="WP_TESTS_EMAIL" value="test@example.org"/>
+        <const name="WP_TESTS_TITLE" value="Commerce Master Test"/>
+    </php>
+
+    <testsuites>
+        <testsuite name="Unit">
+            <directory>tests/phpunit/Unit</directory>
+        </testsuite>
+    </testsuites>
+
+    <coverage>
+        <report>
+            <html outputDirectory="coverage"/>
+            <text outputFile="coverage.txt" showUncoveredFiles="false"/>
+        </report>
+    </coverage>
+
+    <source>
+        <directory>src/</directory>
+    </source>
+</phpunit>

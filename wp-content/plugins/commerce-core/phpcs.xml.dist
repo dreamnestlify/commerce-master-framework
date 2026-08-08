@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<ruleset name="Commerce Core Coding Standards">
+    <description>WordPress Coding Standards for Commerce Core plugin</description>
+
+    <!-- Files to check -->
+    <file>src/</file>
+    <file>tests/</file>
+    <file>commerce-core.php</file>
+    <file>uninstall.php</file>
+
+    <!-- Exclude patterns -->
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <exclude-pattern>*/tests/bootstrap.php</exclude-pattern>
+
+    <!-- Use WordPress Coding Standards -->
+    <rule ref="WordPress">
+        <!-- Allow PSR-4 namespace naming (PascalCase) alongside WordPress snake_case for functions -->
+        <exclude name="WordPress.NamingConventions.ValidFunctionName.FunctionNameInvalid"/>
+        <exclude name="WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase"/>
+    </rule>
+
+    <!-- Minimum supported WP version for deprecated function checks -->
+    <config name="minimum_wp_version" value="6.5"/>
+
+    <!-- Parallel processing -->
+    <config name="parallel" value="8"/>
+
+    <!-- Show progress -->
+    <arg value="p"/>
+
+    <!-- Use colors -->
+    <arg name="colors"/>
+
+    <!-- Show sniff codes -->
+    <arg value="s"/>
+
+    <!-- Ignore warnings during fixes -->
+    <rule ref="WordPress.WP.I18n">
+        <properties>
+            <property name="text_domain" type="array" value="commerce-core"/>
+        </properties>
+    </rule>
+</ruleset>

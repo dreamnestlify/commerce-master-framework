@@ -1,0 +1,32 @@
+{
+    "env": {
+        "browser": true,
+        "es2022": true
+    },
+    "parserOptions": {
+        "ecmaVersion": 2022,
+        "sourceType": "module"
+    },
+    "extends": [
+        "eslint:recommended"
+    ],
+    "rules": {
+        "no-console": "warn",
+        "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+        "no-undef": "error",
+        "no-empty": ["error", { "allowEmptyCatch": false }],
+        "prefer-const": "error",
+        "eqeqeq": ["error", "always"],
+        "no-var": "error",
+        "quotes": ["error", "single"],
+        "semi": ["error", "always"]
+    },
+    "globals": {
+        "wp": "readonly",
+        "jQuery": "readonly",
+        "woocommerce": "readonly",
+        "ajaxurl": "readonly",
+        "commerceCoreData": "readonly"
+    },
+    "ignorePatterns": ["node_modules/", "build/", "*.min.js"]
+}

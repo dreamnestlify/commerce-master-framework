@@ -1,0 +1,60 @@
+{
+    "name": "commerce-master/commerce-core",
+    "description": "Self-built core plugin for WordPress + WooCommerce fashion e-commerce master template",
+    "type": "wordpress-plugin",
+    "license": "proprietary",
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=8.2"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.10",
+        "wp-coding-standards/wpcs": "^3.1",
+        "phpstan/phpstan": "^1.12",
+        "phpstan/extension-installer": "^1.4",
+        "szepeviktor/phpstan-wordpress": "^1.4",
+        "phpunit/phpunit": "^10.5",
+        "yoast/phpunit-polyfills": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "CommerceMaster\\Core\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "CommerceMaster\\Core\\Tests\\": "tests/phpunit/"
+        }
+    },
+    "scripts": {
+        "lint": "find src -name '*.php' -exec php -l {} +",
+        "phpcs": "phpcs --standard=phpcs.xml.dist src/ tests/",
+        "phpcs-fix": "phpcbf --standard=phpcs.xml.dist src/ tests/",
+        "phpstan": "phpstan analyse src/ --memory-limit=512M",
+        "test": "phpunit -c phpunit.xml.dist",
+        "test-coverage": "phpunit -c phpunit.xml.dist --coverage-html coverage",
+        "validate": "composer validate --strict",
+        "check-all": [
+            "@lint",
+            "@phpcs",
+            "@phpstan",
+            "@test"
+        ]
+    },
+    "scripts-descriptions": {
+        "lint": "PHP syntax lint on src directory",
+        "phpcs": "WordPress Coding Standards check",
+        "phpcs-fix": "Auto-fix WordPress Coding Standards violations",
+        "phpstan": "Static analysis with PHPStan + WordPress extensions",
+        "test": "Run PHPUnit test suite",
+        "validate": "Validate composer.json",
+        "check-all": "Run all quality checks"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpstan/extension-installer": true
+        }
+    }
+}
