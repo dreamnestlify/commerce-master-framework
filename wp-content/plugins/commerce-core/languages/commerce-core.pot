@@ -1,0 +1,16 @@
+# Commerce Core Language File
+# This is a placeholder. Generate the real .pot file using:
+#   wp i18n make-pot wp-content/plugins/commerce-core languages/commerce-core.pot
+#
+# Copyright (C) 2026 Commerce Master
+# This file is distributed under the proprietary license.
+msgid ""
+msgstr ""
+"Project-Id-Version: Commerce Core 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-08 00:00+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: WP-CLI i18n\n"
+"Domain: commerce-core\n"

@@ -1,0 +1,37 @@
+/* Commerce Core Admin Styles */
+.commerce-core-admin {
+    max-width: 1200px;
+}
+
+.commerce-core-admin h1 {
+    margin-bottom: 20px;
+}
+
+.commerce-core-admin h2 {
+    margin-top: 30px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.commerce-core-admin .form-table th {
+    width: 250px;
+}
+
+.commerce-core-admin .description {
+    font-size: 13px;
+    color: #666;
+    margin-top: 5px;
+}
+
+.commerce-core-system-info {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 2px solid #ddd;
+}
+
+.commerce-core-system-info code {
+    background: #f0f0f1;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 13px;
+}
