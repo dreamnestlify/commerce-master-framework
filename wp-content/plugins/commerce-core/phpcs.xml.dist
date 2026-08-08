@@ -28,8 +28,8 @@
         <exclude name="Squiz.Commenting.FunctionComment.MissingParamTag"/>
         <exclude name="Squiz.Commenting.FunctionComment.WrongStyle"/>
         <exclude name="Squiz.Commenting.VariableComment.Missing"/>
-        <exclude name="Squiz.Commenting.InlineComments.NotEndOfPeriod"/>
-        <exclude name="Squiz.Commenting.InlineComments.NotCapital"/>
+        <exclude name="Squiz.Commenting.InlineComment.InvalidEndChar"/>
+        <exclude name="Squiz.Commenting.InlineComment.NotCapital"/>
         <exclude name="Generic.Commenting.DocComment.MissingShort"/>
     </rule>
 

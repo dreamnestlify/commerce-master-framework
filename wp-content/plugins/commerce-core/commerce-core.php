@@ -33,7 +33,7 @@ require_once COMMERCE_CORE_DIR . 'src/Autoload.php';
 \CommerceMaster\Core\Autoload::register();
 
 // Bootstrap the plugin.
-$plugin = new \CommerceMaster\Core\Plugin();
+$cc_plugin = new \CommerceMaster\Core\Plugin();
 
 /**
  * Activation hook.
@@ -41,8 +41,8 @@ $plugin = new \CommerceMaster\Core\Plugin();
 register_activation_hook(
 	__FILE__,
 	function (): void {
-		$plugin = new \CommerceMaster\Core\Plugin();
-		$plugin->activate();
+		$cc_plugin = new \CommerceMaster\Core\Plugin();
+		$cc_plugin->activate();
 	}
 );
 
@@ -52,20 +52,20 @@ register_activation_hook(
 register_deactivation_hook(
 	__FILE__,
 	function (): void {
-		$plugin = new \CommerceMaster\Core\Plugin();
-		$plugin->deactivate();
+		$cc_plugin = new \CommerceMaster\Core\Plugin();
+		$cc_plugin->deactivate();
 	}
 );
 
 // Initialize on plugins_loaded.
-add_action( 'plugins_loaded', array( $plugin, 'boot' ) );
+add_action( 'plugins_loaded', array( $cc_plugin, 'boot' ) );
 
 // Add WP-CLI commands if running in CLI context.
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
 	add_action(
 		'cli_init',
-		function () use ( $plugin ): void {
-			$plugin->register_cli_commands();
+		function () use ( $cc_plugin ): void {
+			$cc_plugin->register_cli_commands();
 		}
 	);
 }
