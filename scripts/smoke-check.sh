@@ -239,9 +239,10 @@ check_product_type() {
         return
     fi
 
-    # Get product type from term relationship
+    # Get product type via WC_Product::get_type() (most reliable method).
+    # WooCommerce stores product type in product_type taxonomy, not post meta.
     local product_type
-    product_type=$(wp wc product get "$product_id" --field=type 2>/dev/null || wp post meta get "$product_id" "_product_type" 2>/dev/null || echo "unknown")
+    product_type=$(wp eval "echo wc_get_product($product_id)->get_type();" 2>/dev/null || echo "unknown")
 
     if [ "$product_type" = "$expected_type" ]; then
         ok "SKU $sku: type=$expected_type"

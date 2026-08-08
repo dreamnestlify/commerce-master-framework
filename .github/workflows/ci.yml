@@ -50,6 +50,7 @@ jobs:
           name: fixed-source
           path: |
             wp-content/plugins/commerce-core/src/
+            wp-content/plugins/commerce-core/tests/
             wp-content/plugins/commerce-core/commerce-core.php
             wp-content/plugins/commerce-core/uninstall.php
           if-no-files-found: warn
