@@ -2,7 +2,9 @@
 
 <!-- wp:group {"tagName":"main","className":"site-main woocommerce-product","layout":{"type":"constrained"}} -->
 <main class="wp-block-group site-main woocommerce-product" id="main-content">
-    <!-- wp:woocommerce/breadcrumb /-->
+    <!-- wp:woocommerce/store-notices /-->
+
+    <!-- wp:woocommerce/breadcrumbs /-->
 
     <!-- wp:group {"className":"single-product-content","layout":{"type":"constrained"}} -->
     <div class="wp-block-group single-product-content">
@@ -14,17 +16,17 @@
             </div>
             <!-- /wp:column -->
 
-            <!-- wp:column {"width":"50%","className":"product-details"} -->
-            <div class="wp-block-column product-details" style="flex-basis:50%">
+            <!-- wp:column {"width":"50%","className":"product-details-col"} -->
+            <div class="wp-block-column product-details-col" style="flex-basis:50%">
                 <!-- wp:post-title {"level":1,"className":"product-title"} /-->
 
                 <!-- wp:woocommerce/product-rating /-->
 
                 <!-- wp:woocommerce/product-price {"className":"product-price"} /-->
 
-                <!-- wp:woocommerce/product-short-description /-->
+                <!-- wp:woocommerce/product-summary /-->
 
-                <!-- wp:woocommerce/add-to-cart {"className":"product-add-to-cart"} /-->
+                <!-- wp:woocommerce/add-to-cart-form {"className":"product-add-to-cart"} /-->
 
                 <!-- wp:group {"className":"product-meta"} -->
                 <div class="wp-block-group product-meta">
@@ -42,14 +44,14 @@
                     <!-- /wp:paragraph -->
                 </div>
                 <!-- /wp:group -->
-
-                <!-- wp:woocommerce/product-tabs /-->
-
-                <!-- wp:woocommerce/related-products {"className":"related-products"} /-->
             </div>
             <!-- /wp:column -->
         </div>
         <!-- /wp:columns -->
+
+        <!-- wp:woocommerce/product-details /-->
+
+        <!-- wp:woocommerce/related-products {"className":"related-products"} /-->
     </div>
     <!-- /wp:group -->
 </main>

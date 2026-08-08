@@ -28,9 +28,9 @@
 
 # ──────────────────────────────────────────────
 # Composer / PHP dependencies
+# (lock files ARE committed for reproducible builds)
 # ──────────────────────────────────────────────
 /vendor/
-/composer.lock
 /wp-content/plugins/commerce-core/vendor/
 
 # ──────────────────────────────────────────────

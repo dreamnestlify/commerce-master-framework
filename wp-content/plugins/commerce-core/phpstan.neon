@@ -1,5 +1,4 @@
 includes:
-    - phar://phpstan.phar/conf/wordpress-baseline.neon
     - vendor/szepeviktor/phpstan-wordpress/extension.neon
 
 parameters:

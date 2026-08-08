@@ -33,6 +33,18 @@ services:
         define('SECURE_AUTH_SALT', '${SECURE_AUTH_SALT:-generate_me}');
         define('LOGGED_IN_SALT', '${LOGGED_IN_SALT:-generate_me}');
         define('NONCE_SALT', '${NONCE_SALT:-generate_me}');
+      # Pass-through env vars for init script (read by WP-CLI container)
+      ADMIN_USER: ${ADMIN_USER:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-change_me_to_a_strong_password}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@example.com}
+      BRAND_NAME: ${BRAND_NAME:-Commerce Master}
+      BRAND_TAGLINE: ${BRAND_TAGLINE:-Fashion for the modern world}
+      DEFAULT_LOCALE: ${DEFAULT_LOCALE:-en_US}
+      BASE_CURRENCY: ${BASE_CURRENCY:-USD}
+      ENABLED_CURRENCIES: ${ENABLED_CURRENCIES:-USD,EUR,GBP}
+      DEFAULT_MARKET: ${DEFAULT_MARKET:-EU}
+      SUPPORT_EMAIL: ${SUPPORT_EMAIL:-support@example.com}
+      SUPPORT_PHONE: ${SUPPORT_PHONE:-}
     volumes:
       - wordpress_data:/var/www/html
       - ./wp-content/plugins/commerce-core:/var/www/html/wp-content/plugins/commerce-core:ro
@@ -97,6 +109,20 @@ services:
       WORDPRESS_DB_NAME: ${DB_NAME:-wordpress}
       WORDPRESS_DB_USER: ${DB_USER:-wp_user}
       WORDPRESS_DB_PASSWORD: ${DB_PASSWORD:-change_me}
+      # Admin credentials for init script
+      ADMIN_USER: ${ADMIN_USER:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-change_me_to_a_strong_password}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@example.com}
+      # Brand / site configuration
+      BRAND_NAME: ${BRAND_NAME:-Commerce Master}
+      BRAND_TAGLINE: ${BRAND_TAGLINE:-Fashion for the modern world}
+      DEFAULT_LOCALE: ${DEFAULT_LOCALE:-en_US}
+      BASE_CURRENCY: ${BASE_CURRENCY:-USD}
+      ENABLED_CURRENCIES: ${ENABLED_CURRENCIES:-USD,EUR,GBP}
+      DEFAULT_MARKET: ${DEFAULT_MARKET:-EU}
+      SUPPORT_EMAIL: ${SUPPORT_EMAIL:-support@example.com}
+      SUPPORT_PHONE: ${SUPPORT_PHONE:-}
+      WP_HOME: ${WP_HOME:-http://localhost:8080}
     volumes:
       - wordpress_data:/var/www/html
       - ./wp-content/plugins/commerce-core:/var/www/html/wp-content/plugins/commerce-core:ro

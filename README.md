@@ -59,14 +59,19 @@ open http://localhost:8080
 │   ├── ROADMAP.md              # Phase 0–4 roadmap
 │   └── DECISIONS.md            # Key technical decisions log
 ├── scripts/
-│   └── init.sh                 # WP-CLI site initialization (idempotent)
+│   ├── init.sh                 # WP-CLI site initialization (idempotent)
+│   ├── demo-data.php           # Demo product/category/attribute data
+│   ├── block-name-scanner.sh   # WooCommerce block name validator
+│   └── smoke-check.sh          # Post-init smoke checks
 ├── wp-content/
 │   ├── plugins/
 │   │   └── commerce-core/      # Self-built core plugin (business logic)
+│   │       ├── composer.json   # PHP dependencies & tooling
+│   │       └── composer.lock   # Locked dependency versions
 │   └── themes/
 │       └── commerce-block-theme/  # Self-built Gutenberg block theme
-├── composer.json               # PHP dependencies & tooling
-├── package.json                # Node dependencies & build scripts
+│           ├── package.json     # Node dependencies & lint scripts
+│           └── package-lock.json # Locked dependency versions
 └── .github/
     └── workflows/
         └── ci.yml              # CI pipeline
@@ -111,7 +116,7 @@ composer test          # PHPUnit tests
 
 ```bash
 cd wp-content/themes/commerce-block-theme
-npm install
+npm ci
 npm run lint           # ESLint + Stylelint
 npm run build          # Build theme assets
 ```

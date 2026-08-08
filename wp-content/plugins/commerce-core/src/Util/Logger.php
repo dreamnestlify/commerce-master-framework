@@ -21,9 +21,18 @@ class Logger
 
     private string $context;
 
-    public function __construct(string $context = 'commerce-core')
+    /**
+     * Optional custom handler for testing or advanced use.
+     * Signature: function(string $level, string $entry, string $context): void
+     *
+     * @var callable|null
+     */
+    private $handler;
+
+    public function __construct(string $context = 'commerce-core', ?callable $handler = null)
     {
         $this->context = $context;
+        $this->handler = $handler;
     }
 
     /**
@@ -91,13 +100,13 @@ class Logger
         );
 
         if (!empty($data)) {
-            // Safe encoding — never log passwords or payment data.
             $safe = $this->sanitize_data($data);
             $entry .= ' ' . wp_json_encode($safe);
         }
 
-        // Use WooCommerce logger if available, otherwise error_log.
-        if (function_exists('wc_get_logger')) {
+        if ($this->handler !== null) {
+            ($this->handler)($level, $entry, $this->context);
+        } elseif (function_exists('wc_get_logger')) {
             $logger = wc_get_logger();
             $logger->log($level, $entry, ['source' => $this->context]);
         } else {
@@ -112,7 +121,7 @@ class Logger
      * @param array<string, mixed> $data Raw data.
      * @return array<string, mixed> Sanitized data.
      */
-    private function sanitize_data(array $data): array
+    public function sanitize_data(array $data): array
     {
         $sensitive_keys = [
             'password', 'secret', 'api_key', 'token', 'card', 'cvv', 'ssn',

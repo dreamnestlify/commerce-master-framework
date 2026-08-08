@@ -28,9 +28,9 @@
         }
     },
     "scripts": {
-        "lint": "find src -name '*.php' -exec php -l {} +",
-        "phpcs": "phpcs --standard=phpcs.xml.dist src/ tests/",
-        "phpcs-fix": "phpcbf --standard=phpcs.xml.dist src/ tests/",
+        "lint": "find src commerce-core.php uninstall.php tests -name '*.php' -exec php -l {} +",
+        "phpcs": "phpcs --standard=phpcs.xml.dist",
+        "phpcs-fix": "phpcbf --standard=phpcs.xml.dist",
         "phpstan": "phpstan analyse src/ --memory-limit=512M",
         "test": "phpunit -c phpunit.xml.dist",
         "test-coverage": "phpunit -c phpunit.xml.dist --coverage-html coverage",

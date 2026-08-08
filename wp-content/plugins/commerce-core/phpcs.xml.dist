@@ -21,7 +21,7 @@
     </rule>
 
     <!-- Minimum supported WP version for deprecated function checks -->
-    <config name="minimum_wp_version" value="6.5"/>
+    <config name="minimum_wp_version" value="7.0"/>
 
     <!-- Parallel processing -->
     <config name="parallel" value="8"/>

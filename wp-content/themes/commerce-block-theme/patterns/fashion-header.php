@@ -23,8 +23,8 @@ return [
         <!-- wp:group {"className":"header-actions","layout":{"type":"flex","flexWrap":"nowrap"}} -->
         <div class="wp-block-group header-actions">
             <!-- wp:search {"label":"Search","buttonText":"","className":"header-search"} /-->
-            <!-- wp:woocommerce-customer-account /-->
-            <!-- wp:woocommerce-mini-cart /-->
+            <!-- wp:woocommerce/customer-account /-->
+            <!-- wp:woocommerce/mini-cart /-->
         </div>
         <!-- /wp:group -->
     </div>
