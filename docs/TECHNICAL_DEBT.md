@@ -42,3 +42,54 @@ Phase 1 development and are tracked here for future resolution.
   explicitly passed.
 - **Fix**: Use `filter_var($input['payment']['stripe_enabled'] ?? false, FILTER_VALIDATE_BOOLEAN)`.
 - **Priority**: Medium — should fix before Phase 1 settings UI.
+
+### 6. GitHub Actions Node.js 20 Deprecation
+- **Issue**: `actions/checkout@v4` and `actions/upload-artifact@v4` target
+  Node.js 20, which is deprecated. GitHub forces them to Node.js 24.
+- **Current state**: Non-blocking; CI runs successfully with forced Node.js 24.
+- **Fix**: Upgrade to `actions/checkout@v5` and `actions/upload-artifact@v5`
+  when they become stable.
+- **Priority**: Low
+
+### 7. PHPCS Excluded Rules
+- **Issue**: Several WordPress Coding Standards rules are excluded in
+  `phpcs.xml.dist` to unblock CI:
+  - `WordPress.NamingConventions.ValidFunctionName.FunctionNameInvalid`
+  - `WordPress.NamingConventions.ValidVariableName` (entire sniff)
+  - `WordPress.Files.FileName.NotHyphenatedLowercase` / `InvalidClassFileName`
+    (conflicts with PSR-4 PascalCase)
+  - `Squiz.Commenting.*` (missing doc comments, inline comment style)
+  - `WordPress.WP.GlobalVariablesOverride.Prohibited`
+  - `Squiz.Commenting.FunctionComment.WrongStyle`
+- **Current state**: 0 errors, 0 warnings. Exclusions are documented.
+- **Fix**: Re-evaluate each exclusion in Phase 1. Add doc comments, consider
+  renaming variables to snake_case where possible, or switch to a custom
+  ruleset that better fits PSR-4 projects.
+- **Priority**: Low
+
+### 8. PHPStan Stubs Are Minimal
+- **Issue**: `phpstan-stubs.php` and `phpstan-stubs-wpcli.php` provide minimal
+  stubs for WP_CLI, WooCommerce, and plugin constants. These are hand-maintained
+  and may drift from the real APIs.
+- **Current state**: PHPStan level 6 passes with stubs.
+- **Fix**: Consider using `php-stubs/woocommerce-stubs` and
+  `php-stubs/wp-cli-stubs` Composer packages for comprehensive stubs.
+- **Priority**: Low
+
+### 9. PHPUnit Code Coverage Not Configured
+- **Issue**: `<coverage>` and `<source>` blocks removed from `phpunit.xml.dist`
+  due to PHPUnit 10.5 schema validation error.
+- **Current state**: 60 tests, 158 assertions pass without coverage reporting.
+- **Fix**: Re-add coverage configuration with correct PHPUnit 10.5 schema in
+  Phase 1 when code coverage tracking is needed.
+- **Priority**: Low
+
+### 10. `declare(strict_types=1)` Incompatible with `wp eval-file`
+- **Issue**: Scripts executed via `wp eval-file` (demo-data.php,
+  block-runtime-check.php) cannot use `declare(strict_types=1)` because
+  WP-CLI wraps the code in `eval()` where strict_types triggers a fatal error.
+- **Current state**: `declare(strict_types=1)` removed from both scripts with
+  explanatory comments.
+- **Fix**: No fix needed — this is a WP-CLI limitation. Alternative: execute
+  scripts via `wp eval` with `require` instead of `eval-file`.
+- **Priority**: Low
