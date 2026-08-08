@@ -11,7 +11,7 @@
     <!-- Exclude patterns -->
     <exclude-pattern>*/vendor/*</exclude-pattern>
     <exclude-pattern>*/node_modules/*</exclude-pattern>
-    <exclude-pattern>*/tests/bootstrap.php</exclude-pattern>
+    <exclude-pattern>*/tests/phpunit/bootstrap.php</exclude-pattern>
 
     <!-- Use WordPress Coding Standards -->
     <rule ref="WordPress">

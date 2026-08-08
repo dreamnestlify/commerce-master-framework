@@ -130,49 +130,60 @@ wp rewrite structure '/%postname%/' --hard
 wp rewrite flush
 echo "   ✅ Permalinks set."
 
-# ── Create essential pages (idempotent) with Blocks, not shortcodes ──
+# ── Create essential pages ──
 echo "📄 Ensuring essential pages exist..."
 
-# Cart page — use Cart Block (not [woocommerce_cart] shortcode)
+# Let WooCommerce create its default pages (Cart, Checkout, Shop, My Account, Terms)
+# This uses WC's official page creation mechanism with proper block content.
+echo "   Running WooCommerce page creation..."
+wp eval 'WC_Install::create_pages();' 2>/dev/null || echo "   (WC page creation skipped — may already exist)"
+
+# ── Cart page: verify correct block content ──
+# Official WC 11 Cart page content (self-closing block with lock attributes)
+CART_BLOCK_CONTENT='<!-- wp:woocommerce/cart {"lock":{"remove":true,"move":false}} /-->'
 CART_PAGE_ID=$(wp option get woocommerce_cart_page_id 2>/dev/null || echo "0")
+
 if [ "$CART_PAGE_ID" = "0" ] || ! wp post exists "$CART_PAGE_ID" 2>/dev/null; then
     CART_PAGE_ID=$(wp post create \
         --post_type=page \
         --post_title="Cart" \
         --post_status=publish \
-        --post_content='<!-- wp:woocommerce/cart /-->' \
+        --post_content="$CART_BLOCK_CONTENT" \
         --porcelain)
     wp option update woocommerce_cart_page_id "$CART_PAGE_ID"
     echo "   ✅ Cart page created with Cart Block (ID: $CART_PAGE_ID)"
 else
-    # Ensure existing page uses the Cart Block, not the old shortcode
     EXISTING_CONTENT=$(wp post get "$CART_PAGE_ID" --field=post_content 2>/dev/null || echo "")
-    if echo "$EXISTING_CONTENT" | grep -q '\[woocommerce_cart\]'; then
-        wp post update "$CART_PAGE_ID" --post_content='<!-- wp:woocommerce/cart /-->'
-        echo "   ✅ Cart page updated: shortcode → Cart Block (ID: $CART_PAGE_ID)"
-    else
+    if echo "$EXISTING_CONTENT" | grep -q 'wp:woocommerce/cart'; then
         echo "   ✅ Cart page already uses Cart Block (ID: $CART_PAGE_ID)"
+    else
+        # Fix: empty content, shortcode, or unrecognized content
+        wp post update "$CART_PAGE_ID" --post_content="$CART_BLOCK_CONTENT"
+        echo "   ✅ Cart page fixed: content → Cart Block (ID: $CART_PAGE_ID)"
     fi
 fi
 
-# Checkout page — use Checkout Block (not [woocommerce_checkout] shortcode)
+# ── Checkout page: verify correct block content ──
+# Official WC 11 Checkout page content (self-closing block with lock attributes)
+CHECKOUT_BLOCK_CONTENT='<!-- wp:woocommerce/checkout {"lock":{"remove":true,"move":false}} /-->'
 CHECKOUT_PAGE_ID=$(wp option get woocommerce_checkout_page_id 2>/dev/null || echo "0")
+
 if [ "$CHECKOUT_PAGE_ID" = "0" ] || ! wp post exists "$CHECKOUT_PAGE_ID" 2>/dev/null; then
     CHECKOUT_PAGE_ID=$(wp post create \
         --post_type=page \
         --post_title="Checkout" \
         --post_status=publish \
-        --post_content='<!-- wp:woocommerce/checkout /-->' \
+        --post_content="$CHECKOUT_BLOCK_CONTENT" \
         --porcelain)
     wp option update woocommerce_checkout_page_id "$CHECKOUT_PAGE_ID"
     echo "   ✅ Checkout page created with Checkout Block (ID: $CHECKOUT_PAGE_ID)"
 else
     EXISTING_CONTENT=$(wp post get "$CHECKOUT_PAGE_ID" --field=post_content 2>/dev/null || echo "")
-    if echo "$EXISTING_CONTENT" | grep -q '\[woocommerce_checkout\]'; then
-        wp post update "$CHECKOUT_PAGE_ID" --post_content='<!-- wp:woocommerce/checkout /-->'
-        echo "   ✅ Checkout page updated: shortcode → Checkout Block (ID: $CHECKOUT_PAGE_ID)"
-    else
+    if echo "$EXISTING_CONTENT" | grep -q 'wp:woocommerce/checkout'; then
         echo "   ✅ Checkout page already uses Checkout Block (ID: $CHECKOUT_PAGE_ID)"
+    else
+        wp post update "$CHECKOUT_PAGE_ID" --post_content="$CHECKOUT_BLOCK_CONTENT"
+        echo "   ✅ Checkout page fixed: content → Checkout Block (ID: $CHECKOUT_PAGE_ID)"
     fi
 fi
 
@@ -244,15 +255,23 @@ wp option update woocommerce_enable_checkout_login_reminder "yes"
 wp option update woocommerce_enable_guest_checkout "yes"
 echo "   ✅ WooCommerce settings configured."
 
-# ── Set front page to show the block theme homepage ──
-FRONT_PAGE_ID=$(wp post list --post_type=page --field=ID --title="Home" 2>/dev/null | head -1)
-if [ -n "$FRONT_PAGE_ID" ]; then
-    wp option update show_on_front "page"
-    wp option update page_on_front "$FRONT_PAGE_ID"
-    echo "   ✅ Front page set"
+# ── Create and set Home page as front page ──
+echo "🏠 Creating Home page..."
+HOME_PAGE_ID=$(wp post list --post_type=page --field=ID --title="Home" 2>/dev/null | head -1)
+if [ -z "$HOME_PAGE_ID" ]; then
+    HOME_PAGE_ID=$(wp post create \
+        --post_type=page \
+        --post_title="Home" \
+        --post_status=publish \
+        --post_content='<!-- wp:paragraph --><p>Welcome to our store. Browse our latest collection.</p><!-- /wp:paragraph -->' \
+        --porcelain)
+    echo "   ✅ Home page created (ID: $HOME_PAGE_ID)"
 else
-    echo "   ⚠️  No 'Home' page found — front page not set."
+    echo "   ✅ Home page exists (ID: $HOME_PAGE_ID)"
 fi
+wp option update show_on_front "page"
+wp option update page_on_front "$HOME_PAGE_ID"
+echo "   ✅ Front page set to Home"
 
 # ── Run demo data import (idempotent, must succeed) ──
 if [ -f /scripts/demo-data.php ]; then

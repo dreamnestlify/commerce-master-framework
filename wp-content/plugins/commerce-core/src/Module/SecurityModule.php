@@ -49,12 +49,22 @@ class SecurityModule implements ModuleInterface
     /**
      * Verify a nonce from request.
      *
+     * Uses WordPress REST API standard: checks X-WP-Nonce header first,
+     * falls back to request parameter. All input is unslashed and sanitized.
+     *
      * @return bool True if valid.
      */
     public static function verify_nonce(): bool
     {
-        $nonce = $_REQUEST[self::NONCE_NAME] ?? '';
-        return is_string($nonce) && wp_verify_nonce($nonce, self::NONCE_ACTION) !== false;
+        // For REST API requests, the nonce is sent via X-WP-Nonce header.
+        $nonce = '';
+        if (isset($_SERVER['HTTP_X_WP_NONCE'])) {
+            $nonce = sanitize_text_field(wp_unslash($_SERVER['HTTP_X_WP_NONCE']));
+        } elseif (isset($_REQUEST[self::NONCE_NAME])) {
+            $nonce = sanitize_text_field(wp_unslash($_REQUEST[self::NONCE_NAME]));
+        }
+
+        return $nonce !== '' && wp_verify_nonce($nonce, self::NONCE_ACTION) !== false;
     }
 
     /**

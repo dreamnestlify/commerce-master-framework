@@ -1,14 +1,19 @@
 #!/usr/bin/env bash
 # ════════════════════════════════════════════════════════════════
 # block-name-scanner.sh
-# Scans theme templates, parts, and patterns for deprecated/invalid
-# WooCommerce block names per WooCommerce 11.0.
+# Static scan of theme templates, parts, and patterns for
+# KNOWN DEPRECATED WooCommerce block names per WooCommerce 11.0.
+#
+# ⚠️  This is a STATIC blacklist check only.
+# It does NOT verify that block names are registered at runtime.
+# For runtime validation, run scripts/block-runtime-check.php
+# inside the Docker container after WordPress + WooCommerce boot.
 #
 # Usage:
 #   bash scripts/block-name-scanner.sh [--theme-dir PATH]
 #
 # Exit codes:
-#   0 — All block names valid (or no deprecated names found)
+#   0 — No deprecated block names found
 #   1 — Deprecated block names found (details printed)
 #   2 — Theme directory not found
 # ════════════════════════════════════════════════════════════════
@@ -119,8 +124,14 @@ done
 # ── Summary ───────────────────────────────────────────────────────
 echo "───────────────────────────────────────────────────────────"
 if [ "$ERRORS_FOUND" -eq 0 ]; then
-    echo "  ✅ All block names are valid for WooCommerce 11.0."
+    echo "  ✅ No deprecated block names found (static blacklist check)."
     echo "  Scanned ${#FILES[@]} files, found 0 deprecated names."
+    echo ""
+    echo "  ⚠️  This is a static check only — it verifies no KNOWN"
+    echo "     deprecated names appear in templates. It does NOT verify"
+    echo "     that all referenced blocks are registered at runtime."
+    echo "     For runtime validation, run:"
+    echo "       docker compose --profile cli run --rm wpcli wp eval-file /scripts/block-runtime-check.php"
     exit 0
 else
     echo "  ❌ Found $ERRORS_FOUND deprecated block name(s) or shortcode(s)."

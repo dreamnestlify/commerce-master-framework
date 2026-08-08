@@ -123,6 +123,15 @@ services:
       SUPPORT_EMAIL: ${SUPPORT_EMAIL:-support@example.com}
       SUPPORT_PHONE: ${SUPPORT_PHONE:-}
       WP_HOME: ${WP_HOME:-http://localhost:8080}
+      # WordPress salts (must be passed for WP-CLI to generate correct config)
+      AUTH_KEY: ${AUTH_KEY:-generate_me}
+      SECURE_AUTH_KEY: ${SECURE_AUTH_KEY:-generate_me}
+      LOGGED_IN_KEY: ${LOGGED_IN_KEY:-generate_me}
+      NONCE_KEY: ${NONCE_KEY:-generate_me}
+      AUTH_SALT: ${AUTH_SALT:-generate_me}
+      SECURE_AUTH_SALT: ${SECURE_AUTH_SALT:-generate_me}
+      LOGGED_IN_SALT: ${LOGGED_IN_SALT:-generate_me}
+      NONCE_SALT: ${NONCE_SALT:-generate_me}
     volumes:
       - wordpress_data:/var/www/html
       - ./wp-content/plugins/commerce-core:/var/www/html/wp-content/plugins/commerce-core:ro
@@ -145,7 +154,7 @@ services:
       - commerce_net
     profiles:
       - build  # Only runs with: docker compose --profile build run --rm node ...
-    command: ["echo", "Node container ready. Use: docker compose --profile build run --rm node npm install"]
+    command: ["echo", "Node container ready. Use: docker compose --profile build run --rm node npm ci"]
 
 volumes:
   wordpress_data:

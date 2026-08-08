@@ -27,8 +27,15 @@ jobs:
       - name: Validate composer.json
         run: composer validate --strict
 
-      - name: Install dependencies
+      - name: Install dependencies (generates composer.lock)
         run: composer install --no-interaction --no-progress
+
+      - name: Upload composer.lock
+        uses: actions/upload-artifact@v4
+        with:
+          name: composer-lock
+          path: wp-content/plugins/commerce-core/composer.lock
+          if-no-files-found: error
 
       - name: PHP Lint
         run: composer lint
@@ -65,11 +72,175 @@ jobs:
       - name: Lint CSS
         run: npm run lint:css
 
-  docker-check:
-    name: Docker Compose Config Validate
+  static-block-scan:
+    name: Static Block Name Scanner
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
+      - name: Run block-name-scanner.sh
+        run: bash scripts/block-name-scanner.sh
+
       - name: Validate docker-compose.yml
         run: docker compose config -q
+
+  docker-integration:
+    name: Docker Integration Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate test .env with random salts
+        run: |
+          cat > .env << 'ENVEOF'
+          DB_NAME=wordpress
+          DB_USER=wp_user
+          DB_PASSWORD=test_db_password_12345
+          DB_ROOT_PASSWORD=test_root_password_12345
+          DB_HOST=db:3306
+          DB_TABLE_PREFIX=wp_
+
+          ADMIN_USER=admin
+          ADMIN_PASSWORD=TestPassword12345!
+          ADMIN_EMAIL=admin@example.com
+
+          WP_HOME=http://localhost:8080
+          WP_SITEURL=http://localhost:8080
+          WP_DEBUG=true
+          WP_DEBUG_LOG=true
+          WP_DEBUG_DISPLAY=false
+
+          AUTH_KEY=$(openssl rand -hex 32)
+          SECURE_AUTH_KEY=$(openssl rand -hex 32)
+          LOGGED_IN_KEY=$(openssl rand -hex 32)
+          NONCE_KEY=$(openssl rand -hex 32)
+          AUTH_SALT=$(openssl rand -hex 32)
+          SECURE_AUTH_SALT=$(openssl rand -hex 32)
+          LOGGED_IN_SALT=$(openssl rand -hex 32)
+          NONCE_SALT=$(openssl rand -hex 32)
+
+          BRAND_NAME=Commerce Master
+          BRAND_TAGLINE=Fashion for the modern world
+          DEFAULT_LOCALE=en_US
+          BASE_CURRENCY=USD
+          ENABLED_CURRENCIES=USD,EUR,GBP
+          DEFAULT_MARKET=EU
+
+          SUPPORT_EMAIL=support@example.com
+          SUPPORT_PHONE=
+
+          HTTP_PORT=8080
+          PMA_PORT=8090
+          ENVEOF
+          # Generate real random salts
+          for key in AUTH_KEY SECURE_AUTH_KEY LOGGED_IN_KEY NONCE_KEY AUTH_SALT SECURE_AUTH_SALT LOGGED_IN_SALT NONCE_SALT; do
+            val=$(openssl rand -hex 32)
+            sed -i "s|^${key}=.*|${key}=${val}|" .env
+          done
+          echo "✅ .env generated with random salts"
+
+      - name: Start Docker Compose
+        run: docker compose up -d
+
+      - name: Wait for database
+        run: |
+          echo "Waiting for MariaDB..."
+          for i in $(seq 1 30); do
+            if docker compose exec -T db mariadb-admin ping -h localhost -u root -ptest_root_password_12345 --silent 2>/dev/null; then
+              echo "✅ Database is ready"
+              exit 0
+            fi
+            echo "  Attempt $i/30..."
+            sleep 5
+          done
+          echo "❌ Database did not become ready"
+          docker compose logs db
+          exit 1
+
+      - name: Wait for WordPress
+        run: |
+          echo "Waiting for WordPress..."
+          for i in $(seq 1 60); do
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/wp-admin/install.php 2>/dev/null || echo "000")
+            if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "302" ]; then
+              echo "✅ WordPress is ready (HTTP $HTTP_CODE)"
+              exit 0
+            fi
+            echo "  Attempt $i/60 (HTTP $HTTP_CODE)..."
+            sleep 5
+          done
+          echo "❌ WordPress did not become ready"
+          docker compose logs wordpress
+          exit 1
+
+      - name: Run init.sh (first run)
+        run: |
+          docker compose --profile cli run --rm wpcli bash /scripts/init.sh 2>&1 | tee /tmp/init-run1.log
+          echo "✅ First init.sh completed"
+
+      - name: Run init.sh (second run — idempotency check)
+        run: |
+          docker compose --profile cli run --rm wpcli bash /scripts/init.sh 2>&1 | tee /tmp/init-run2.log
+          echo "✅ Second init.sh completed (idempotency verified)"
+
+      - name: Run smoke checks
+        run: |
+          docker compose --profile cli run --rm wpcli bash /scripts/smoke-check.sh 2>&1 | tee /tmp/smoke-check.log
+
+      - name: Run block runtime check
+        run: |
+          docker compose --profile cli run --rm wpcli wp eval-file /scripts/block-runtime-check.php 2>&1 | tee /tmp/block-runtime.log
+
+      - name: Verify page HTTP status codes
+        run: |
+          echo "── HTTP Status Checks ──"
+          for path in "/" "/shop/" "/cart/" "/checkout/" "/my-account/"; do
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:8080${path}" 2>/dev/null || echo "000")
+            if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "302" ]; then
+              echo "  ✅ ${path} → ${HTTP_CODE}"
+            else
+              echo "  ❌ ${path} → ${HTTP_CODE}"
+              exit 1
+            fi
+          done
+
+      - name: Verify product detail page
+        run: |
+          # Find a product URL
+          PRODUCT_URL=$(curl -s "http://localhost:8080/shop/" | grep -oE 'href="[^"]*product/[^"]*"' | head -1 | sed 's/href="//;s/"//')
+          if [ -n "$PRODUCT_URL" ]; then
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$PRODUCT_URL" 2>/dev/null || echo "000")
+            if [ "$HTTP_CODE" = "200" ]; then
+              echo "  ✅ Product page → ${HTTP_CODE} ($PRODUCT_URL)"
+            else
+              echo "  ❌ Product page → ${HTTP_CODE} ($PRODUCT_URL)"
+              exit 1
+            fi
+          else
+            echo "  ⚠️  No product URL found on shop page"
+          fi
+
+      - name: Save container logs
+        if: always()
+        run: |
+          mkdir -p /tmp/container-logs
+          docker compose logs wordpress > /tmp/container-logs/wordpress.log 2>&1 || true
+          docker compose logs db > /tmp/container-logs/db.log 2>&1 || true
+          docker compose logs wpcli > /tmp/container-logs/wpcli.log 2>&1 || true
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: container-logs
+          path: |
+            /tmp/init-run1.log
+            /tmp/init-run2.log
+            /tmp/smoke-check.log
+            /tmp/block-runtime.log
+            /tmp/container-logs/
+
+      - name: Cleanup
+        if: always()
+        run: docker compose down -v

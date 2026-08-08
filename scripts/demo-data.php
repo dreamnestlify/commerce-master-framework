@@ -438,11 +438,23 @@ foreach ($demo_products as $product_data) {
         if (!$product) {
             WP_CLI::error("FAIL: Product ID {$existing_id} exists but wc_get_product returned null for '{$product_data['name']}'.");
         }
-        // Correct product type if needed.
+        // Correct product type if needed: delete old product + variations, create new.
         $current_type = $product->get_type();
         $target_type  = $product_data['type'];
         if ($current_type !== $target_type) {
-            WP_CLI::warning("  Type mismatch for '{$product_data['name']}': {$current_type} → {$target_type}. Recreating.");
+            WP_CLI::log("  ⚠ Type mismatch for '{$product_data['name']}': {$current_type} → {$target_type}. Deleting old product and recreating.");
+            // Delete all existing variations first.
+            if ($current_type === 'variable') {
+                foreach ($product->get_children() as $child_id) {
+                    $child = wc_get_product($child_id);
+                    if ($child) {
+                        $child->delete(true);
+                    }
+                }
+            }
+            // Delete the old product post (force, no trash).
+            $product->delete(true);
+            // Create fresh product.
             $product = ($target_type === 'variable')
                 ? new WC_Product_Variable()
                 : new WC_Product_Simple();
@@ -590,9 +602,29 @@ foreach ($demo_products as $product_data) {
         // Reload children after potential creation.
         $product->save();
 
+        // ── Delete stale variations (not in expected SKU set) ──
+        $expected_skus = [];
+        foreach ($color_attr as $color) {
+            foreach ($size_values as $size) {
+                $expected_skus[] = $product_data['sku'] . '-' . sanitize_title($color) . '-' . sanitize_title($size);
+            }
+        }
+        $stale_count = 0;
+        foreach ($product->get_children() as $child_id) {
+            $child = wc_get_product($child_id);
+            if ($child && !in_array($child->get_sku(), $expected_skus, true)) {
+                $child->delete(true);
+                $stale_count++;
+            }
+        }
+        if ($stale_count > 0) {
+            WP_CLI::log("  🗑 Deleted {$stale_count} stale variation(s) for '{$product_data['name']}'.");
+            $product->save();
+        }
+
         $actual_var_count = count($product->get_children());
         if ($actual_var_count !== $expected_var_count) {
-            WP_CLI::warning("  Variation count mismatch for '{$product_data['name']}': expected {$expected_var_count}, got {$actual_var_count}.");
+            WP_CLI::error("Variation count mismatch for '{$product_data['name']}': expected {$expected_var_count}, got {$actual_var_count}.");
         }
 
         if ($is_new) {
@@ -615,23 +647,18 @@ foreach ($demo_products as $product_data) {
 WP_CLI::log('');
 WP_CLI::log('🔍 Post-run verification...');
 
-$verify_errors = 0;
-
 // Verify product count.
 $product_count = wp_count_posts('product');
 $total_products = (int) ($product_count->publish ?? 0) + (int) ($product_count->draft ?? 0);
 if ($total_products < count($demo_products)) {
-    WP_CLI::warning("Expected >= " . count($demo_products) . " products, found {$total_products}.");
-    $verify_errors++;
-} else {
-    WP_CLI::log("  ✅ Products: {$total_products} (expected >= " . count($demo_products) . ")");
+    WP_CLI::error("Expected >= " . count($demo_products) . " products, found {$total_products}.");
 }
+WP_CLI::log("  ✅ Products: {$total_products} (expected >= " . count($demo_products) . ")");
 
 // Verify categories.
 foreach ($categories as $name => $desc) {
     if (!term_exists($name, 'product_cat')) {
-        WP_CLI::warning("Category '{$name}' missing after init.");
-        $verify_errors++;
+        WP_CLI::error("Category '{$name}' missing after init.");
     }
 }
 WP_CLI::log("  ✅ Categories: " . count($categories) . " verified");
@@ -648,8 +675,7 @@ foreach ($attributes_def as $key => $attr) {
         }
     }
     if (!$found) {
-        WP_CLI::warning("Attribute '{$attr['name']}' missing after init.");
-        $verify_errors++;
+        WP_CLI::error("Attribute '{$attr['name']}' missing after init.");
     }
 }
 WP_CLI::log("  ✅ Attributes: " . count($attributes_def) . " verified");
@@ -661,16 +687,18 @@ foreach ($attributes_def as $key => $attr) {
         'hide_empty' => false,
     ]);
     if (is_wp_error($terms)) {
-        WP_CLI::warning("Cannot get terms for {$attr['slug']}: " . $terms->get_error_message());
-        $verify_errors++;
-    } else {
-        $expected = count($attr['values']);
-        $actual = count($terms);
-        if ($actual < $expected) {
-            WP_CLI::warning("Terms for {$attr['slug']}: expected {$expected}, got {$actual}.");
-            $verify_errors++;
-        }
+        WP_CLI::error("Cannot get terms for {$attr['slug']}: " . $terms->get_error_message());
     }
+    $expected = count($attr['values']);
+    $actual = count($terms);
+    if ($actual < $expected) {
+        WP_CLI::error("Terms for {$attr['slug']}: expected {$expected}, got {$actual}.");
+    }
+}
+
+// Verify exact product count (no duplicates from repeated runs).
+if ($total_products !== count($demo_products)) {
+    WP_CLI::error("Product count mismatch: expected exactly " . count($demo_products) . ", got {$total_products}. Possible duplicates from repeated runs.");
 }
 
 // Verify variable products have correct variation counts.
@@ -680,15 +708,11 @@ foreach ($demo_products as $pd) {
     }
     $pid = wc_get_product_id_by_sku($pd['sku']);
     if (!$pid) {
-        WP_CLI::warning("Cannot find product by SKU '{$pd['sku']}' for variation verification.");
-        $verify_errors++;
-        continue;
+        WP_CLI::error("Cannot find product by SKU '{$pd['sku']}' for variation verification.");
     }
     $product = wc_get_product($pid);
     if (!$product || $product->get_type() !== 'variable') {
-        WP_CLI::warning("Product '{$pd['name']}' is not variable.");
-        $verify_errors++;
-        continue;
+        WP_CLI::error("Product '{$pd['name']}' is not variable.");
     }
     $color_attr  = $pd['attributes']['color'] ?? [];
     $size_attr   = $pd['attributes']['size'] ?? [];
@@ -697,11 +721,9 @@ foreach ($demo_products as $pd) {
     $expected = count($color_attr) * count($size_values);
     $actual = count($product->get_children());
     if ($actual !== $expected) {
-        WP_CLI::warning("Variations for '{$pd['name']}': expected {$expected}, got {$actual}.");
-        $verify_errors++;
-    } else {
-        WP_CLI::log("  ✅ '{$pd['name']}': {$actual}/{$expected} variations");
+        WP_CLI::error("Variations for '{$pd['name']}': expected {$expected}, got {$actual}.");
     }
+    WP_CLI::log("  ✅ '{$pd['name']}': {$actual}/{$expected} variations");
 }
 
 // ══════════════════════════════════════════════════
@@ -710,10 +732,6 @@ foreach ($demo_products as $pd) {
 flush_rewrite_rules();
 
 WP_CLI::log('');
-if ($verify_errors > 0) {
-    WP_CLI::warning("Demo data initialized with {$verify_errors} verification warning(s). Total products: {$total_products}");
-} else {
-    WP_CLI::success("Demo data initialized and verified. Total products: {$total_products}");
-}
+WP_CLI::success("Demo data initialized and verified. Total products: {$total_products}");
 WP_CLI::log('');
 WP_CLI::log('Run this script again anytime — it is convergently idempotent.');

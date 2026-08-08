@@ -116,26 +116,55 @@ class Logger
     }
 
     /**
-     * Remove sensitive keys from data before logging.
+     * Remove sensitive data and PII from data before logging.
+     *
+     * Redacts:
+     * - Secrets: password, secret, api_key, token, card, cvv, ssn, private_key
+     * - PII: email, phone, address, customer_name, IP address
      *
      * @param array<string, mixed> $data Raw data.
      * @return array<string, mixed> Sanitized data.
      */
     public function sanitize_data(array $data): array
     {
-        $sensitive_keys = [
-            'password', 'secret', 'api_key', 'token', 'card', 'cvv', 'ssn',
-            'stripe_secret', 'paypal_secret', 'private_key',
+        // Substring matches (safe — these don't appear as substrings in common non-sensitive keys)
+        $sensitive_substrings = [
+            'password', 'secret', 'api_key', 'apikey', 'token',
+            'card', 'cvv', 'ssn', 'stripe_secret', 'paypal_secret', 'private_key',
+            'email', 'phone', 'address',
+        ];
+
+        // Exact key matches (keys where substring matching would cause false positives)
+        $sensitive_exact = [
+            'customer_name', 'customer_name ', 'ip', 'ip_address',
+            'customer_ip', 'client_ip', 'remote_addr', 'user_ip',
         ];
 
         foreach ($data as $key => $value) {
-            $lower_key = strtolower($key);
+            $lower_key = strtolower((string) $key);
+            $should_redact = false;
 
-            foreach ($sensitive_keys as $sensitive) {
+            // Check substring matches
+            foreach ($sensitive_substrings as $sensitive) {
                 if (str_contains($lower_key, $sensitive)) {
-                    $data[$key] = '[REDACTED]';
-                    continue 2;
+                    $should_redact = true;
+                    break;
                 }
+            }
+
+            // Check exact matches
+            if (!$should_redact) {
+                foreach ($sensitive_exact as $exact) {
+                    if ($lower_key === $exact) {
+                        $should_redact = true;
+                        break;
+                    }
+                }
+            }
+
+            if ($should_redact) {
+                $data[$key] = '[REDACTED]';
+                continue;
             }
 
             if (is_array($value)) {

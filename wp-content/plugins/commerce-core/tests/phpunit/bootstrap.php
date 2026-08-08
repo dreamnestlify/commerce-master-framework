@@ -71,6 +71,17 @@ if ($_tests_dir && file_exists($_tests_dir . '/includes/functions.php')) {
             return is_scalar($value) ? trim(strip_tags((string) $value)) : '';
         }
 
+        function wp_unslash($value)
+        {
+            if (is_string($value)) {
+                return stripslashes($value);
+            }
+            if (is_array($value)) {
+                return array_map('wp_unslash', $value);
+            }
+            return $value;
+        }
+
         function sanitize_email($value): string
         {
             $value = sanitize_text_field($value);
