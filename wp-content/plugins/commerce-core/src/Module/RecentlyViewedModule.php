@@ -81,6 +81,8 @@ class RecentlyViewedModule implements ModuleInterface {
 
 	/**
 	 * Get recently viewed product IDs.
+	 *
+	 * @return int[]
 	 */
 	public function get_recently_viewed_ids(): array {
 		if (is_user_logged_in()) {
@@ -99,6 +101,9 @@ class RecentlyViewedModule implements ModuleInterface {
 
 	/**
 	 * Track a product view.
+	 *
+	 * @param int $product_id Product ID being viewed.
+	 * @return int[]
 	 */
 	public function track_product_view(int $product_id): array {
 		$ids = $this->get_recently_viewed_ids();
@@ -168,6 +173,8 @@ class RecentlyViewedModule implements ModuleInterface {
 
 	/**
 	 * Save recently viewed IDs.
+	 *
+	 * @param int[] $ids Product IDs to save.
 	 */
 	private function save_ids(array $ids): void {
 		if (is_user_logged_in()) {

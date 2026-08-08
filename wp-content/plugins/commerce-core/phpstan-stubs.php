@@ -17,6 +17,14 @@ define( 'COMMERCE_CORE_DIR', __DIR__ . '/' );
 define( 'COMMERCE_CORE_URL', 'http://example.com/' );
 define( 'COMMERCE_CORE_BASENAME', 'commerce-core/commerce-core.php' );
 
+// WordPress cookie path constants (defined by WordPress core during bootstrap).
+if ( ! defined( 'COOKIEPATH' ) ) {
+	define( 'COOKIEPATH', '/' );
+}
+if ( ! defined( 'COOKIE_DOMAIN' ) ) {
+	define( 'COOKIE_DOMAIN', false );
+}
+
 // WooCommerce WC() function.
 if ( ! function_exists( 'WC' ) ) {
 	function WC() {

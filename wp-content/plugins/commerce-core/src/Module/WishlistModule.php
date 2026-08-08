@@ -106,6 +106,8 @@ class WishlistModule implements ModuleInterface {
 
 	/**
 	 * Get wishlist product IDs for the current user.
+	 *
+	 * @return int[]
 	 */
 	public function get_wishlist_ids(): array {
 		if (is_user_logged_in()) {
@@ -202,6 +204,8 @@ class WishlistModule implements ModuleInterface {
 
 	/**
 	 * Save wishlist IDs for the current user.
+	 *
+	 * @param int[] $ids Product IDs to save.
 	 */
 	private function save_wishlist_ids(array $ids): void {
 		if (is_user_logged_in()) {
