@@ -21,10 +21,6 @@
  * @package CommerceMaster
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 WP_CLI::log( '========================================' );
 WP_CLI::log( '  EU/US Compliance & Trust Pages Setup' );
 WP_CLI::log( '========================================' );
