@@ -22,7 +22,11 @@ echo "  Zalandy — Fix Remaining Issues"
 echo "========================================"
 echo ""
 
-# ─── 1. Run compliance pages ───────────────────────────────
+# ─── 0. Ensure WP-CLI is installed ─────────────────────────
+echo "0/6 — Ensuring WP-CLI is available..."
+$COMPOSE exec wordpress bash -c 'if [ ! -x /usr/local/bin/wp ]; then curl -sL https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -o /usr/local/bin/wp && chmod +x /usr/local/bin/wp; fi && /usr/local/bin/wp --version --allow-root'
+echo "  ✅ WP-CLI ready"
+echo ""
 echo "1/6 — Creating compliance & legal pages..."
 $COMPOSE cp scripts/compliance-pages.php wordpress:/tmp/compliance-pages.php
 $COMPOSE exec wordpress bash -c "php -d memory_limit=512M /usr/local/bin/wp eval-file /tmp/compliance-pages.php --allow-root"
