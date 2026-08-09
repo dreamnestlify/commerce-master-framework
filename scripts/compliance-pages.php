@@ -62,10 +62,19 @@ WP_CLI::log( '1/10 — Rewriting Privacy Policy (GDPR + CCPA compliant)...' );
 $privacy_content = <<<HTML
 <h2>Privacy Policy</h2>
 <p><strong>Last updated:</strong> August 9, 2026</p>
-<p>This Privacy Policy describes how Zalandy ("we," "us," or "our") collects, uses, and protects your personal data when you visit zalandy.top (the "Site") or purchase our products. This policy complies with the General Data Protection Regulation (GDPR) and the California Consumer Privacy Act (CCPA).</p>
+<p>This Privacy Policy describes how Equi international UG (haftungsbeschränkt) ("we," "us," or "our"), operating under the brand Zalandy, collects, uses, and protects your personal data when you visit zalandy.top (the "Site") or purchase our products. This policy complies with the General Data Protection Regulation (GDPR) and the California Consumer Privacy Act (CCPA).</p>
 
 <h3>1. Data Controller</h3>
-<p>Zalandy is the data controller for your personal data. For privacy inquiries, contact us at: <strong>privacy@zalandy.top</strong></p>
+<p>The data controller for your personal data is:</p>
+<p>
+<strong>Equi international UG (haftungsbeschränkt)</strong><br/>
+Großenwede Siedlung 8<br/>
+29640 Schneverdingen<br/>
+Niedersachsen, Germany<br/>
+VAT ID: DE312939176<br/>
+Commercial Register: HRB 206966, Amtsgericht Walsrode<br/>
+</p>
+<p>For privacy inquiries, contact us at: <strong>privacy@zalandy.top</strong></p>
 
 <h3>2. Information We Collect</h3>
 <p><strong>2.1 Information you provide:</strong></p>
@@ -243,37 +252,46 @@ WP_CLI::log( '' );
 WP_CLI::log( '3/10 — Creating Imprint / Legal Notice...' );
 
 $imprint_content = <<<HTML
-<h2>Imprint / Legal Notice</h2>
-<p><strong>Important:</strong> Replace the placeholder information below with your actual business details. EU law requires this page to be accessible from every page (typically via footer link).</p>
+<h2>Impressum / Imprint / Legal Notice</h2>
 
-<h3>Company Information</h3>
+<h3>Angaben gemäß § 5 TMG / Information according to § 5 TMG</h3>
 <p>
-<strong>Company Name:</strong> Zalandy Jewelry<br/>
-<strong>Registered Address:</strong> [Your Business Address]<br/>
-<strong>City, Postal Code:</strong> [City, Postal Code]<br/>
-<strong>Country:</strong> [Your Country]<br/>
-<strong>Registration Number:</strong> [Company Registration Number]<br/>
-<strong>VAT ID:</strong> [VAT Identification Number — required for EU sales]<br/>
+<strong>Company Name:</strong> Equi international UG (haftungsbeschränkt)<br/>
+<strong>Registered Address:</strong> Großenwede Siedlung 8<br/>
+<strong>Postal Code / City:</strong> 29640 Schneverdingen<br/>
+<strong>State / Country:</strong> Niedersachsen, Germany<br/>
+<strong>Commercial Register:</strong> Amtsgericht Walsrode<br/>
+<strong>Registration Number:</strong> HRB 206966<br/>
+<strong>VAT ID:</strong> DE312939176<br/>
+<strong>EPR Packaging Register No.:</strong> DE5821461622733<br/>
 </p>
 
-<h3>Contact</h3>
+<h3>Vertreten durch / Represented by</h3>
+<p>
+<strong>Managing Director:</strong> Katrin Dübbers<br/>
+</p>
+
+<h3>Kontakt / Contact</h3>
 <p>
 <strong>Email:</strong> support@zalandy.top<br/>
-<strong>Phone:</strong> [Your Business Phone]<br/>
+<strong>Phone:</strong> +1 706 215 4022<br/>
 </p>
 
-<h3>Responsible for Content</h3>
-<p>[Your Name], support@zalandy.top</p>
+<h3>Verantwortlich für den Inhalt / Responsible for Content</h3>
+<p>Katrin Dübbers, support@zalandy.top</p>
 
-<h3>Dispute Resolution</h3>
-<p>The European Commission provides a platform for online dispute resolution (ODR): https://ec.europa.eu/consumers/odr/. We are not obliged or willing to participate in dispute settlement proceedings before a consumer arbitration board.</p>
+<h3>Streitschlichtung / Dispute Resolution</h3>
+<p>The European Commission provides a platform for online dispute resolution (ODR): <a href="https://ec.europa.eu/consumers/odr/">https://ec.europa.eu/consumers/odr/</a>. We are not obliged or willing to participate in dispute settlement proceedings before a consumer arbitration board.</p>
+<p>Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
 
-<h3>Liability for Content</h3>
-<p>As a service provider, we are responsible for our own content on these pages in accordance with general legislation. However, we are not obliged to monitor transmitted or stored third-party information.</p>
+<h3>Haftung für Inhalte / Liability for Content</h3>
+<p>As a service provider, we are responsible for our own content on these pages in accordance with general legislation (§ 7 para.1 TMG). According to §§ 8 to 10 TMG, however, we as a service provider are not obliged to monitor transmitted or stored third-party information or to investigate circumstances that indicate illegal activity.</p>
 
-<div style="background:#fff3cd;border:1px solid #ffc107;padding:16px;border-radius:8px;margin:20px 0;">
-<strong>Note:</strong> Please replace all bracketed [placeholder] text with your actual business registration details before launching. Operating without accurate imprint information can result in warnings and fines in EU countries.
-</div>
+<h3>Haftung für Links / Liability for Links</h3>
+<p>Our offer contains links to external third-party websites, on whose contents we have no influence. Therefore, we cannot accept any liability for these external contents. The respective provider or operator of the pages is always responsible for the content of the linked pages.</p>
+
+<h3>Urheberrecht / Copyright</h3>
+<p>The content and works created by the site operators on these pages are subject to German copyright law. The duplication, processing, distribution and any form of commercialization of such material beyond the scope of copyright law require the written consent of its respective author or creator.</p>
 HTML;
 
 _zalandy_upsert_page( 'imprint', 'Imprint / Legal Notice', $imprint_content );
@@ -334,7 +352,7 @@ $about_content = <<<HTML
 <p style="font-size:16px;color:#999;">Handcrafted jewelry for the modern soul</p>
 </div>
 
-<p style="font-size:16px;line-height:2;">Zalandy was born from a passion for fine jewelry and a belief that every piece tells a story. We source the finest gemstones from around the world and work with skilled artisans who bring each design to life with meticulous attention to detail.</p>
+<p style="font-size:16px;line-height:2;">Zalandy is a brand of <strong>Equi international UG (haftungsbeschränkt)</strong>, a Germany-registered company based in Schneverdingen, Niedersachsen. We were born from a passion for fine jewelry and a belief that every piece tells a story. We source the finest gemstones from around the world and work with skilled artisans who bring each design to life with meticulous attention to detail.</p>
 
 <h2 style="font-size:24px;font-weight:400;margin-top:40px;">Our Craft</h2>
 <p style="font-size:16px;line-height:2;">Every piece in our collection is handcrafted using traditional techniques passed down through generations. From vintage-inspired palace designs to modern minimalist creations, we blend old-world craftsmanship with contemporary aesthetics.</p>
@@ -387,17 +405,20 @@ $contact_content = <<<HTML
 <h3 style="font-size:18px;font-weight:400;color:#c9a96e;">Customer Support</h3>
 <p style="color:#666;line-height:1.8;">
 <strong>Email:</strong> support@zalandy.top<br/>
-<strong>Hours:</strong> Mon-Fri 9:00-18:00 (UTC+8)<br/>
+<strong>Phone:</strong> +1 706 215 4022<br/>
+<strong>Hours:</strong> Mon-Fri 9:00-18:00 (CET)<br/>
 <strong>Response:</strong> Within 24 hours
 </p>
 </div>
 
 <div style="text-align:center;padding:30px;background:#f8f6f3;border-radius:8px;">
-<h3 style="font-size:18px;font-weight:400;color:#c9a96e;">Privacy & Legal</h3>
+<h3 style="font-size:18px;font-weight:400;color:#c9a96e;">Company Address</h3>
 <p style="color:#666;line-height:1.8;">
-<strong>Email:</strong> privacy@zalandy.top<br/>
-<strong>Returns:</strong> returns@zalandy.top<br/>
-<strong>Wholesale:</strong> wholesale@zalandy.top
+<strong>Equi international UG</strong><br/>
+Großenwede Siedlung 8<br/>
+29640 Schneverdingen<br/>
+Niedersachsen, Germany<br/>
+<strong>VAT ID:</strong> DE312939176
 </p>
 </div>
 
@@ -759,9 +780,8 @@ WP_CLI::log( '  Main menu: + About, + Contact' );
 WP_CLI::log( '  Footer menu: 12 policy/help links' );
 WP_CLI::log( '' );
 WP_CLI::log( 'Still TODO (manual):' );
-WP_CLI::log( '  1. Replace [placeholder] in Imprint with real business info' );
-WP_CLI::log( '  2. Install Cookie Notice plugin (Complianz or CookieYes)' );
-WP_CLI::log( '  3. Configure Stripe/PayPal API keys' );
-WP_CLI::log( '  4. Configure SMTP (Resend)' );
-WP_CLI::log( '  5. Add social media links in Woostify footer' );
+WP_CLI::log( '  1. Install Cookie Notice plugin (Complianz or CookieYes)' );
+WP_CLI::log( '  2. Configure Stripe/PayPal API keys' );
+WP_CLI::log( '  3. Configure SMTP (Resend)' );
+WP_CLI::log( '  4. Add social media links in Woostify footer' );
 WP_CLI::log( '========================================' );
