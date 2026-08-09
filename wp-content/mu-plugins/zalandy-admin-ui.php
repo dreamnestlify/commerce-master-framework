@@ -18,13 +18,13 @@ add_action( 'wp_dashboard_setup', function() {
 add_action( 'welcome_panel', function() {
 	?>
 	<div class="welcome-panel-content" style="padding: 40px 20px;">
-		<h2 style="font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 10px;">Welcome to Zalandy Admin</h2>
-		<p style="font-size: 14px; color: #666; max-width: 600px;">Manage your jewelry and fashion store. Add products, process orders, and customize your storefront.</p>
+		<h2 style="font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 10px;">欢迎来到 Zalandy 管理后台</h2>
+		<p style="font-size: 14px; color: #666; max-width: 600px;">管理您的珠宝和时尚商店。添加商品、处理订单、自定义店铺外观。</p>
 		<div style="display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap;">
-			<a href="/wp-admin/post-new.php?post_type=product" class="button button-primary">Add Product</a>
-			<a href="/wp-admin/admin.php?page=wc-orders" class="button">View Orders</a>
-			<a href="/wp-admin/edit.php?post_type=product" class="button">All Products</a>
-			<a href="/wp-admin/admin.php?page=wc-settings" class="button">Settings</a>
+			<a href="/wp-admin/post-new.php?post_type=product" class="button button-primary">添加商品</a>
+			<a href="/wp-admin/admin.php?page=wc-orders" class="button">查看订单</a>
+			<a href="/wp-admin/edit.php?post_type=product" class="button">全部商品</a>
+			<a href="/wp-admin/admin.php?page=wc-settings" class="button">设置</a>
 		</div>
 	</div>
 	<?php
@@ -67,7 +67,7 @@ add_action( 'login_head', function() {
 add_action( 'admin_bar_menu', function( $wp_admin_bar ) {
 	$wp_admin_bar->add_node( array(
 		'id'     => 'zalandy-view-shop',
-		'title'  => 'View Shop',
+		'title'  => '查看店铺',
 		'href'   => home_url( '/shop/' ),
 		'parent' => 'site-name',
 	) );
