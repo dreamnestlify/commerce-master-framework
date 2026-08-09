@@ -40,6 +40,7 @@ services:
       # Plugin directory must be writable so composer can install vendor/ on startup.
       - ./wp-content/plugins/commerce-core:/var/www/html/wp-content/plugins/commerce-core
       - ./wp-content/themes/commerce-block-theme:/var/www/html/wp-content/themes/commerce-block-theme:ro
+      - ./wp-content/mu-plugins:/var/www/html/wp-content/mu-plugins:ro
       - ./scripts/entrypoint-prod.sh:/entrypoint-prod.sh:ro
     environment:
       WORDPRESS_DEBUG: "false"

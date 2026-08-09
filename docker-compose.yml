@@ -67,6 +67,7 @@ services:
       - wordpress_data:/var/www/html
       - ./wp-content/plugins/commerce-core:/var/www/html/wp-content/plugins/commerce-core:ro
       - ./wp-content/themes/commerce-block-theme:/var/www/html/wp-content/themes/commerce-block-theme:ro
+      - ./wp-content/mu-plugins:/var/www/html/wp-content/mu-plugins:ro
     ports:
       - "${HTTP_PORT:-8080}:80"
     networks:
@@ -166,6 +167,7 @@ services:
       - wordpress_data:/var/www/html
       - ./wp-content/plugins/commerce-core:/var/www/html/wp-content/plugins/commerce-core:ro
       - ./wp-content/themes/commerce-block-theme:/var/www/html/wp-content/themes/commerce-block-theme:ro
+      - ./wp-content/mu-plugins:/var/www/html/wp-content/mu-plugins:ro
       - ./scripts:/scripts:ro
     networks:
       - commerce_net
