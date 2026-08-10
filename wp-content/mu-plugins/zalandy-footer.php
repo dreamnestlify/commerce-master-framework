@@ -22,6 +22,7 @@ add_action( 'wp_footer', function() {
 
 // Also hide default Woostify site-info bar via CSS as a fallback
 add_action( 'wp_head', function() {
+	$css = get_option( 'zalandy_footer_css' );
 	echo '<style>
 	footer#colophon,
 	footer#colophon .site-info,
@@ -30,5 +31,13 @@ add_action( 'wp_head', function() {
 	footer#colophon .site-infor-col {
 		display: none !important;
 	}
+	.zalandy-custom-footer {
+		background: #1a1a1a;
+		color: #fff;
+		margin-top: 60px;
+	}
+	.zalandy-custom-footer a:hover { color: #FF6B00 !important; }
+	.zalandy-custom-footer img { max-width: 200px; }
+	' . ( $css ? $css : '' ) . '
 	</style>';
 });

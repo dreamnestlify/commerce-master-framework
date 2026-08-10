@@ -17,8 +17,11 @@ add_action( 'wp_dashboard_setup', function() {
 // Custom welcome panel
 add_action( 'welcome_panel', function() {
 	?>
-	<div class="welcome-panel-content" style="padding: 40px 20px;">
-		<h2 style="font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 10px;">欢迎来到 Zalandy 管理后台</h2>
+    <div class="welcome-panel-content" style="padding: 40px 20px;">
+		<div style="display: flex; align-items: center; gap: 16px; margin-bottom: 10px;">
+			<img src="<?php echo esc_url( wp_get_attachment_image_url( get_option( 'zalandy_logo_dark_id' ), 'thumbnail' ) ); ?>" alt="Zalandy" style="height: 40px; width: auto;">
+			<h2 style="font-family: 'Playfair Display', serif; font-size: 24px; margin: 0; color: #1a1a1a;">欢迎来到 Zalandy 管理后台</h2>
+		</div>
 		<p style="font-size: 14px; color: #666; max-width: 600px;">管理您的珠宝和时尚商店。添加商品、处理订单、自定义店铺外观。</p>
 		<div style="display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap;">
 			<a href="/wp-admin/post-new.php?post_type=product" class="button button-primary">添加商品</a>
@@ -36,31 +39,43 @@ add_action( 'admin_head', function() {
 	#wpadminbar { background: #1a1a1a; }
 	#adminmenuback, #adminmenuwrap { background: #1a1a1a; }
 	#adminmenu a { color: #ccc; font-size: 13px; }
-	#adminmenu a:hover, #adminmenu .wp-has-current-submenu > a { color: #c9a96e; }
-	#adminmenu .wp-menu-open > a { background: #c9a96e !important; color: #fff !important; }
+	#adminmenu a:hover, #adminmenu .wp-has-current-submenu > a { color: #FF6B00; }
+	#adminmenu .wp-menu-open > a { background: #FF6B00 !important; color: #fff !important; }
 	#adminmenu .wp-has-current-submenu .wp-submenu-wrap { background: #111; }
 	#adminmenu .wp-submenu a { color: #888; }
-	#adminmenu .wp-submenu a:hover { color: #c9a96e; }
-	.wp-core-ui .button-primary { background: #c9a96e; border-color: #b8975a; }
-	.wp-core-ui .button-primary:hover { background: #b8975a; border-color: #a0874a; }
+	#adminmenu .wp-submenu a:hover { color: #FF6B00; }
+	.wp-core-ui .button-primary { background: #FF6B00; border-color: #E65F00; }
+	.wp-core-ui .button-primary:hover { background: #E65F00; border-color: #D45500; }
 	#dashboard-widgets .postbox { border: 1px solid #e5e5e5; border-radius: 8px; }
-	#dashboard-widgets .postbox h2, #dashboard-widgets .postbox h3 { border-bottom: 2px solid #c9a96e; }
+	#dashboard-widgets .postbox h2, #dashboard-widgets .postbox h3 { border-bottom: 2px solid #FF6B00; }
 	.welcome-panel-content h2 { font-family: Playfair Display, serif; }
 	#footer-upgrade { display: none; }
-	#footer-thankyou { color: #c9a96e; }
+	#footer-thankyou { color: #FF6B00; }
 	.login h1 a { background-image: none; }
-	.login #nav a, .login #backtoblog a { color: #c9a96e; }
+	.login #nav a, .login #backtoblog a { color: #FF6B00; }
 	</style>';
 });
 
 // Login page CSS
 add_action( 'login_head', function() {
-	echo '<style>
-	.login h1 a { background-image: none; text-indent: 0; width: auto; height: auto; font-family: Playfair Display, serif; font-size: 32px; color: #c9a96e; font-weight: 700; }
+	$logo_url = wp_get_attachment_image_url( get_option( 'zalandy_logo_dark_id' ), 'medium' );
+	?>
+	<style>
+	.login h1 a {
+		background-image: url('<?php echo esc_url( $logo_url ); ?>');
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center;
+		width: 240px;
+		height: 60px;
+		text-indent: -9999px;
+	}
 	.login form { border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-	.login .button-primary { background: #c9a96e; border-color: #b8975a; }
-	.login .button-primary:hover { background: #b8975a; }
-	</style>';
+	.login .button-primary { background: #FF6B00; border-color: #E65F00; }
+	.login .button-primary:hover { background: #E65F00; }
+	.login #nav a, .login #backtoblog a { color: #FF6B00; }
+	</style>
+	<?php
 });
 
 // Custom admin bar
