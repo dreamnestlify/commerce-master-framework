@@ -3,17 +3,101 @@
  * Zalandy Header Fix
  *
  * Woostify header-layout-1 outputs an empty .site-navigation div in some
- * configurations. This mu-plugin injects the primary menu (with Polylang
- * language switcher attached via wp_nav_menu_items filter) and a visible
+ * configurations. This mu-plugin injects the primary menu and a visible
  * search box into the header if Woostify fails to render them.
+ *
+ * Uses wp_get_nav_menu_items() directly instead of wp_nav_menu() because
+ * the latter returns false when called during wp_footer in some contexts.
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
+ * Build primary menu HTML from menu items directly.
+ */
+function zalandy_build_primary_menu_html() {
+	// Get menu assigned to 'primary' location
+	$locations = get_nav_menu_locations();
+	$menu_id   = isset( $locations['primary'] ) ? (int) $locations['primary'] : 0;
+
+	if ( ! $menu_id ) {
+		// Fallback: find by name
+		$menu = wp_get_nav_menu_object( 'Main Menu' );
+		if ( $menu ) {
+			$menu_id = $menu->term_id;
+		}
+	}
+
+	if ( ! $menu_id ) {
+		return '';
+	}
+
+	$items = wp_get_nav_menu_items( $menu_id );
+	if ( empty( $items ) ) {
+		return '';
+	}
+
+	// Build nested HTML
+	$menu_html = '<nav class="main-navigation"><ul id="primary-menu" class="primary-navigation">';
+
+	// Group items by parent
+	$top_items   = array();
+	$sub_items   = array();
+	$has_submenu = array();
+
+	foreach ( $items as $item ) {
+		if ( (int) $item->menu_item_parent === 0 ) {
+			$top_items[] = $item;
+		} else {
+			$sub_items[ (int) $item->menu_item_parent ][] = $item;
+		}
+	}
+
+	foreach ( $top_items as $item ) {
+		$has_subs = isset( $sub_items[ $item->ID ] ) && ! empty( $sub_items[ $item->ID ] );
+		$class    = $has_subs ? 'menu-item menu-item-has-children' : 'menu-item';
+
+		$menu_html .= '<li class="' . esc_attr( $class ) . '">';
+		$menu_html .= '<a href="' . esc_url( $item->url ) . '">' . esc_html( $item->title ) . '</a>';
+
+		if ( $has_subs ) {
+			$menu_html .= '<ul class="sub-menu">';
+			foreach ( $sub_items[ $item->ID ] as $sub ) {
+				$menu_html .= '<li class="menu-item"><a href="' . esc_url( $sub->url ) . '">' . esc_html( $sub->title ) . '</a></li>';
+			}
+			$menu_html .= '</ul>';
+		}
+
+		$menu_html .= '</li>';
+	}
+
+	// Add Polylang language switcher
+	if ( function_exists( 'pll_the_languages' ) ) {
+		$languages = pll_the_languages( array( 'raw' => 1, 'hide_if_empty' => 0 ) );
+		if ( ! empty( $languages ) ) {
+			$menu_html .= '<li class="menu-item polylang-switcher">';
+			$parts      = array();
+			foreach ( $languages as $lang ) {
+				$label = strtoupper( $lang['slug'] );
+				if ( $lang['current_lang'] ) {
+					$parts[] = '<span style="font-weight:700;color:#FF6B00;font-size:13px;">' . esc_html( $label ) . '</span>';
+				} else {
+					$parts[] = '<a href="' . esc_url( $lang['url'] ) . '" style="color:#666;font-size:13px;text-decoration:none;" hreflang="' . esc_attr( $lang['locale'] ) . '">' . esc_html( $label ) . '</a>';
+				}
+			}
+			$menu_html .= implode( '<span style="color:#ddd;font-size:11px;">|</span>', $parts );
+			$menu_html .= '</li>';
+		}
+	}
+
+	$menu_html .= '</ul></nav>';
+
+	return $menu_html;
+}
+
+/**
  * Inject primary navigation and search box via wp_footer.
- * Uses wp_nav_menu() so all filters (including Polylang switcher) fire.
  */
 add_action( 'wp_footer', 'zalandy_inject_header_nav' );
 function zalandy_inject_header_nav() {
@@ -21,17 +105,7 @@ function zalandy_inject_header_nav() {
 		return;
 	}
 
-	// Build the menu HTML — this fires wp_nav_menu_items filter so Polylang
-	// language switcher gets appended automatically.
-	$menu_html = wp_nav_menu( array(
-		'theme_location'  => 'primary',
-		'menu_class'      => 'primary-navigation',
-		'container'       => 'nav',
-		'container_class' => 'main-navigation',
-		'echo'            => false,
-		'fallback_cb'     => false,
-		'depth'           => 2,
-	) );
+	$menu_html = zalandy_build_primary_menu_html();
 
 	// Build search box HTML
 	$search_html = '<div class="zalandy-header-search">'
