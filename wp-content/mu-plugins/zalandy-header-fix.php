@@ -72,21 +72,54 @@ function zalandy_build_primary_menu_html() {
 		$menu_html .= '</li>';
 	}
 
-	// Add Polylang language switcher (horizontal)
+	// Add Polylang language switcher (dropdown with flags)
 	if ( function_exists( 'pll_the_languages' ) ) {
 		$languages = pll_the_languages( array( 'raw' => 1, 'hide_if_empty' => 0 ) );
 		if ( ! empty( $languages ) ) {
-			$menu_html .= '<li class="menu-item polylang-switcher">';
-			$parts      = array();
+			$flags = array(
+				'en' => '🇬🇧',
+				'de' => '🇩🇪',
+			);
+			$names = array(
+				'en' => 'English',
+				'de' => 'Deutsch',
+			);
+			$current_lang = null;
 			foreach ( $languages as $lang ) {
-				$label = strtoupper( $lang['slug'] );
 				if ( $lang['current_lang'] ) {
-					$parts[] = '<span class="current-lang">' . esc_html( $label ) . '</span>';
-				} else {
-					$parts[] = '<a href="' . esc_url( $lang['url'] ) . '" hreflang="' . esc_attr( $lang['locale'] ) . '">' . esc_html( $label ) . '</a>';
+					$current_lang = $lang;
+					break;
 				}
 			}
-			$menu_html .= implode( '<span class="lang-sep">|</span>', $parts );
+			if ( ! $current_lang ) {
+				$current_lang = reset( $languages );
+			}
+
+			$slug      = $current_lang['slug'];
+			$flag      = isset( $flags[ $slug ] ) ? $flags[ $slug ] : '🇬🇧';
+			$code      = strtoupper( $slug );
+			$menu_html .= '<li class="menu-item polylang-switcher">';
+			$menu_html .= '<div class="pll-language-dropdown">';
+			$menu_html .= '<button class="pll-dropdown-toggle" type="button" aria-haspopup="true" aria-expanded="false">';
+			$menu_html .= '<span class="pll-flag">' . $flag . '</span>';
+			$menu_html .= '<span class="pll-code">' . esc_html( $code ) . '</span>';
+			$menu_html .= '<svg class="pll-arrow" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+			$menu_html .= '</button>';
+			$menu_html .= '<ul class="pll-dropdown-menu">';
+			foreach ( $languages as $lang ) {
+				$l_slug = $lang['slug'];
+				$l_flag = isset( $flags[ $l_slug ] ) ? $flags[ $l_slug ] : '🇬🇧';
+				$l_name = isset( $names[ $l_slug ] ) ? $names[ $l_slug ] : $lang['name'];
+				$active = $lang['current_lang'] ? ' pll-dropdown-item--active' : '';
+				$menu_html .= '<li class="pll-dropdown-item' . esc_attr( $active ) . '">';
+				$menu_html .= '<a href="' . esc_url( $lang['url'] ) . '" hreflang="' . esc_attr( $lang['locale'] ) . '">';
+				$menu_html .= '<span class="pll-flag">' . $l_flag . '</span>';
+				$menu_html .= '<span class="pll-name">' . esc_html( $l_name ) . '</span>';
+				$menu_html .= '</a>';
+				$menu_html .= '</li>';
+			}
+			$menu_html .= '</ul>';
+			$menu_html .= '</div>';
 			$menu_html .= '</li>';
 		}
 	}
@@ -140,6 +173,41 @@ function zalandy_inject_header_nav() {
 				headerInner.parentNode.insertBefore( wrapper.firstChild, headerInner.nextSibling );
 			}
 		}
+
+		// 3. Initialize language dropdown toggles
+		document.querySelectorAll( ".pll-language-dropdown" ).forEach( function( dropdown ) {
+			var toggle = dropdown.querySelector( ".pll-dropdown-toggle" );
+			var menu   = dropdown.querySelector( ".pll-dropdown-menu" );
+			if ( ! toggle || ! menu ) {
+				return;
+			}
+			toggle.addEventListener( "click", function( e ) {
+				e.preventDefault();
+				e.stopPropagation();
+				var isOpen = menu.classList.contains( "pll-dropdown-menu--open" );
+				// Close any other open dropdowns
+				document.querySelectorAll( ".pll-dropdown-menu--open" ).forEach( function( openMenu ) {
+					if ( openMenu !== menu ) {
+						openMenu.classList.remove( "pll-dropdown-menu--open" );
+						var otherToggle = openMenu.closest( ".pll-language-dropdown" ).querySelector( ".pll-dropdown-toggle" );
+						if ( otherToggle ) {
+							otherToggle.setAttribute( "aria-expanded", "false" );
+						}
+					}
+				} );
+				menu.classList.toggle( "pll-dropdown-menu--open", ! isOpen );
+				toggle.setAttribute( "aria-expanded", String( ! isOpen ) );
+			} );
+		} );
+		document.addEventListener( "click", function() {
+			document.querySelectorAll( ".pll-dropdown-menu--open" ).forEach( function( menu ) {
+				menu.classList.remove( "pll-dropdown-menu--open" );
+				var toggle = menu.closest( ".pll-language-dropdown" ).querySelector( ".pll-dropdown-toggle" );
+				if ( toggle ) {
+					toggle.setAttribute( "aria-expanded", "false" );
+				}
+			} );
+		} );
 	} );
 	</script>
 	<?php
