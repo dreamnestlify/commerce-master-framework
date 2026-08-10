@@ -72,7 +72,7 @@ function zalandy_build_primary_menu_html() {
 		$menu_html .= '</li>';
 	}
 
-	// Add Polylang language switcher
+	// Add Polylang language switcher (horizontal)
 	if ( function_exists( 'pll_the_languages' ) ) {
 		$languages = pll_the_languages( array( 'raw' => 1, 'hide_if_empty' => 0 ) );
 		if ( ! empty( $languages ) ) {
@@ -81,12 +81,12 @@ function zalandy_build_primary_menu_html() {
 			foreach ( $languages as $lang ) {
 				$label = strtoupper( $lang['slug'] );
 				if ( $lang['current_lang'] ) {
-					$parts[] = '<span style="font-weight:700;color:#FF6B00;font-size:13px;">' . esc_html( $label ) . '</span>';
+					$parts[] = '<span class="current-lang">' . esc_html( $label ) . '</span>';
 				} else {
-					$parts[] = '<a href="' . esc_url( $lang['url'] ) . '" style="color:#666;font-size:13px;text-decoration:none;" hreflang="' . esc_attr( $lang['locale'] ) . '">' . esc_html( $label ) . '</a>';
+					$parts[] = '<a href="' . esc_url( $lang['url'] ) . '" hreflang="' . esc_attr( $lang['locale'] ) . '">' . esc_html( $label ) . '</a>';
 				}
 			}
-			$menu_html .= implode( '<span style="color:#ddd;font-size:11px;">|</span>', $parts );
+			$menu_html .= implode( '<span class="lang-sep">|</span>', $parts );
 			$menu_html .= '</li>';
 		}
 	}
@@ -107,13 +107,15 @@ function zalandy_inject_header_nav() {
 
 	$menu_html = zalandy_build_primary_menu_html();
 
-	// Build search box HTML
-	$search_html = '<div class="zalandy-header-search">'
+	// Build full-width search bar HTML
+	$search_html = '<div class="zalandy-header-search-bar">'
+		. '<div class="woostify-container">'
 		. '<form role="search" method="get" action="' . esc_url( home_url( '/' ) ) . '">'
 		. '<input type="search" name="s" placeholder="Search products..." value="' . esc_attr( get_search_query() ) . '" />'
 		. '<input type="hidden" name="post_type" value="product" />'
-		. '<button type="submit"><svg width="16" height="16" viewBox="0 0 17 17" fill="currentColor"><path d="M16.604 15.868l-5.173-5.173c0.975-1.137 1.569-2.611 1.569-4.223 0-3.584-2.916-6.5-6.5-6.5-1.736 0-3.369 0.676-4.598 1.903-1.227 1.228-1.903 2.861-1.902 4.597 0 3.584 2.916 6.5 6.5 6.5 1.612 0 3.087-0.594 4.224-1.569l5.173 5.173 0.707-0.708zM6.5 11.972c-3.032 0-5.5-2.467-5.5-5.5-0.001-1.47 0.571-2.851 1.61-3.889 1.038-1.039 2.42-1.611 3.89-1.611 3.032 0 5.5 2.467 5.5 5.5 0 3.032-2.468 5.5-5.5 5.5z"/></svg></button>'
+		. '<button type="submit"><svg width="18" height="18" viewBox="0 0 17 17" fill="currentColor"><path d="M16.604 15.868l-5.173-5.173c0.975-1.137 1.569-2.611 1.569-4.223 0-3.584-2.916-6.5-6.5-6.5-1.736 0-3.369 0.676-4.598 1.903-1.227 1.228-1.903 2.861-1.902 4.597 0 3.584 2.916 6.5 6.5 6.5 1.612 0 3.087-0.594 4.224-1.569l5.173 5.173 0.707-0.708zM6.5 11.972c-3.032 0-5.5-2.467-5.5-5.5-0.001-1.47 0.571-2.851 1.61-3.889 1.038-1.039 2.42-1.611 3.89-1.611 3.032 0 5.5 2.467 5.5 5.5 0 3.032-2.468 5.5-5.5 5.5z"/></svg></button>'
 		. '</form>'
+		. '</div>'
 		. '</div>';
 
 	$menu_json   = wp_json_encode( $menu_html );
@@ -128,14 +130,14 @@ function zalandy_inject_header_nav() {
 			navContainer.innerHTML = <?php echo $menu_json; // phpcs:ignore ?>;
 		}
 
-		// 2. Inject search box before site-tools icons
-		var siteTools = document.querySelector( ".site-header .site-tools" );
-		if ( siteTools ) {
-			var existingSearch = siteTools.querySelector( ".zalandy-header-search" );
-			if ( ! existingSearch ) {
+		// 2. Inject full-width search bar below .site-header-inner
+		var headerInner = document.querySelector( ".site-header .site-header-inner" );
+		if ( headerInner ) {
+			var existingBar = document.querySelector( ".zalandy-header-search-bar" );
+			if ( ! existingBar ) {
 				var wrapper = document.createElement( "div" );
 				wrapper.innerHTML = <?php echo $search_json; // phpcs:ignore ?>;
-				siteTools.insertBefore( wrapper.firstChild, siteTools.firstChild );
+				headerInner.parentNode.insertBefore( wrapper.firstChild, headerInner.nextSibling );
 			}
 		}
 	} );

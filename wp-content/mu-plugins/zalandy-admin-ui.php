@@ -178,55 +178,124 @@ add_action( 'wp_head', function() {
 		color: #FF6B00;
 		background: #f9f9f9;
 	}
-	/* Header search box */
-	.zalandy-header-search {
-		display: flex;
+	/* Header layout: single row */
+	.site-header .site-header-inner > .woostify-container {
+		display: flex !important;
 		align-items: center;
-		margin-right: 6px;
+		justify-content: space-between;
+		flex-wrap: nowrap;
+		position: relative;
 	}
-	.zalandy-header-search input[type="search"] {
-		padding: 7px 14px;
-		border: 1px solid #e5e5e5;
-		border-radius: 20px;
-		font-size: 13px;
-		width: 170px;
-		outline: none;
-		transition: width 0.3s, border-color 0.3s;
-		background: #f9f9f9;
-	}
-	.zalandy-header-search input[type="search"]:focus {
-		width: 210px;
-		border-color: #FF6B00;
-		background: #fff;
-	}
-	.zalandy-header-search button {
-		background: none;
-		border: none;
-		padding: 4px 6px;
-		cursor: pointer;
-		color: #666;
-		display: flex;
-		align-items: center;
-	}
-	.zalandy-header-search button:hover {
-		color: #FF6B00;
-	}
-	/* Language switcher */
-	.polylang-switcher {
+	/* Language switcher: horizontal, in the header row */
+	.polylang-switcher,
+	.site-header .primary-navigation > li.polylang-switcher {
 		list-style: none !important;
 		display: inline-flex !important;
-		gap: 4px;
-		align-items: center;
-		margin-left: 10px !important;
-		padding-left: 10px !important;
+		flex-direction: row !important;
+		gap: 6px;
+		align-items: center !important;
+		margin-left: 16px !important;
+		padding-left: 16px !important;
 		border-left: 1px solid #e5e5e5;
+	}
+	.polylang-switcher > *,
+	.site-header .primary-navigation > li.polylang-switcher > * {
+		display: inline-block !important;
+		line-height: 1;
+		white-space: nowrap;
+	}
+	.polylang-switcher .current-lang {
+		font-weight: 700;
+		color: #FF6B00;
+		font-size: 13px;
+	}
+	.polylang-switcher a {
+		color: #666;
+		font-size: 13px;
+		text-decoration: none;
+	}
+	.polylang-switcher a:hover {
+		color: #FF6B00 !important;
+	}
+	.polylang-switcher .lang-sep {
+		color: #ddd;
+		font-size: 11px;
+		user-select: none;
 	}
 	/* Site tools layout */
 	.site-header .site-tools {
 		display: flex;
 		align-items: center;
-		gap: 10px;
+		gap: 14px;
 		flex-shrink: 0;
+	}
+	/* Full-width search bar below navigation */
+	.zalandy-header-search-bar {
+		width: 100%;
+		background: #fff;
+		border-top: 1px solid #f0f0f0;
+		border-bottom: 1px solid #f0f0f0;
+		padding: 12px 0;
+	}
+	.zalandy-header-search-bar .woostify-container {
+		display: flex;
+		justify-content: center;
+	}
+	.zalandy-header-search-bar form {
+		width: 100%;
+		max-width: 680px;
+		display: flex;
+		align-items: center;
+		gap: 0;
+		border: 1px solid #e5e5e5;
+		border-radius: 30px;
+		overflow: hidden;
+		background: #f9f9f9;
+		transition: box-shadow 0.2s, border-color 0.2s;
+	}
+	.zalandy-header-search-bar form:focus-within {
+		border-color: #FF6B00;
+		box-shadow: 0 4px 12px rgba(255,107,0,0.12);
+		background: #fff;
+	}
+	.zalandy-header-search-bar input[type="search"] {
+		flex: 1;
+		padding: 14px 24px;
+		border: none;
+		font-size: 15px;
+		outline: none;
+		background: transparent;
+		min-width: 0;
+	}
+	.zalandy-header-search-bar input[type="search"]::-webkit-search-decoration,
+	.zalandy-header-search-bar input[type="search"]::-webkit-search-cancel-button,
+	.zalandy-header-search-bar input[type="search"]::-webkit-search-results-button,
+	.zalandy-header-search-bar input[type="search"]::-webkit-search-results-decoration {
+		display: none;
+	}
+	.zalandy-header-search-bar button {
+		background: #FF6B00;
+		border: none;
+		padding: 0 24px;
+		cursor: pointer;
+		color: #fff;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 100%;
+		min-height: 48px;
+		transition: background 0.2s;
+	}
+	.zalandy-header-search-bar button:hover {
+		background: #E65F00;
+	}
+	.zalandy-header-search-bar button svg {
+		width: 18px;
+		height: 18px;
+	}
+	/* Hide Woostify default search icon since we have a real search bar */
+	.site-tools .header-search-icon {
+		display: none !important;
 	}
 	@media (max-width: 1024px) {
 		.site-header .primary-navigation > li > a {
@@ -238,8 +307,11 @@ add_action( 'wp_head', function() {
 		.site-header .site-navigation {
 			display: none !important;
 		}
-		.zalandy-header-search {
+		.zalandy-header-search-bar {
 			display: none;
+		}
+		.site-tools .header-search-icon {
+			display: block !important;
 		}
 	}
 	</style>';
