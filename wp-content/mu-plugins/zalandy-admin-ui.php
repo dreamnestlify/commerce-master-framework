@@ -4,6 +4,16 @@
  */
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+// Force frontend to English, while admin/dashboard can remain Chinese
+add_filter( 'locale', 'zalandy_frontend_english_locale', 999 );
+add_filter( 'determine_locale', 'zalandy_frontend_english_locale', 999 );
+function zalandy_frontend_english_locale( $locale ) {
+	if ( ! is_admin() ) {
+		return 'en_US';
+	}
+	return $locale;
+}
+
 // Remove unwanted dashboard widgets
 add_action( 'wp_dashboard_setup', function() {
 	remove_meta_box( 'dashboard_quick_press', 'dashboard', 'side' );
