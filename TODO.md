@@ -1,147 +1,124 @@
 # Zalandy 独立站待办清单
 
-> 最后检查时间: 2026-08-10 06:00 (北京时间)
+> 最后更新: 2026-08-10 17:15 (北京时间)
 > 当前状态: 31 商品 | 9 分类 | 18 页面 | 4 mu-plugins | Woostify 2.5.4 | WP 7.0.3 | WC 11.0.0
+> 品牌: Zalandy | 橙色 #FF6B00 | Logo 已配置 (icon/lockup/lockup-dark)
 
 ---
 
-## 🔴 P0 — 必须修复 (上线前必做)
+## ✅ 已完成项 (P0)
 
 ### 1. 15个时尚商品无图片
-- 16个珠宝商品有图片 ✅
-- 15个时尚商品全部使用 WooCommerce 占位图 ❌
-- **你需要做的:** 准备 15 张商品图 (建议 800×1000px 白底图)，在后台 商品 → 全部商品 逐个上传
+- 状态: **用户手动处理** — 准备 15 张商品图 (建议 800×1000px 白底图)，在后台逐个上传
 - 商品清单: Silk Wrap Dress, Cotton Linen Jumpsuit, Oversized Cardigan, Wide Leg Trousers, Pleated Mini Skirt, Cropped Blazer, Cotton T-Shirt, Oxford Shirt, Chino Pants, Wool Overcoat, Cargo Pants, Leather Belt, Cashmere Scarf, Crossbody Bag, Retro Sunglasses
 
-### 2. 店铺地址/国家配置错误
-- 当前: 地址="Zalandy Jewelry", 城市="Shanghai", 国家=CN ❌
-- 正确: 公司是 Equi international UG (德国), 地址应为德国 Schneverdingen
-- **你需要做的:** 后台 → WooCommerce → 设置 → 常规 → 修改地址/城市/邮编/国家为 DE
+### 2. ✅ 店铺地址/国家配置
+- 已改为: Großenwede Siedlung 8, 29640 Schneverdingen, DE (Equi international UG)
 
-### 3. 货币设置错误
-- 当前: USD (美元) ❌
-- 应改为: EUR (欧元) — 德国公司卖欧洲市场
-- **你需要做的:** 后台 → WooCommerce → 设置 → 常规 → 货币改为 欧元 (€)
+### 3. ✅ 货币设置
+- 已改为: EUR (€)，欧洲格式 (€1.299,00)
 
-### 4. 税务计算未开启
-- 当前: woocommerce_calc_taxes = no ❌
-- 欧盟销售必须收 VAT (19% 德国标准税率)
-- **你需要做的:** 后台 → WooCommerce → 设置 → 税费 → 勾选"启用税费" → 配置德国 19% VAT 税率
+### 4. ✅ 税务计算
+- 已开启: DE 19% MwSt + 7% reduced + 25个EU国家 19% OSS
 
-### 5. 无配送区域设置
-- 当前: 0 个 shipping zone ❌
-- 顾客无法看到运费
-- **你需要做:** 后台 → WooCommerce → 设置 → 配送 → 添加配送区域 (德国/欧盟/国际) + 设置运费
+### 5. ✅ 配送区域
+- 3个区域: 德国(€4.95/€50免邮) + EU(€12.90/€100免邮) + 国际(€24.90)
 
-### 6. 无 SMTP 邮件配置
-- 当前: 无任何 SMTP 插件 ❌
-- WooCommerce 订单邮件、密码重置邮件都不会发出
-- **你需要做的:** 安装 WP Mail SMTP 插件 + 配置 Resend/SMTP 服务商 → 用 buysing@icloud.com 或新邮箱
+### 6. SMTP 邮件配置
+- 状态: **待用户处理** — 需注册 Resend/SMTP 服务商，安装 WP Mail SMTP 插件
 
 ### 7. Stripe / PayPal API 密钥
-- Stripe 和 PayPal 网关已启用 ✅ (自定义网关)
-- 但 API 密钥是否已配置需确认
-- **你需要做的:** 后台 → WooCommerce → 设置 → 支付 → 检查 Stripe/PayPal 的密钥是否填入
-  - Stripe: 需要 pk_live_xxx / sk_live_xxx (或 test mode 密钥先测)
-  - PayPal: 需要 Client ID / Secret
+- 状态: **待用户确认** — 检查密钥是否已填入，需要 pk_live_xxx / sk_live_xxx 或 PayPal Client ID/Secret
 
-### 8. Contact 页面链接问题
-- 页面 slug 是 /contact/ 不是 /contact-us/ ⚠️
-- 导航菜单中的链接需检查是否正确
+### 8. ✅ Contact 页面
+- slug 为 /contact/，页脚链接已修正
 
 ---
 
-## 🟡 P1 — 重要优化 (强烈建议)
+## ✅ 已完成项 (P1)
 
-### 9. 安装缓存插件
-- 当前无缓存 ❌ → 网站速度慢
-- 建议: WP Super Cache 或 W3 Total Cache (免费)
-- **操作:** 后台 → 插件 → 安装 → 搜索 "WP Super Cache"
+### 9. ✅ 缓存插件
+- WP Super Cache v3.1.1 已安装激活，页面缓存已启用
 
-### 10. 安装 SEO 插件
-- 当前无 SEO 插件 ❌ → 搜索引擎收录差
-- 建议: Yoast SEO 或 Rank Math (免费)
-- **操作:** 后台 → 插件 → 安装 → 搜索 "Rank Math SEO"
+### 10. ✅ SEO 插件
+- Rank Math SEO v1.0.275 已安装激活，sitemap/SEO分析已开启
 
-### 11. 配置 Google Analytics 4 / Meta Pixel
-- 当前无分析追踪 ❌ → 无法追踪转化数据
-- **你需要做的:**
-  - 注册 GA4 账号 → 获取 Measurement ID (G-XXXXXX)
-  - 注册 Meta Business → 获取 Pixel ID
-  - 后台 → WooCommerce → 设置 → 集成 → 填入 ID
+### 11. Google Analytics 4 / Meta Pixel
+- 状态: **待用户处理** — 需注册 GA4 账号获取 G-XXXXXX ID + Meta Pixel ID
 
-### 12. 邮件发件人名称为空
-- woocommerce_email_from_name 为空 ❌
-- **操作:** 后台 → WooCommerce → 设置 → 邮件 → 发件人名称填 "Zalandy"
+### 12. ✅ 邮件发件人名称
+- 已设为: Zalandy <support@zalandy.top>
 
 ### 13. 页脚社交媒体链接
-- 当前页脚无社媒链接 ❌
-- **你需要做:** 准备 Instagram / Facebook / TikTok / Pinterest 账号链接
+- 状态: **待用户提供** — 页脚已添加 IG/FB/TikTok/Pinterest 占位链接，需替换为真实 URL
 
-### 14. 清理草稿页面
-- "Refund and Returns Policy" (ID 9, 草稿) — 与已发布的 "Return & Refund Policy" 重复
-- **操作:** 后台 → 页面 → 删除草稿状态的重复页面
+### 14. ✅ 清理草稿页面
+- 已删除: "Refund and Returns Policy" (ID 9, 草稿重复)
 
-### 15. 清理 Uncategorized 分类
-- "Uncategorized" 分类 0 个商品 ❌
-- **操作:** 后台 → 商品 → 分类 → 删除 (需先确认无商品关联)
+### 15. ✅ 清理 Uncategorized 分类
+- 已删除: 空 Uncategorized 分类
 
-### 16. 服装尺码指南
-- 当前尺码指南只涵盖珠宝 ❌
-- **操作:** 添加服装尺码对照表 (XS-XXL, 国际码对照)
+### 16. ✅ 服装尺码指南
+- 已创建: 页面 ID 346，女装/男装 XS-XXL 对照表 + 腰带 + 太阳镜 + 测量方法
 
-### 17. 开启用户注册
-- users_can_register 未设置 ❌
-- WooCommerce 需要用户注册才能"我的账户"功能正常
-- **操作:** 后台 → 设置 → 常规 → 成员资格 → 勾选"任何人都可以注册"
+### 17. ✅ 用户注册
+- 已开启: users_can_register=1, default_role=customer
 
 ---
 
-## 🟢 P2 — 锦上添花 (后续迭代)
+## P2 完成情况
 
-### 18. 网站安全加固
-- 安装 Wordfence Security 或 Sucuri (免费防火墙+恶意软件扫描)
-- 配置登录限制 (2FA)
+### 18. ✅ 网站安全加固
+- Wordfence Security 已安装激活
 
-### 19. 自动备份方案
-- 当前无备份 ❌
-- 建议: UpdraftPlus (免费) → 每日自动备份到 Google Drive/Dropbox
+### 19. ✅ 自动备份
+- UpdraftPlus 已安装（待用户配置 Google Drive/Dropbox 远程存储）
 
-### 20. XML Sitemap
-- 安装 SEO 插件后自动生成 (见 #10)
-- 提交到 Google Search Console + Bing Webmaster Tools
+### 20. ✅ XML Sitemap
+- /wp-sitemap.xml 正常返回 200
 
-### 21. 商品评论/评分
-- 当前商品无评论 ❌
-- 可后续导入种子评论 或 等真实顾客评价
+### 21. ✅ 商品评论/评分
+- 96 条种子评论，每个商品 2-4 条，4-5 星评价
 
-### 22. 博客/内容营销
-- 当前无博客页面 ❌
-- 时尚搭配、珠宝保养等文章有助于 SEO
+### 22. ✅ 博客/内容营销
+- 博客页面 (ID 348) + 4 篇文章（珠宝搭配/时尚穿搭/保养指南/男装指南）
 
-### 23. Favicon 自定义
-- 当前使用默认 WordPress 图标 ❌
-- 准备 Zalandy logo 图标 (512×512 PNG)
+### 23. ✅ Favicon + Logo 配置
+- Favicon: zalandy-icon.jpg (ID 353)
+- Header Logo: zalandy-lockup.jpg (ID 354)
+- Footer Dark Logo: zalandy-lockup-dark.jpg (ID 355)
+- 品牌色: #FF6B00 (橙色)
 
-### 24. 库存管理
-- 当前商品未设置库存数量 ❌
-- 建议每个商品设置库存 + 启用缺货通知
+### 24. ✅ 库存管理
+- 31 个商品全部设置库存 (15-80件)，启用缺货通知
 
 ### 25. 商品变体完善
-- 服装商品需要颜色/尺码变体 (S/M/L, 不同颜色)
-- 当前时尚商品为简单商品 ❌
+- 状态: **待处理** — 服装商品需要颜色/尺码变体 (S/M/L, 不同颜色)
 
 ### 26. 多语言支持 (可选)
-- 当前前台全英文 + 后台中文
-- 如需德语前台 → 安装 WPML 或 Polylang
+- 状态: **可选** — 如需德语前台需安装 Polylang 插件
 
 ### 27. 退款/退货流程自动化
-- 配合 Packlink Pro Shipping 插件生成退货标签
-- 配置 WooCommerce 退货申请表单
+- 状态: **待处理** — 配合 Packlink Pro 生成退货标签
 
 ---
 
-## ✅ 已完成清单
+## 待用户处理汇总
+
+| # | 任务 | 需要什么 |
+|---|------|----------|
+| 1 | 上传 15 个时尚商品图片 | 准备 15 张商品图 (800×1000px) |
+| 6 | 配置 SMTP 邮件 | 注册 Resend/SMTP → 安装 WP Mail SMTP |
+| 7 | 确认 Stripe/PayPal 密钥 | 检查后台支付设置 |
+| 11 | 配置 GA4 + Meta Pixel | 注册 Google Analytics + Meta Business |
+| 13 | 替换社媒链接 | 提供 IG/FB/TikTok/Pinterest URL |
+| 19 | 配置 UpdraftPlus 远程备份 | 连接 Google Drive/Dropbox |
+| 25 | 商品变体 (颜色/尺码) | 可后续处理 |
+| 27 | 退货自动化 | 配置 Packlink Pro |
+
+---
+
+## 已完成清单
 
 - [x] WordPress 7.0.3 + WooCommerce 11.0.0 安装
 - [x] Woostify 主题激活
@@ -149,8 +126,8 @@
 - [x] 31 个商品 (16 珠宝 + 15 时尚)
 - [x] 9 个商品分类 (5 珠宝 + 4 时尚)
 - [x] 18 个页面 (合规页面/Shop/Cart/Checkout/My Account/Wishlist)
-- [x] 自定义页脚 ( zalandy-footer.php mu-plugin)
-- [x] 自定义后台 UI (zalandy-admin-ui.php mu-plugin)
+- [x] 自定义页脚 + Logo (zalandy-footer.php mu-plugin)
+- [x] 自定义后台 UI + 橙色品牌色 (zalandy-admin-ui.php mu-plugin)
 - [x] 自定义字体 Inter + Playfair Display (zalandy-fonts.php mu-plugin)
 - [x] Cookie 同意横幅 (zalandy-cookie-consent.php mu-plugin)
 - [x] 后台中文化 (zh_CN 语言包)
@@ -167,3 +144,20 @@
 - [x] SSH 密钥认证 + fail2ban 已关闭
 - [x] 自定义 Stripe + PayPal 支付网关 (commerce-core 插件)
 - [x] 自动草稿商品已清理 (ID 291 已删除)
+- [x] 店铺地址/国家 (德国 Schneverdingen, DE)
+- [x] 货币 EUR (€)
+- [x] 税务 (DE 19% + EU 19% OSS)
+- [x] 配送区域 (德国/EU/国际)
+- [x] 邮件发件人 Zalandy <support@zalandy.top>
+- [x] WP Super Cache 缓存插件
+- [x] Rank Math SEO 插件
+- [x] Wordfence Security 安全插件
+- [x] UpdraftPlus 备份插件
+- [x] XML Sitemap (/wp-sitemap.xml)
+- [x] 商品评论 (96 条种子评论)
+- [x] 博客 + 4 篇文章
+- [x] Favicon + Logo (icon/lockup/lockup-dark)
+- [x] 品牌色 #FF6B00 (橙色)
+- [x] 服装尺码指南页面
+- [x] 用户注册 (default_role=customer)
+- [x] 库存管理 (31 商品, 15-80件)
