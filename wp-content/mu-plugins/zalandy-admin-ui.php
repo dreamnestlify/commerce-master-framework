@@ -4,14 +4,22 @@
  */
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-// Force frontend to English, while admin/dashboard can remain Chinese
-add_filter( 'locale', 'zalandy_frontend_english_locale', 999 );
-add_filter( 'determine_locale', 'zalandy_frontend_english_locale', 999 );
-function zalandy_frontend_english_locale( $locale ) {
-	if ( ! is_admin() ) {
-		return 'en_US';
+// Locale handling: let Polylang manage frontend language if active.
+// When Polylang is active it hooks into determine_locale to return the
+// correct locale (en_US / de_DE) based on the requested URL/content.
+// We only force en_US on the frontend when Polylang is NOT running, so the
+// site never accidentally renders in zh_CN (admin stays zh_CN via user profile).
+add_filter( 'determine_locale', 'zalandy_frontend_locale_fallback', 1000 );
+function zalandy_frontend_locale_fallback( $locale ) {
+	if ( is_admin() ) {
+		return $locale;
 	}
-	return $locale;
+	// If Polylang is active, trust it to set the correct locale.
+	if ( function_exists( 'pll_current_language' ) || function_exists( 'PLL' ) && PLL() ) {
+		return $locale;
+	}
+	// Fallback: keep frontend English when Polylang is inactive.
+	return 'en_US';
 }
 
 // Remove unwanted dashboard widgets
