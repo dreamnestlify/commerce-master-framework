@@ -24,6 +24,7 @@
 *.sql.gz
 *.sql.bz2
 /db-data/
+/uploads/
 /wp-content/uploads/
 /wp-content/upgrade/
 /wp-content/backups/

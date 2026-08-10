@@ -88,6 +88,73 @@ add_action( 'login_head', function() {
 	<?php
 });
 
+// Frontend header layout fixes
+add_action( 'wp_head', function() {
+	echo '<style>
+	/* Zalandy header layout fixes */
+	.site-header .site-branding,
+	.site-header .site-logo {
+		flex-shrink: 0;
+	}
+	.site-header .site-logo img,
+	.site-header .custom-logo {
+		max-height: 44px;
+		width: auto;
+	}
+	.site-header .main-navigation {
+		flex: 1;
+		justify-content: center;
+	}
+	.site-header .main-navigation .menu {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		flex-wrap: nowrap;
+	}
+	.site-header .main-navigation .menu > li {
+		position: relative;
+		margin: 0 4px;
+	}
+	.site-header .main-navigation .menu > li > a {
+		font-size: 13px;
+		font-weight: 500;
+		letter-spacing: 0.3px;
+		text-transform: uppercase;
+		padding: 10px 12px;
+		white-space: nowrap;
+	}
+	.site-header .main-navigation .sub-menu {
+		min-width: 200px;
+		background: #fff;
+		box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+		border-radius: 6px;
+		padding: 10px 0;
+	}
+	.site-header .main-navigation .sub-menu a {
+		font-size: 13px;
+		padding: 8px 18px;
+		white-space: nowrap;
+	}
+	.site-header .header-action {
+		display: flex;
+		align-items: center;
+		gap: 14px;
+		flex-shrink: 0;
+	}
+	@media (max-width: 1024px) {
+		.site-header .main-navigation .menu > li > a {
+			font-size: 12px;
+			padding: 8px 8px;
+		}
+	}
+	@media (max-width: 768px) {
+		.site-header .main-navigation {
+			display: none;
+		}
+	}
+	</style>';
+}, 100 );
+
 // Custom admin bar
 add_action( 'admin_bar_menu', function( $wp_admin_bar ) {
 	$wp_admin_bar->add_node( array(

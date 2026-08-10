@@ -1,14 +1,32 @@
 <?php
 /**
- * Update footer HTML with logo image and social links
+ * Zalandy — Fix Footer Layout & Header Menu
+ *
+ * 1. Regenerates the custom footer HTML with robust horizontal-text styles.
+ * 2. Restructures the Main Menu so the header does not wrap.
+ * 3. Flushes rewrite rules and caches.
  */
 
-$dark_logo_id = get_option('zalandy_logo_dark_id');
-$logo_url = $dark_logo_id ? wp_get_attachment_image_url($dark_logo_id, 'medium') : '';
-$brand_color = get_option('zalandy_brand_color', '#FF6B00');
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
-// Build footer HTML with logo
-$year        = date( 'Y' );
+WP_CLI::log( '========================================' );
+WP_CLI::log( '  Zalandy — Fix Footer & Header Menu' );
+WP_CLI::log( '========================================' );
+
+// ═══════════════════════════════════════════════════════════════
+// 1. Regenerate footer HTML with explicit horizontal styles
+// ═══════════════════════════════════════════════════════════════
+WP_CLI::log( '' );
+WP_CLI::log( '1/3 — Regenerating custom footer HTML...' );
+
+$dark_logo_id = get_option( 'zalandy_logo_dark_id' );
+$logo_url     = $dark_logo_id ? wp_get_attachment_image_url( $dark_logo_id, 'medium' ) : '';
+$brand_color  = get_option( 'zalandy_brand_color', '#FF6B00' );
+
+$year = date( 'Y' );
+
 $footer_html = '<div class="footer-container" style="max-width:1200px;margin:0 auto;padding:60px 20px 30px;">
   <div class="footer-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:40px;margin-bottom:40px;">
     <div>
@@ -58,23 +76,79 @@ $footer_html = '<div class="footer-container" style="max-width:1200px;margin:0 a
   </div>
 </div>';
 
-update_option('zalandy_custom_footer', $footer_html);
-echo "Footer HTML updated with logo image and social links\n";
+update_option( 'zalandy_custom_footer', $footer_html );
+WP_CLI::log( '  ✅ Footer HTML regenerated' );
 
-// Also add footer CSS with brand color
-$footer_css = '
-.zalandy-custom-footer {
-  background: #1a1a1a;
-  color: #fff;
-  margin-top: 60px;
+// ═══════════════════════════════════════════════════════════════
+// 2. Restructure Main Menu to avoid wrapping
+// ═══════════════════════════════════════════════════════════════
+WP_CLI::log( '' );
+WP_CLI::log( '2/3 — Restructuring Main Menu...' );
+
+$menu_name = 'Main Menu';
+$menu      = wp_get_nav_menu_object( $menu_name );
+
+if ( $menu ) {
+	wp_delete_nav_menu( $menu->term_id );
 }
-.zalandy-custom-footer a:hover { color: ' . $brand_color . ' !important; }
-.zalandy-custom-footer img { max-width: 200px; }
-';
 
-// Store the CSS as an option for the mu-plugin to use
-update_option('zalandy_footer_css', $footer_css);
-echo "Footer CSS updated\n";
+$menu_id = wp_create_nav_menu( $menu_name );
 
-// Add inline CSS via wp_head
-echo "DONE\n";
+// Helper to add menu items.
+function _zalandy_add_menu_item( $menu_id, $title, $url, $parent = 0 ) {
+	return wp_update_nav_menu_item(
+		$menu_id,
+		0,
+		array(
+			'menu-item-title'     => $title,
+			'menu-item-url'       => home_url( $url ),
+			'menu-item-status'    => 'publish',
+			'menu-item-parent-id' => $parent,
+		)
+	);
+}
+
+// Top-level items.
+_zalandy_add_menu_item( $menu_id, 'Home', '/' );
+
+// Shop dropdown.
+$shop_id = _zalandy_add_menu_item( $menu_id, 'Shop', '/shop/' );
+_zalandy_add_menu_item( $menu_id, 'Shop All', '/shop/', $shop_id );
+_zalandy_add_menu_item( $menu_id, 'Earrings', '/product-category/earrings/', $shop_id );
+_zalandy_add_menu_item( $menu_id, 'Necklaces', '/product-category/necklaces/', $shop_id );
+_zalandy_add_menu_item( $menu_id, 'Bracelets', '/product-category/bracelets/', $shop_id );
+_zalandy_add_menu_item( $menu_id, 'Rings', '/product-category/rings/', $shop_id );
+_zalandy_add_menu_item( $menu_id, 'Jewelry Sets', '/product-category/jewelry-sets/', $shop_id );
+_zalandy_add_menu_item( $menu_id, 'Fashion', '/product-category/fashion/', $shop_id );
+
+_zalandy_add_menu_item( $menu_id, 'Size Guide', '/size-guide/' );
+_zalandy_add_menu_item( $menu_id, 'Blog', '/blog/' );
+_zalandy_add_menu_item( $menu_id, 'About', '/about-us/' );
+_zalandy_add_menu_item( $menu_id, 'Contact', '/contact/' );
+
+// Assign to theme locations.
+$locations                  = get_theme_mod( 'nav_menu_locations' );
+$locations                  = is_array( $locations ) ? $locations : array();
+$locations['primary']       = $menu_id;
+$locations['handheld']      = $menu_id;
+$locations['mobile']        = $menu_id;
+$locations['menu-primary']  = $menu_id;
+$locations['menu-handheld'] = $menu_id;
+set_theme_mod( 'nav_menu_locations', $locations );
+
+WP_CLI::log( '  ✅ Main Menu restructured (Home / Shop dropdown / Size Guide / Blog / About / Contact)' );
+
+// ═══════════════════════════════════════════════════════════════
+// 3. Flush & Summary
+// ═══════════════════════════════════════════════════════════════
+WP_CLI::log( '' );
+WP_CLI::log( '3/3 — Flushing rewrites & caches...' );
+
+flush_rewrite_rules( true );
+wp_cache_flush();
+
+WP_CLI::log( '  ✅ Done' );
+WP_CLI::log( '' );
+WP_CLI::log( '========================================' );
+WP_CLI::log( '  Footer & Header Menu Fixed' );
+WP_CLI::log( '========================================' );

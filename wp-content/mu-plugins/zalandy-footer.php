@@ -24,20 +24,85 @@ add_action( 'wp_footer', function() {
 add_action( 'wp_head', function() {
 	$css = get_option( 'zalandy_footer_css' );
 	echo '<style>
+	/* Aggressively hide Woostify default footer elements */
 	footer#colophon,
 	footer#colophon .site-info,
 	footer#colophon .woostify-footer-menu,
 	footer#colophon .privacy-policy-link,
-	footer#colophon .site-infor-col {
+	footer#colophon .site-infor-col,
+	footer#colophon .colophon,
+	footer#colophon .woostify-footer-inner,
+	footer#colophon .woostify-footer-section,
+	footer#colophon .elementor-widget-container,
+	#colophon,
+	.site-footer,
+	.woostify-site-footer,
+	.elementor-location-footer,
+	.footer-builder {
 		display: none !important;
+		visibility: hidden !important;
+		opacity: 0 !important;
+		height: 0 !important;
+		min-height: 0 !important;
+		overflow: hidden !important;
 	}
+
+	/* Zalandy custom footer — force horizontal text/layout */
 	.zalandy-custom-footer {
 		background: #1a1a1a;
 		color: #fff;
 		margin-top: 60px;
+		clear: both;
+	}
+	.zalandy-custom-footer,
+	.zalandy-custom-footer *,
+	.zalandy-custom-footer *::before,
+	.zalandy-custom-footer *::after {
+		writing-mode: horizontal-tb !important;
+		text-orientation: mixed !important;
+		word-break: normal !important;
+		white-space: normal !important;
+		letter-spacing: normal !important;
+		word-spacing: normal !important;
+		line-height: 1.6 !important;
+	}
+	.zalandy-custom-footer a {
+		color: #aaa;
+		text-decoration: none;
+		transition: color 0.2s ease;
 	}
 	.zalandy-custom-footer a:hover { color: #FF6B00 !important; }
-	.zalandy-custom-footer img { max-width: 200px; }
+	.zalandy-custom-footer img { max-width: 200px; height: auto; }
+	.zalandy-custom-footer h4,
+	.zalandy-custom-footer h3,
+	.zalandy-custom-footer h2 {
+		color: #fff;
+		margin-top: 0;
+	}
+	.zalandy-custom-footer ul {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+	.zalandy-custom-footer li {
+		margin-bottom: 8px;
+	}
+	.zalandy-custom-footer .footer-grid {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 40px;
+	}
+	@media (max-width: 900px) {
+		.zalandy-custom-footer .footer-grid {
+			grid-template-columns: repeat(2, 1fr);
+			gap: 30px;
+		}
+	}
+	@media (max-width: 600px) {
+		.zalandy-custom-footer .footer-grid {
+			grid-template-columns: 1fr;
+		}
+	}
 	' . ( $css ? $css : '' ) . '
 	</style>';
 }, 10 );
