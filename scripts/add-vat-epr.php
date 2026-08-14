@@ -17,6 +17,8 @@ if ( ! defined( 'WP_CLI' ) ) {
 	exit;
 }
 
+global $wpdb;
+
 $NEW_VAT = 'DE367264918';
 $NEW_EPR = 'DE1649745799617';
 $OLD_EPR = 'DE5821461622733';
