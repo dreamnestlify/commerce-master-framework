@@ -35,7 +35,7 @@ Niedersachsen, Germany<br/>
 Commercial Register: HRA 204407, Amtsgericht Tostedt<br/>
 VAT ID: DE367264918<br/>
 EPR Registration Number (LUCID): DE1649745799617<br/>
-Email: support@zalandy.top
+Email: indiagianina5@gmail.com
 </p>
 
 <h3>2. Conclusion of Contract</h3>
@@ -51,7 +51,7 @@ Email: support@zalandy.top
 <p>Consumers in the European Union have the right to withdraw from a distance contract within 14 days without giving any reason. Details and the model withdrawal form can be found on our <a href="/withdrawal-right/">Right of Withdrawal</a> page.</p>
 
 <h3>6. Warranty for Defects</h3>
-<p>Statutory warranty rights apply. In case of defective goods, please contact support@zalandy.top with your order number and a description of the defect.</p>
+<p>Statutory warranty rights apply. In case of defective goods, please contact indiagianina5@gmail.com with your order number and a description of the defect.</p>
 
 <h3>7. Reservations of Title</h3>
 <p>Delivered goods remain our property until full payment has been received.</p>
@@ -72,7 +72,7 @@ Email: support@zalandy.top
 <p>We may update these terms from time to time. The version valid at the time of your order applies. Significant changes will be announced on our website.</p>
 
 <h3>13. Contact</h3>
-<p>For questions regarding these terms, contact <strong>support@zalandy.top</strong>.</p>
+<p>For questions regarding these terms, contact <strong>indiagianina5@gmail.com</strong>.</p>
 HTML;
 
 $de_content = <<<HTML
@@ -88,7 +88,7 @@ Niedersachsen, Deutschland<br/>
 Handelsregister: HRA 204407, Amtsgericht Tostedt<br/>
 USt-IdNr.: DE367264918<br/>
 Verpackungsregister (LUCID): DE1649745799617<br/>
-E-Mail: support@zalandy.top
+E-Mail: indiagianina5@gmail.com
 </p>
 
 <h3>§ 2 Vertragsschluss</h3>
@@ -104,7 +104,7 @@ E-Mail: support@zalandy.top
 <p>Verbraucher in der Europäischen Union haben das Recht, binnen 14 Tagen ohne Angabe von Gründen den Vertrag zu widerrufen. Details und das Muster-Widerrufsformular finden Sie auf unserer Seite <a href="/de/widerrufsrecht/">Widerrufsrecht</a>.</p>
 
 <h3>§ 6 Gewährleistung</h3>
-<p>Es gelten die gesetzlichen Gewährleistungsrechte. Bei mangelhafter Ware kontaktieren Sie bitte support@zalandy.top unter Angabe Ihrer Bestellnummer und einer Beschreibung des Mangels.</p>
+<p>Es gelten die gesetzlichen Gewährleistungsrechte. Bei mangelhafter Ware kontaktieren Sie bitte indiagianina5@gmail.com unter Angabe Ihrer Bestellnummer und einer Beschreibung des Mangels.</p>
 
 <h3>§ 7 Eigentumsvorbehalt</h3>
 <p>Die gelieferte Ware bleibt bis zur vollständigen Bezahlung unser Eigentum.</p>
@@ -125,7 +125,7 @@ E-Mail: support@zalandy.top
 <p>Wir können diese Bedingungen von Zeit zu Zeit aktualisieren. Maßgeblich ist die zum Zeitpunkt Ihrer Bestellung gültige Fassung. Wesentliche Änderungen werden auf unserer Website angekündigt.</p>
 
 <h3>§ 13 Kontakt</h3>
-<p>Fragen zu diesen Bedingungen richten Sie bitte an <strong>support@zalandy.top</strong>.</p>
+<p>Fragen zu diesen Bedingungen richten Sie bitte an <strong>indiagianina5@gmail.com</strong>.</p>
 HTML;
 
 // ── Update EN page ───────────────────────────

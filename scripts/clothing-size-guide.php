@@ -15,7 +15,7 @@ if ($existing) {
 
 $html = <<<HTML
 <h2 style="font-family: 'Playfair Display', serif; color: #1a1a1a;">服装尺码指南 / Clothing Size Guide</h2>
-<p style="color: #666; font-size: 14px;">本指南帮助你找到最合适的尺码。如需帮助，请联系 <a href="mailto:support@zalandy.top">support@zalandy.top</a></p>
+<p style="color: #666; font-size: 14px;">本指南帮助你找到最合适的尺码。如需帮助，请联系 <a href="mailto:indiagianina5@gmail.com">indiagianina5@gmail.com</a></p>
 
 <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 30px 0;">
 
@@ -235,7 +235,7 @@ $html = <<<HTML
         <li>尺码表仅供参考，不同款式可能有细微差异</li>
         <li>如介于两个尺码之间，建议选大一号（更舒适）</li>
         <li>弹性面料可适当选小一号</li>
-        <li>有任何尺码问题，欢迎联系 <a href="mailto:support@zalandy.top">support@zalandy.top</a></li>
+        <li>有任何尺码问题，欢迎联系 <a href="mailto:indiagianina5@gmail.com">indiagianina5@gmail.com</a></li>
     </ul>
 </div>
 HTML;

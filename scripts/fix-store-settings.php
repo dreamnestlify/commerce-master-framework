@@ -236,7 +236,7 @@ if ( $draft_page && $draft_page->post_status === 'draft' ) {
 
 // Set email from name
 update_option( 'woocommerce_email_from_name', 'Zalandy' );
-update_option( 'woocommerce_email_from_address', 'support@zalandy.top' );
-echo "\nEmail from: Zalandy <support@zalandy.top>\n";
+update_option( 'woocommerce_email_from_address', 'indiagianina5@gmail.com' );
+echo "\nEmail from: Zalandy <indiagianina5@gmail.com>\n";
 
 echo "\n=== ALL DONE: Items #2-5 completed ===\n";

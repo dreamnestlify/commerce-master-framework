@@ -69,7 +69,7 @@ Im Ziegelfeld 16<br/>
 Niedersachsen, Germany<br/>
 Commercial Register: HRA 204407, Amtsgericht Tostedt<br/>
 </p>
-<p>For privacy inquiries, contact us at: <strong>privacy@zalandy.top</strong></p>
+<p>For privacy inquiries, contact us at: <strong>indiagianina5@gmail.com</strong></p>
 
 <h3>2. Information We Collect</h3>
 <p><strong>2.1 Information you provide:</strong></p>
@@ -125,7 +125,7 @@ Commercial Register: HRA 204407, Amtsgericht Tostedt<br/>
 <li><strong>Right to object:</strong> Object to processing based on legitimate interest</li>
 <li><strong>Right to withdraw consent:</strong> Withdraw consent at any time</li>
 </ul>
-<p>To exercise these rights, email <strong>privacy@zalandy.top</strong>. We respond within 30 days.</p>
+<p>To exercise these rights, email <strong>indiagianina5@gmail.com</strong>. We respond within 30 days.</p>
 
 <h3>7. Your Rights (CCPA)</h3>
 <p>California residents have the right to:</p>
@@ -135,7 +135,7 @@ Commercial Register: HRA 204407, Amtsgericht Tostedt<br/>
 <li>Opt-out of the "sale" of personal information (we do not sell your data)</li>
 <li>Non-discrimination: We will not discriminate against you for exercising your rights</li>
 </ul>
-<p>To submit a CCPA request, email <strong>privacy@zalandy.top</strong>.</p>
+<p>To submit a CCPA request, email <strong>indiagianina5@gmail.com</strong>.</p>
 
 <h3>8. International Data Transfers</h3>
 <p>Your data may be transferred to and processed in countries outside your country of residence, including the United States and China. We ensure appropriate safeguards are in place, including Standard Contractual Clauses (SCCs) for EU data.</p>
@@ -161,8 +161,8 @@ Commercial Register: HRA 204407, Amtsgericht Tostedt<br/>
 
 <h3>13. Contact Us</h3>
 <p>If you have questions about this Privacy Policy, contact us at:</p>
-<p><strong>Email:</strong> privacy@zalandy.top<br/>
-<strong>General inquiries:</strong> support@zalandy.top</p>
+<p><strong>Email:</strong> indiagianina5@gmail.com<br/>
+<strong>General inquiries:</strong> indiagianina5@gmail.com</p>
 HTML;
 
 _zalandy_upsert_page( 'privacy-policy', 'Privacy Policy', $privacy_content );
@@ -235,7 +235,7 @@ $cookie_content = <<<HTML
 <p>Note: Disabling essential cookies will prevent you from completing purchases.</p>
 
 <h3>Contact</h3>
-<p>For questions about cookies, email <strong>privacy@zalandy.top</strong></p>
+<p>For questions about cookies, email <strong>indiagianina5@gmail.com</strong></p>
 HTML;
 
 _zalandy_upsert_page( 'cookie-policy', 'Cookie Policy', $cookie_content );
@@ -268,12 +268,12 @@ $imprint_content = <<<HTML
 
 <h3>Kontakt / Contact</h3>
 <p>
-<strong>Email:</strong> support@zalandy.top<br/>
-<strong>Phone:</strong> +1 706 215 4022<br/>
+<strong>Email:</strong> indiagianina5@gmail.com<br/>
+<strong>Phone:</strong> +1 929 568 3010<br/>
 </p>
 
 <h3>Verantwortlich für den Inhalt / Responsible for Content</h3>
-<p>Katrin Dübbers, support@zalandy.top</p>
+<p>Katrin Dübbers, indiagianina5@gmail.com</p>
 
 <h3>Streitschlichtung / Dispute Resolution</h3>
 <p>The European Commission provides a platform for online dispute resolution (ODR): <a href="https://ec.europa.eu/consumers/odr/">https://ec.europa.eu/consumers/odr/</a>. We are not obliged or willing to participate in dispute settlement proceedings before a consumer arbitration board.</p>
@@ -306,7 +306,7 @@ $withdrawal_content = <<<HTML
 
 <h3>How to Exercise Your Right</h3>
 <p>To withdraw from the contract, you must inform us by sending a clear statement to:</p>
-<p><strong>Email:</strong> returns@zalandy.top<br/>
+<p><strong>Email:</strong> indiagianina5@gmail.com<br/>
 <strong>Subject:</strong> "Withdrawal of Order #[Order Number]"</p>
 <p>You can use the following template:</p>
 <blockquote style="background:#f8f6f3;padding:16px;border-left:3px solid #c9a96e;margin:16px 0;">
@@ -399,8 +399,8 @@ $contact_content = <<<HTML
 <div style="text-align:center;padding:30px;background:#f8f6f3;border-radius:8px;">
 <h3 style="font-size:18px;font-weight:400;color:#c9a96e;">Customer Support</h3>
 <p style="color:#666;line-height:1.8;">
-<strong>Email:</strong> support@zalandy.top<br/>
-<strong>Phone:</strong> +1 706 215 4022<br/>
+<strong>Email:</strong> indiagianina5@gmail.com<br/>
+<strong>Phone:</strong> +1 929 568 3010<br/>
 <strong>Hours:</strong> Mon-Fri 9:00-18:00 (CET)<br/>
 <strong>Response:</strong> Within 24 hours
 </p>
@@ -478,7 +478,7 @@ $faq_content = <<<HTML
 <p style="color:#666;line-height:1.8;">We accept returns within 30 days of delivery for items in original condition. EU consumers have a 14-day withdrawal right. See our <a href="/return-policy/">Return Policy</a>.</p>
 
 <h3 style="font-size:16px;">Can I exchange for a different size?</h3>
-<p style="color:#666;line-height:1.8;">Yes, we offer free size exchanges within 30 days. Contact support@zalandy.top with your order number.</p>
+<p style="color:#666;line-height:1.8;">Yes, we offer free size exchanges within 30 days. Contact indiagianina5@gmail.com with your order number.</p>
 
 <h3 style="font-size:16px;">Are custom orders refundable?</h3>
 <p style="color:#666;line-height:1.8;">Custom-made and personalized jewelry items cannot be returned or exchanged.</p>
@@ -587,7 +587,7 @@ $size_content = <<<HTML
 </tbody>
 </table>
 
-<p style="color:#999;font-size:14px;margin-top:30px;">Need help finding your size? Email us at support@zalandy.top with your measurements and we'll help you choose.</p>
+<p style="color:#999;font-size:14px;margin-top:30px;">Need help finding your size? Email us at indiagianina5@gmail.com with your measurements and we'll help you choose.</p>
 
 </div>
 HTML;

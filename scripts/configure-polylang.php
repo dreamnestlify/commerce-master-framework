@@ -214,7 +214,7 @@ $page_translations = array(
 	array( 'about-us', 'ueber-uns', 'Über Uns',
 		'<h2>Über Zalandy</h2><p>Zalandy ist Ihre Anlaufstelle für handgefertigten Schmuck und zeitgenössische Mode. Mit Leidenschaft in Deutschland gefertigt.</p><p>Seniorenpflegeheim Bevern GmbH & Co. KG<br>Im Ziegelfeld 16<br>27432 Bremervörde, Deutschland<br>HRA: 204407</p>' ),
 	array( 'contact', 'kontakt', 'Kontakt',
-		'<h2>Kontakt</h2><p>Haben Sie Fragen? Wir helfen Ihnen gerne weiter.</p><p>E-Mail: support@zalandy.top<br>Seniorenpflegeheim Bevern GmbH & Co. KG<br>Im Ziegelfeld 16, 27432 Bremervörde</p>' ),
+		'<h2>Kontakt</h2><p>Haben Sie Fragen? Wir helfen Ihnen gerne weiter.</p><p>E-Mail: indiagianina5@gmail.com<br>Seniorenpflegeheim Bevern GmbH & Co. KG<br>Im Ziegelfeld 16, 27432 Bremervörde</p>' ),
 	array( 'size-guide', 'grosentabelle', 'Größentabelle', '' ),
 	array( 'blog', 'blog-de', 'Blog', '' ),
 	array( 'faq', 'faq-de', 'FAQ', '' ),
