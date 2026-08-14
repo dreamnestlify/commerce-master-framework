@@ -257,11 +257,13 @@ $imprint_content = <<<HTML
 <strong>State / Country:</strong> Niedersachsen, Germany<br/>
 <strong>Commercial Register:</strong> Amtsgericht Tostedt<br/>
 <strong>Registration Number:</strong> HRA 204407<br/>
+<strong>VAT ID:</strong> DE367264918<br/>
+<strong>EPR Registration Number (LUCID):</strong> DE1649745799617<br/>
 </p>
 
 <h3>Vertreten durch / Represented by</h3>
 <p>
-<strong>Managing Director:</strong> <em>(to be provided)</em><br/>
+<strong>Managing Director:</strong> Katrin Dübbers<br/>
 </p>
 
 <h3>Kontakt / Contact</h3>
