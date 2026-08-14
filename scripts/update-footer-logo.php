@@ -14,7 +14,7 @@ $footer_html = '<div class="footer-container" style="max-width:1200px;margin:0 a
     <div>
       ' . ( $logo_url ? '<img src="' . esc_url( $logo_url ) . '" alt="Zalandy" style="height:36px;width:auto;margin-bottom:16px;display:block;">' : '<h3 style="font-family:Playfair Display,serif;font-size:24px;margin-bottom:16px;color:' . esc_attr( $brand_color ) . ';">Zalandy</h3>' ) . '
       <p style="color:#aaa;font-size:14px;line-height:1.7;">Fine jewelry & contemporary fashion. Handcrafted with passion in Germany.</p>
-      <p style="color:#aaa;font-size:13px;margin-top:12px;line-height:1.7;">Equi international UG (haftungsbeschränkt)<br>Großenwede Siedlung 8<br>29640 Schneverdingen, Germany<br>VAT: DE312939176 | HRB: 206966</p>
+      <p style="color:#aaa;font-size:13px;margin-top:12px;line-height:1.7;">Seniorenpflegeheim Bevern GmbH & Co. KG<br>Im Ziegelfeld 16<br>27432 Bremervörde, Germany<br>HRA: 204407</p>
       <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap;">
         <a href="#" style="color:#aaa;font-size:13px;text-decoration:none;white-space:nowrap;">Instagram</a>
         <a href="#" style="color:#aaa;font-size:13px;text-decoration:none;white-space:nowrap;">Facebook</a>
@@ -53,7 +53,7 @@ $footer_html = '<div class="footer-container" style="max-width:1200px;margin:0 a
     </div>
   </div>
   <div style="border-top:1px solid #333;padding-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
-    <p style="color:#888;font-size:13px;margin:0;">&copy; ' . $year . ' Zalandy. All rights reserved. Equi international UG</p>
+    <p style="color:#888;font-size:13px;margin:0;">&copy; ' . $year . ' Zalandy. All rights reserved. Seniorenpflegeheim Bevern GmbH & Co. KG</p>
     <p style="color:#888;font-size:13px;margin:0;">Designed with passion in Germany</p>
   </div>
 </div>';

@@ -13,7 +13,7 @@
 - 商品清单: Silk Wrap Dress, Cotton Linen Jumpsuit, Oversized Cardigan, Wide Leg Trousers, Pleated Mini Skirt, Cropped Blazer, Cotton T-Shirt, Oxford Shirt, Chino Pants, Wool Overcoat, Cargo Pants, Leather Belt, Cashmere Scarf, Crossbody Bag, Retro Sunglasses
 
 ### 2. ✅ 店铺地址/国家配置
-- 已改为: Großenwede Siedlung 8, 29640 Schneverdingen, DE (Equi international UG)
+- 已改为: Im Ziegelfeld 16, 27432 Bremervörde, DE (Seniorenpflegeheim Bevern GmbH & Co. KG)
 
 ### 3. ✅ 货币设置
 - 已改为: EUR (€)，欧洲格式 (€1.299,00)
@@ -147,7 +147,7 @@
 - [x] SSH 密钥认证 + fail2ban 已关闭
 - [x] 自定义 Stripe + PayPal 支付网关 (commerce-core 插件)
 - [x] 自动草稿商品已清理 (ID 291 已删除)
-- [x] 店铺地址/国家 (德国 Schneverdingen, DE)
+- [x] 店铺地址/国家 (德国 Bremervörde, DE)
 - [x] 货币 EUR (€)
 - [x] 税务 (DE 19% + EU 19% OSS)
 - [x] 配送区域 (德国/EU/国际)

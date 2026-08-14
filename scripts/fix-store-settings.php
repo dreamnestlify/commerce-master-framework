@@ -9,15 +9,15 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 // ==============================
 // #2: Store Address / Country
 // ==============================
-update_option( 'woocommerce_store_address', 'Großenwede Siedlung 8' );
+update_option( 'woocommerce_store_address', 'Im Ziegelfeld 16' );
 update_option( 'woocommerce_store_address_2', '' );
-update_option( 'woocommerce_store_city', 'Schneverdingen' );
-update_option( 'woocommerce_store_postcode', '29640' );
+update_option( 'woocommerce_store_city', 'Bremervörde' );
+update_option( 'woocommerce_store_postcode', '27432' );
 update_option( 'woocommerce_default_country', 'DE' );
 update_option( 'woocommerce_default_state', '' );
 
 echo "#2 Store address updated:\n";
-echo "  Address: Großenwede Siedlung 8, 29640 Schneverdingen, DE\n";
+echo "  Address: Im Ziegelfeld 16, 27432 Bremervörde, DE\n";
 
 // ==============================
 // #3: Currency → EUR

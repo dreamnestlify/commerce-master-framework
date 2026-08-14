@@ -58,17 +58,16 @@ WP_CLI::log( '1/10 — Rewriting Privacy Policy (GDPR + CCPA compliant)...' );
 $privacy_content = <<<HTML
 <h2>Privacy Policy</h2>
 <p><strong>Last updated:</strong> August 9, 2026</p>
-<p>This Privacy Policy describes how Equi international UG (haftungsbeschränkt) ("we," "us," or "our"), operating under the brand Zalandy, collects, uses, and protects your personal data when you visit zalandy.top (the "Site") or purchase our products. This policy complies with the General Data Protection Regulation (GDPR) and the California Consumer Privacy Act (CCPA).</p>
+<p>This Privacy Policy describes how Seniorenpflegeheim Bevern GmbH & Co. KG ("we," "us," or "our"), operating under the brand Zalandy, collects, uses, and protects your personal data when you visit zalandy.top (the "Site") or purchase our products. This policy complies with the General Data Protection Regulation (GDPR) and the California Consumer Privacy Act (CCPA).</p>
 
 <h3>1. Data Controller</h3>
 <p>The data controller for your personal data is:</p>
 <p>
-<strong>Equi international UG (haftungsbeschränkt)</strong><br/>
-Großenwede Siedlung 8<br/>
-29640 Schneverdingen<br/>
+<strong>Seniorenpflegeheim Bevern GmbH & Co. KG</strong><br/>
+Im Ziegelfeld 16<br/>
+27432 Bremervörde<br/>
 Niedersachsen, Germany<br/>
-VAT ID: DE312939176<br/>
-Commercial Register: HRB 206966, Amtsgericht Walsrode<br/>
+Commercial Register: HRA 204407, Amtsgericht Tostedt<br/>
 </p>
 <p>For privacy inquiries, contact us at: <strong>privacy@zalandy.top</strong></p>
 
@@ -252,19 +251,17 @@ $imprint_content = <<<HTML
 
 <h3>Angaben gemäß § 5 TMG / Information according to § 5 TMG</h3>
 <p>
-<strong>Company Name:</strong> Equi international UG (haftungsbeschränkt)<br/>
-<strong>Registered Address:</strong> Großenwede Siedlung 8<br/>
-<strong>Postal Code / City:</strong> 29640 Schneverdingen<br/>
+<strong>Company Name:</strong> Seniorenpflegeheim Bevern GmbH & Co. KG<br/>
+<strong>Registered Address:</strong> Im Ziegelfeld 16<br/>
+<strong>Postal Code / City:</strong> 27432 Bremervörde<br/>
 <strong>State / Country:</strong> Niedersachsen, Germany<br/>
-<strong>Commercial Register:</strong> Amtsgericht Walsrode<br/>
-<strong>Registration Number:</strong> HRB 206966<br/>
-<strong>VAT ID:</strong> DE312939176<br/>
-<strong>EPR Packaging Register No.:</strong> DE5821461622733<br/>
+<strong>Commercial Register:</strong> Amtsgericht Tostedt<br/>
+<strong>Registration Number:</strong> HRA 204407<br/>
 </p>
 
 <h3>Vertreten durch / Represented by</h3>
 <p>
-<strong>Managing Director:</strong> Katrin Dübbers<br/>
+<strong>Managing Director:</strong> <em>(to be provided)</em><br/>
 </p>
 
 <h3>Kontakt / Contact</h3>
@@ -348,7 +345,7 @@ $about_content = <<<HTML
 <p style="font-size:16px;color:#999;">Handcrafted jewelry for the modern soul</p>
 </div>
 
-<p style="font-size:16px;line-height:2;">Zalandy is a brand of <strong>Equi international UG (haftungsbeschränkt)</strong>, a Germany-registered company based in Schneverdingen, Niedersachsen. We were born from a passion for fine jewelry and a belief that every piece tells a story. We source the finest gemstones from around the world and work with skilled artisans who bring each design to life with meticulous attention to detail.</p>
+<p style="font-size:16px;line-height:2;">Zalandy is a brand of <strong>Seniorenpflegeheim Bevern GmbH & Co. KG</strong>, a Germany-registered company based in Bremervörde, Niedersachsen. We were born from a passion for fine jewelry and a belief that every piece tells a story. We source the finest gemstones from around the world and work with skilled artisans who bring each design to life with meticulous attention to detail.</p>
 
 <h2 style="font-size:24px;font-weight:400;margin-top:40px;">Our Craft</h2>
 <p style="font-size:16px;line-height:2;">Every piece in our collection is handcrafted using traditional techniques passed down through generations. From vintage-inspired palace designs to modern minimalist creations, we blend old-world craftsmanship with contemporary aesthetics.</p>
@@ -410,11 +407,11 @@ $contact_content = <<<HTML
 <div style="text-align:center;padding:30px;background:#f8f6f3;border-radius:8px;">
 <h3 style="font-size:18px;font-weight:400;color:#c9a96e;">Company Address</h3>
 <p style="color:#666;line-height:1.8;">
-<strong>Equi international UG</strong><br/>
-Großenwede Siedlung 8<br/>
-29640 Schneverdingen<br/>
+<strong>Seniorenpflegeheim Bevern GmbH & Co. KG</strong><br/>
+Im Ziegelfeld 16<br/>
+27432 Bremervörde<br/>
 Niedersachsen, Germany<br/>
-<strong>VAT ID:</strong> DE312939176
+<strong>Commercial Register:</strong> HRA 204407
 </p>
 </div>
 

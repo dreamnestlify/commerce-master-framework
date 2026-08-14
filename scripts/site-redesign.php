@@ -943,7 +943,7 @@ $footer_content = '<div style="display:grid;grid-template-columns:repeat(4,1fr);
 </div>
 </div>
 <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:20px;text-align:center;">
-<p style="color:#666;font-size:13px;">© 2026 Zalandy — Equi international UG (haftungsbeschränkt). All rights reserved. VAT: DE312939176</p>
+<p style="color:#666;font-size:13px;">© 2026 Zalandy — Seniorenpflegeheim Bevern GmbH & Co. KG. All rights reserved. HRA: 204407</p>
 </div>';
 
 // Save footer as a widget or option
